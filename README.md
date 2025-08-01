@@ -13,7 +13,7 @@ Razorpay/Stripe account
 Installation
 
 Clone Repository:
-git clone https://github.com/dipinrz/HMS.git
+git clone https://github.com/dipinrz/HMS-TEAM.git
 cd hms
 
 
