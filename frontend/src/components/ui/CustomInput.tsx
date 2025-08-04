@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, type TextFieldProps, Box } from '@mui/material';
 
 export type CustomInputProps = TextFieldProps & {
-  label: string;
+  label: string |number;
   width?: string | number; // e.g., '300px', 250, etc.
 };
 

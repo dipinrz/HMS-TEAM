@@ -1,0 +1,273 @@
+import * as React from "react";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  InputBase,
+  Badge,
+  MenuItem,
+  Menu,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import { Bell, Stethoscope } from "lucide-react";
+
+function Navbar() {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const userRole = "admin";
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: "#fff",
+        color: "black",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        borderBottom: "1px solid #f4f3f3ff",
+      }}
+    >
+      <Toolbar
+        sx={{
+          display: "flex",
+          flexDirection: isSmallScreen ? "column" : "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          py: isSmallScreen ? 1 : 0,
+          gap: isSmallScreen ? 1 : 0,
+        }}
+      >
+        {/* Logo */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            order: isSmallScreen ? 1 : 0,
+            width: isSmallScreen ? "100%" : "auto",
+            justifyContent: isSmallScreen ? "space-between" : "flex-start",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Stethoscope
+              style={{ fontSize: "20px", color: "#1976d2", marginRight: "5px" }}
+            />
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                fontWeight: "bold",
+                fontFamily: '"Domine", serif',
+                fontSize: isSmallScreen ? "1.1rem" : "1.25rem",
+              }}
+            >
+              HealthCare HMS
+            </Typography>
+          </Box>
+
+          {isSmallScreen && (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <IconButton
+                size="large"
+                aria-label="show notifications"
+                color="inherit"
+              >
+                <Badge badgeContent={4} color="error">
+                  <Bell size={20} />
+                </Badge>
+              </IconButton>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle sx={{ fontSize: 28, color: "primary.main" }} />
+              </IconButton>
+            </Box>
+          )}
+        </Box>
+
+        <Box
+          sx={{
+            width: isSmallScreen ? "80%" : "40%",
+            order: isSmallScreen ? 2 : 0,
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#ffffff",
+            borderRadius: 3,
+            px: 2,
+            py: 0.5,
+            border: "1px solid #e0e0e0",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+            mx: isSmallScreen ? 0 : "auto",
+          }}
+        >
+          <SearchIcon
+            sx={{
+              color: "action.active",
+              mr: 1,
+              fontSize: isSmallScreen ? "1rem" : "1.25rem",
+            }}
+          />
+          <InputBase
+            placeholder="Search patients, doctors, reports..."
+            sx={{
+              width: "100%",
+              fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+              fontSize: isSmallScreen ? "0.875rem" : "1rem",
+            }}
+            inputProps={{ "aria-label": "search" }}
+          />
+        </Box>
+
+        {!isSmallScreen && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              order: 2,
+              ml: "auto",
+            }}
+          >
+            <IconButton
+              size="large"
+              aria-label="show notifications"
+              color="inherit"
+            >
+              <Badge badgeContent={4} color="error">
+                <Bell />
+              </Badge>
+            </IconButton>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                ml: { xs: 0, sm: 2 },
+                p: { xs: 0.5, sm: 1 },
+                borderRadius: 2,
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.03)",
+                },
+              }}
+            >
+              <IconButton
+                size="medium"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+                sx={{
+                  p: 1,
+                  transition: "transform 0.2s ease",
+                  "&:hover": {
+                    transform: "scale(1.1)",
+                    backgroundColor: "rgba(25, 118, 210, 0.1)",
+                  },
+                }}
+              >
+                <AccountCircle
+                  sx={{
+                    fontSize: { xs: 28, sm: 32 },
+                    color: "primary.main",
+                  }}
+                />
+              </IconButton>
+
+              <Box
+                sx={{
+                  ml: { xs: 0.5, sm: 1.5 },
+                  display: { xs: "none", sm: "flex" },
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontWeight: 600,
+                    lineHeight: 1.3,
+                    fontFamily: '"Inter", sans-serif',
+                    color: "text.primary",
+                    letterSpacing: 0.1,
+                  }}
+                >
+                  Dr. John Doe
+                </Typography>
+                <Box
+                  sx={{
+                    mt: 0.5,
+                    px: 1.2,
+                    py: 0.4,
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    backgroundColor:
+                      userRole === "admin"
+                        ? "error.main"
+                        : userRole === "doctor"
+                        ? "success.main"
+                        : "primary.main",
+                    color: "white",
+                    borderRadius: "12px",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                    textTransform: "uppercase",
+                    fontFamily: '"Inter", sans-serif',
+                    letterSpacing: 0.5,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      transform: "translateY(-1px)",
+                      boxShadow: "0 3px 6px rgba(0,0,0,0.15)",
+                    },
+                  }}
+                >
+                  {userRole}
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        )}
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          sx={{
+            zIndex: theme.zIndex.modal + 1,
+          }}
+        >
+          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={handleClose}>Settings</MenuItem>
+          <MenuItem onClick={handleClose}>Logout</MenuItem>
+        </Menu>
+      </Toolbar>
+    </AppBar>
+  );
+}
+
+export default Navbar;

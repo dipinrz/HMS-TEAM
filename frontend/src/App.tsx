@@ -190,7 +190,10 @@ const App = () => {
           </Box>
         </Box>
       </Box>
+      <Navbar/>
     </div>
+
+
   );
 };
 
