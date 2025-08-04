@@ -17,6 +17,7 @@ import {
   type StatusType,
   type StatusVariant,
 } from "./components/ui/CustomStatus";
+import Navbar from "./components/NavBar";
 
 const statuses: StatusType[] = [
   "success",
