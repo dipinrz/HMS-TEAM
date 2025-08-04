@@ -1,17 +1,17 @@
 // components/ui/StatusIndicator.tsx
-import React from 'react';
-import { styled, keyframes } from '@mui/material/styles';
-import { Box, Typography, Chip, Badge } from '@mui/material';
-import { 
-  CheckCircle, 
-  Cancel, 
-  Warning, 
-  Info, 
+import React from "react";
+import { styled, keyframes } from "@mui/material/styles";
+import { Box, Typography, Chip, Badge } from "@mui/material";
+import {
+  CheckCircle,
+  Cancel,
+  Warning,
+  Info,
   RadioButtonUnchecked,
   Pause,
   Schedule,
-  Block
-} from '@mui/icons-material';
+  Block,
+} from "@mui/icons-material";
 
 // Animation keyframes
 const pulse = keyframes`
@@ -41,124 +41,126 @@ const ripple = keyframes`
 `;
 
 // Status types and their configurations
-export type StatusType = 
-  | 'success' 
-  | 'error' 
-  | 'warning' 
-  | 'info' 
-  | 'pending' 
-  | 'inactive' 
-  | 'processing' 
-  | 'paused'
-  | 'blocked';
+export type StatusType =
+  | "success"
+  | "error"
+  | "warning"
+  | "info"
+  | "pending"
+  | "inactive"
+  | "processing"
+  | "paused"
+  | "blocked";
 
-export type StatusVariant = 'dot' | 'chip' | 'badge' | 'icon' | 'text';
+export type StatusVariant = "dot" | "chip" | "badge" | "icon" | "text";
 
 const statusConfig = {
   success: {
-    color: '#4caf50',
-    backgroundColor: '#e8f5e8',
+    color: "#4caf50",
+    backgroundColor: "#e8f5e8",
     icon: CheckCircle,
-    label: 'Success'
+    label: "Success",
   },
   error: {
-    color: '#f44336',
-    backgroundColor: '#ffebee',
+    color: "#f44336",
+    backgroundColor: "#ffebee",
     icon: Cancel,
-    label: 'Error'
+    label: "Error",
   },
   warning: {
-    color: '#ff9800',
-    backgroundColor: '#fff3e0',
+    color: "#ff9800",
+    backgroundColor: "#fff3e0",
     icon: Warning,
-    label: 'Warning'
+    label: "Warning",
   },
   info: {
-    color: '#2196f3',
-    backgroundColor: '#e3f2fd',
+    color: "#2196f3",
+    backgroundColor: "#e3f2fd",
     icon: Info,
-    label: 'Info'
+    label: "Info",
   },
   pending: {
-    color: '#9c27b0',
-    backgroundColor: '#f3e5f5',
+    color: "#9c27b0",
+    backgroundColor: "#f3e5f5",
     icon: Schedule,
-    label: 'Pending'
+    label: "Pending",
   },
   inactive: {
-    color: '#9e9e9e',
-    backgroundColor: '#f5f5f5',
+    color: "#9e9e9e",
+    backgroundColor: "#f5f5f5",
     icon: RadioButtonUnchecked,
-    label: 'Inactive'
+    label: "Inactive",
   },
   processing: {
-    color: '#00bcd4',
-    backgroundColor: '#e0f2f1',
+    color: "#00bcd4",
+    backgroundColor: "#e0f2f1",
     icon: RadioButtonUnchecked,
-    label: 'Processing'
+    label: "Processing",
   },
   paused: {
-    color: '#795548',
-    backgroundColor: '#efebe9',
+    color: "#795548",
+    backgroundColor: "#efebe9",
     icon: Pause,
-    label: 'Paused'
+    label: "Paused",
   },
   blocked: {
-    color: '#607d8b',
-    backgroundColor: '#eceff1',
+    color: "#607d8b",
+    backgroundColor: "#eceff1",
     icon: Block,
-    label: 'Blocked'
-  }
+    label: "Blocked",
+  },
 };
 
 // Styled components
-const StatusDot = styled('div')<{ 
-  status: StatusType; 
-  size: number; 
+const StatusDot = styled("div")<{
+  status: StatusType;
+  size: number;
   animated?: boolean;
   withRipple?: boolean;
 }>(({ status, size, animated, withRipple }) => ({
   width: size,
   height: size,
-  borderRadius: '50%',
+  borderRadius: "50%",
   backgroundColor: statusConfig[status].color,
-  position: 'relative',
-  display: 'inline-block',
-  
+  position: "relative",
+  display: "inline-block",
+
   ...(animated && {
     animation: `${pulse} 2s infinite`,
   }),
-  
+
   ...(withRipple && {
-    '&::before': {
+    "&::before": {
       content: '""',
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
+      position: "absolute",
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
       backgroundColor: statusConfig[status].color,
       animation: `${ripple} 1.5s infinite`,
       zIndex: -1,
-    }
-  })
+    },
+  }),
 }));
 
-const StatusContainer = styled(Box)<{ clickable?: boolean }>(({ clickable }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '8px',
+const StatusContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "clickable",
+})<{ clickable?: boolean }>(({ clickable }) => ({
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "8px",
   ...(clickable && {
-    cursor: 'pointer',
-    '&:hover': {
+    cursor: "pointer",
+    "&:hover": {
       opacity: 0.8,
-    }
-  })
+    },
+  }),
 }));
 
 interface StatusIndicatorProps {
   status: StatusType;
   variant?: StatusVariant;
-  size?: 'small' | 'medium' | 'large';
+  size?: "small" | "medium" | "large";
   label?: string;
   showLabel?: boolean;
   animated?: boolean;
@@ -170,15 +172,15 @@ interface StatusIndicatorProps {
 }
 
 const sizeMap = {
-  small: { dot: 8, icon: 16, text: 'body2' as const },
-  medium: { dot: 12, icon: 20, text: 'body1' as const },
-  large: { dot: 16, icon: 24, text: 'h6' as const }
+  small: { dot: 8, icon: 16, text: "body2" as const },
+  medium: { dot: 12, icon: 20, text: "body1" as const },
+  large: { dot: 16, icon: 24, text: "h6" as const },
 };
 
 export function StatusIndicator({
   status,
-  variant = 'dot',
-  size = 'medium',
+  variant = "dot",
+  size = "medium",
   label,
   showLabel = false,
   animated = false,
@@ -186,7 +188,7 @@ export function StatusIndicator({
   onClick,
   className,
   customColor,
-  children
+  children,
 }: StatusIndicatorProps) {
   const config = statusConfig[status];
   const sizeConfig = sizeMap[size];
@@ -200,11 +202,11 @@ export function StatusIndicator({
   };
 
   // Dot variant
-  if (variant === 'dot') {
+  if (variant === "dot") {
     return (
-      <StatusContainer 
-        className={className} 
-        clickable={!!onClick} 
+      <StatusContainer
+        className={className}
+        clickable={!!onClick}
         onClick={handleClick}
       >
         <StatusDot
@@ -225,32 +227,34 @@ export function StatusIndicator({
   }
 
   // Chip variant
-  if (variant === 'chip') {
+  if (variant === "chip") {
     return (
       <Chip
         className={className}
         icon={<StatusDot status={status} size={8} animated={animated} />}
         label={displayLabel}
-        size={size === 'large' ? 'medium' : 'small'}
+        size={size === "large" ? "medium" : "small"}
         onClick={onClick}
         style={{
-          backgroundColor: customColor ? `${customColor}20` : config.backgroundColor,
+          backgroundColor: customColor
+            ? `${customColor}20`
+            : config.backgroundColor,
           color: customColor || config.color,
-          border: `1px solid ${customColor || config.color}40`
+          border: `1px solid ${customColor || config.color}40`,
         }}
       />
     );
   }
 
   // Badge variant
-  if (variant === 'badge') {
+  if (variant === "badge") {
     return (
       <Badge
         className={className}
         badgeContent={
-          <StatusDot 
-            status={status} 
-            size={sizeConfig.dot} 
+          <StatusDot
+            status={status}
+            size={sizeConfig.dot}
             animated={animated}
             withRipple={withRipple}
           />
@@ -263,11 +267,11 @@ export function StatusIndicator({
   }
 
   // Icon variant
-  if (variant === 'icon') {
+  if (variant === "icon") {
     return (
-      <StatusContainer 
-        className={className} 
-        clickable={!!onClick} 
+      <StatusContainer
+        className={className}
+        clickable={!!onClick}
         onClick={handleClick}
       >
         <IconComponent
@@ -287,20 +291,20 @@ export function StatusIndicator({
   }
 
   // Text variant
-  if (variant === 'text') {
+  if (variant === "text") {
     return (
-      <StatusContainer 
-        className={className} 
-        clickable={!!onClick} 
+      <StatusContainer
+        className={className}
+        clickable={!!onClick}
         onClick={handleClick}
       >
         <Typography
           variant={sizeConfig.text}
           sx={{
             color: customColor || config.color,
-            fontWeight: 'medium',
-            textTransform: 'uppercase',
-            fontSize: size === 'small' ? '0.75rem' : undefined
+            fontWeight: "medium",
+            textTransform: "uppercase",
+            fontSize: size === "small" ? "0.75rem" : undefined,
           }}
         >
           {displayLabel}
@@ -314,26 +318,29 @@ export function StatusIndicator({
 }
 
 // Convenience components for common use cases
-export function OnlineStatus({ online, ...props }: { online: boolean } & Omit<StatusIndicatorProps, 'status'>) {
+export function OnlineStatus({
+  online,
+  ...props
+}: { online: boolean } & Omit<StatusIndicatorProps, "status">) {
   return (
     <StatusIndicator
-      status={online ? 'success' : 'inactive'}
-      label={online ? 'Online' : 'Offline'}
+      status={online ? "success" : "inactive"}
+      label={online ? "Online" : "Offline"}
       {...props}
     />
   );
 }
 
-export function ConnectionStatus({ 
-  connected, 
-  ...props 
-}: { 
-  connected: boolean 
-} & Omit<StatusIndicatorProps, 'status'>) {
+export function ConnectionStatus({
+  connected,
+  ...props
+}: {
+  connected: boolean;
+} & Omit<StatusIndicatorProps, "status">) {
   return (
     <StatusIndicator
-      status={connected ? 'success' : 'error'}
-      label={connected ? 'Connected' : 'Disconnected'}
+      status={connected ? "success" : "error"}
+      label={connected ? "Connected" : "Disconnected"}
       animated={!connected}
       {...props}
     />

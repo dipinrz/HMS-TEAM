@@ -8,7 +8,7 @@ import {
   CardActions,
   CardImage,
 } from "./components/ui/CustomCards";
-import { Box, Typography, Chip, Badge } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import {
   ConnectionStatus,
@@ -153,7 +153,7 @@ const App = () => {
                         width: 32,
                         height: 32,
                         bgcolor: "grey.200",
-                        borderRadius: 1,
+                        borderRadius: 10,
                       }}
                     />
                   )}

@@ -46,7 +46,9 @@ const StyledCard = styled(MUICard)(({ theme }) => ({
 }));
 
 // Enhanced Card with hover animation variants
-const AnimatedCard = styled(MUICard)<{ hoverVariant?: 'lift' | 'glow' | 'scale' | 'rotate' }>(
+const AnimatedCard = styled(MUICard,{
+  shouldForwardProp: (prop) => prop !== 'hoverVariant'
+})<{ hoverVariant?: 'lift' | 'glow' | 'scale' | 'rotate' }>(
   ({ theme, hoverVariant = 'lift' }) => ({
     width: 'fit-content',
     minWidth: '280px',
