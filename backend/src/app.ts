@@ -7,6 +7,7 @@ import patientRoutes from './routes/patient.routes';
 import authRoutes from './routes/auth.routes';
 import adminRoutes from "./routes/admin.routes";
 import doctorRoutes from './routes/doctor.routes'
+import departmentRoutes from "./routes/department.routes";
 
 dotenv.config();
 
@@ -20,10 +21,11 @@ app.use(express.urlencoded({ extended: true }))
 
 
 
-app.use("/api/v1/auth", authRoutes)
-app.use("/api/v1/users", adminRoutes)
-app.use('/api/v1/patients', patientRoutes)
-app.use("/api/v1/doctor", doctorRoutes)
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/users", adminRoutes);
+app.use('/api/v1/patients', patientRoutes);
+app.use("/api/v1/doctor", doctorRoutes);
+app.use('/api/v1/department', departmentRoutes);
 
 
 

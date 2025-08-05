@@ -1,0 +1,130 @@
+import { Request, Response, NextFunction} from "express";
+import { createDepartment, deleteDepartmentById, getAllDepartments, getDepartmentById, getDeptByName, updateDepartment } from "../services/department.service";
+import { ApiError } from "../utils/apiError";
+import { getDoctorById } from "../services/doctor.services";
+
+export const addDepartmentHandler = async (req: Request, res: Response, next: NextFunction) => {
+    
+    try {
+        
+        const { name, description, consultation_fee, head_doctor } = req.body;
+
+        const deptExisting = await getDeptByName(name);
+
+         if (deptExisting) {
+            throw new ApiError("Department already in exists", 401)
+        }
+
+        const  headDoctor = await getDoctorById(head_doctor);
+
+        if (!headDoctor) {
+            throw new ApiError("Head doctor not found", 404);
+        }
+        
+        const departmentData = await createDepartment({
+            name,
+            description,
+            consultation_fee,
+            head_doctor: headDoctor
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Department created successfully",
+            data: {
+                department: departmentData
+            }
+        })
+    } catch (error) {
+        next(error);
+    }
+
+} 
+
+export const fetchAllDepartmentHandler = async (req: Request, res: Response, next: NextFunction) => {
+    
+    try {
+        
+        const departmentData = await getAllDepartments();
+
+        if(!departmentData){
+            throw new ApiError('Department data not found', 404);
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Departments fetched successfully",
+            data: {
+                departments: departmentData
+            }
+        });
+
+    } catch (error) {
+        next(error);
+    }
+
+} 
+
+export const removeDepartmentHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+     try {
+
+        const department_id  = Number(req.params.id)
+
+        if (isNaN(department_id)) {
+            return res.status(400).json({ success: false, message: "Invalid user ID" });
+        }
+
+        const department = await getDepartmentById(department_id);
+        if (!department) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        await deleteDepartmentById(department_id);
+
+        res.status(200).json({
+            success: true,
+            message: "Departments deleted successfully",
+            
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const updateDepartmentHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+
+        const department_id = Number(req.params.id);
+        const { name, description, consultation_fee, head_doctor } = req.body;
+
+        if (isNaN(department_id)) {
+            return res.status(400).json({ success: false, message: "Invalid user ID" });
+        }
+
+        const existingDepartment = await getDepartmentById(department_id);
+        if (!existingDepartment) {
+            return res.status(404).json({ success: false, message: "Department not found" });
+        }
+
+        const departmentData = {
+            name, 
+            description, 
+            consultation_fee, 
+            head_doctor 
+        }
+
+        const updatedDepartment = await updateDepartment(department_id, departmentData);
+
+        res.status(200).json({
+            success: true,
+            message: 'Department updated successfully',
+            data: updatedDepartment
+        })
+
+    } catch(error) {
+        next(error);
+    }
+}
+
