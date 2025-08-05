@@ -5,6 +5,7 @@ import { errorHandler } from "./middlewares/errorHandler";
 import cookieParser from 'cookie-parser'
 import userRouter from './routes/auth.routes'
 import patientRoutes from './routes/patient.routes'
+import doctorRoutes from './routes/doctor.routes'
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use("/api/v1/auth", userRouter)
 app.use("/api/v1/patient", patientRoutes)
+app.use("/api/v1/doctor", doctorRoutes)
 
 
 
