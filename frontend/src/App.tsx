@@ -18,6 +18,7 @@ import {
   type StatusVariant,
 } from "./components/ui/CustomStatus";
 import Navbar from "./components/NavBar";
+import AdminDashboard from "./components/dashboards/AdminDashboard";
 
 const statuses: StatusType[] = [
   "success",
@@ -30,31 +31,40 @@ const statuses: StatusType[] = [
 ];
 const variants: StatusVariant[] = ["dot", "chip", "badge", "icon", "text"];
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <div>
-      <Navbar/>
+      <Navbar />
+      <AdminDashboard/>
+      {/* <Box sx={{ ml:'20px' }}>
+        <Box sx={{  mt: {
+          xs: "130px",
+          md: "90px",
+        }, border: "none" }}>
+            <CustomInput
+              label="Name"
+              width="250px"
+              sx={{ backgroundColor: "#0d6ebeff", borderRadius: "4px" }}
+            />
+          </Box>
+          <Box sx={{ border: "none" }}>
+            <CustomInput
+              label="Name"
+              width="250px"
+              sx={{ backgroundColor: "#d6dfe6ff", borderRadius: "4px" }}
+            />
+          </Box>
 
-      <CustomInput
-        label="Name"
-        width="400px"
-        sx={{ backgroundColor: "#4684b6ff", borderRadius: "8px" }}
-      />
-      <CustomInput
-        label="Name"
-        width="250px"
-        sx={{ backgroundColor: "#f5f5f5", borderRadius: "8px" }}
-      />
+          <CustomButton
+            label="Testing"
+            variant="outlined"
+            onClick={() => {
+              console.log("button clicked..");
+            }}
+          />
+      </Box> */}
 
-      <CustomButton
-        label="Testing"
-        variant="outlined"
-        onClick={() => {
-          console.log("button clicked..");
-        }}
-      />
-
-      <div
+      {/* <div
         style={{
           display: "flex",
           gap: "20px",
@@ -62,7 +72,6 @@ const App = () => {
           padding: "20px",
         }}
       >
-        {/* Basic Card with dynamic width */}
         <Card>
           <CardHeader title="Short Title" />
           <CardContent>
@@ -70,7 +79,6 @@ const App = () => {
           </CardContent>
         </Card>
 
-        {/* Card with longer content */}
         <Card hoverVariant="glow">
           <CardHeader
             title="Much Longer Title That Will Expand The Card"
@@ -100,7 +108,6 @@ const App = () => {
           </CardActions>
         </Card>
 
-        {/* Scale hover variant */}
         <Card hoverVariant="scale">
           <CardImage
             image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgoRAM8VbTHTlFwB9v3BRa0ZlFUioRZH5lqQ&s"
@@ -112,7 +119,6 @@ const App = () => {
           </CardContent>
         </Card>
 
-        {/* Rotate hover variant */}
         <Card hoverVariant="rotate">
           <CardHeader title="Rotate Effect" />
           <CardContent>
@@ -121,8 +127,8 @@ const App = () => {
             </Typography>
           </CardContent>
         </Card>
-      </div>
-      <Box sx={{ p: 3, display: "flex", flexDirection: "column", gap: 3 }}>
+      </div> */}
+      {/* <Box sx={{ p: 3, display: "flex", flexDirection: "column", gap: 3 }}>
         <Typography variant="h5">Status Indicator Examples</Typography>
 
         {variants.map((variant) => (
@@ -192,10 +198,8 @@ const App = () => {
             />
           </Box>
         </Box>
-      </Box>
+      </Box> */}
     </div>
-
-
   );
 };
 
