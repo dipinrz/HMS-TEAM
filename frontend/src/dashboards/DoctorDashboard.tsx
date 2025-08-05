@@ -127,7 +127,7 @@ const DoctorDashboard= () => {
     }
   };
   return (
-    <Box  sx={{ mt: 10, px: 4 }}>
+    <Box  sx={{ mt: 10 }}>
       <Navbar />
       <Box mb={4} display={"flex"} justifyContent="space-between" alignItems={"center"}>
         <Box>
