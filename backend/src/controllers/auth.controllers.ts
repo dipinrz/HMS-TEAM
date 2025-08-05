@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createUser, findUserByEmail, findUserById, updateUser } from "../services/user.services";
+import { createUser, getUserByEmail, getUserById, updateUser } from "../services/user.services";
 import { ApiError } from "../utils/apiError";
 import { UserRole } from "../entities/user.entity";
 import bcrypt from 'bcryptjs'
@@ -17,7 +17,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 
         const { role } = req.params
 
-        const userExisting = await findUserByEmail(email)
+        const userExisting = await getUserByEmail(email)
 
         if (userExisting) {
             throw new ApiError("Email already in use", 401)
@@ -53,7 +53,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     try {
         const { email, password } = req.body
 
-        const user = await findUserByEmail(email)
+        const user = await getUserByEmail(email)
 
         if (!user) {
             throw new ApiError("Email doesn't exist", 401)
@@ -138,7 +138,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
 
         const { email } = req.body
 
-        const user = await findUserByEmail(email)
+        const user = await getUserByEmail(email)
 
         if (!user) {
             throw new ApiError("User doesn't exist", 404)
@@ -184,7 +184,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
             throw new ApiError("Invalid or expired invite token", 401);
         }
 
-        const user = await findUserById(decoded.user_id)
+        const user = await getUserById(decoded.user_id)
 
         if (!user) {
             throw new ApiError("User not found", 400)
