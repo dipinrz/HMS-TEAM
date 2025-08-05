@@ -7,15 +7,15 @@ import { generateAccessToken, generatePassordResetToken, generateRefreshToken, v
 import { generateResetPasswordEmail } from "../helper/emailTemplates/resetPassword";
 import { sendEmail } from "../utils/email";
 import jwt from 'jsonwebtoken'
+import { createPatient } from "../services/patient.services";
 
 
-export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
+export const registerPatient = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
 
         const { first_name, last_name, email, password } = req.body
 
-        const { role } = req.params
 
         const userExisting = await getUserByEmail(email)
 
@@ -30,14 +30,20 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             last_name,
             email,
             password: hashedpassword,
-            role: role as UserRole
+            role: UserRole.PATIENT
+        })
+
+
+
+        await createPatient({
+            user
         })
 
         delete user.password
 
         res.status(201).json({
             success: true,
-            message: `${role} registered successfully`,
+            message: `Patient registered successfully`,
             user,
         });
 
