@@ -6,24 +6,38 @@ const doctorRepo = AppDataSource.getRepository(Doctor)
 const appointmentRepo = AppDataSource.getRepository(Appointment)
 
 
-export const createDoctor = async (doctor_id: number, doctor: Partial<Doctor>) => {
+export const createDoctor = async (doctor: Partial<Doctor>) => {
 
     const newDoctor = doctorRepo.create(doctor)
 
     return await doctorRepo.save(newDoctor)
 }
 
-export const getDoctorById = async (doctor_id: number) => {
-    return await doctorRepo.findOneBy({ doctor_id })
+export const getDoctorByUserId = async (userId: number) => {
+    return await doctorRepo.findOne({
+        where: {
+            user: { user_id: userId }
+        },
+        relations: ['user']
+    })
+}
+
+export const getDoctorById = async (doctorId: number) => {
+    return await doctorRepo.findOne({
+        where: {
+            doctor_id: doctorId
+        },
+        relations: ['user']
+    })
 }
 
 
-export const getDoctorAppointments = async (doctor_id: number) => {
+export const getDoctorAppointments = async (userId: number) => {
 
     return await appointmentRepo.find({
         where: {
-            doctor: { user_id: doctor_id }
+            doctor: { user_id: userId }
         },
-        relations:['patient']
+        relations: ['patient']
     })
 }
