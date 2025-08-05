@@ -1,4 +1,4 @@
-import React from "react";
+
 import CustomButton from "./components/ui/CustomButton";
 import CustomInput from "./components/ui/CustomInput";
 import {
@@ -6,21 +6,40 @@ import {
   CardHeader,
   CardContent,
   CardActions,
-  CardImage,
+  
 } from "./components/ui/CustomCards";
 import { Typography } from "@mui/material";
+import { useState } from "react";
+import CustomModal from "./components/ui/CustomModal";
+
 
 const App = () => {
+  const [open,setOpen]=useState(false);
   return (
     <div>
+      <CustomButton label="Modal testing" variant="outlined" onClick={()=>setOpen(true)}/>
+
+      <CustomModal 
+      open={open} 
+      onClose={()=>setOpen(false)}
+      title="Modal Titile" 
+      content={<Typography variant="h6">Modal clicked</Typography>}
+      actions={
+      <>
+        <CustomButton label="Delete" onClick={() => setOpen(false)} variant="outlined" color="error"/>
+        <CustomButton label="Save" onClick={() => setOpen(false)} variant="outlined" color="success"/>
+      </>
+      }
+      />
+
       <CustomInput
         label="Name"
-        width="400px"
+        
         sx={{ backgroundColor: "#4684b6ff", borderRadius: "8px" }}
       />
       <CustomInput
         label="Name"
-        width="250px"
+        
         sx={{ backgroundColor: "#f5f5f5", borderRadius: "8px" }}
       />
 
