@@ -6,7 +6,6 @@ import { Patient } from "../entities/patient.entity";
 
 const patientRepo = AppDataSource.getRepository(Patient)
 const appointmentRepo = AppDataSource.getRepository(Appointment)
-const billRepo = AppDataSource.getRepository(Bill)
 
 
 export const getPatientById = async (patientId: number) => {
@@ -14,17 +13,6 @@ export const getPatientById = async (patientId: number) => {
     return await patientRepo.findOne({
         where: {
             patient_id: patientId
-        },
-        relations: ['user']
-    })
-
-}
-
-export const getPatientByUserId = async (userId: number) => {
-
-    return await patientRepo.findOne({
-        where: {
-            user: {user_id:userId}
         },
         relations: ['user']
     })
@@ -53,11 +41,11 @@ export const updatePatient = async (PatientId: number, updatedPatient: Partial<P
 
 }
 
-export const getPatientAppointments = async (userId: number) => {
+export const getPatientAppointments = async (patientId: number) => {
 
     return await appointmentRepo.find({
         where: {
-            patient: { user_id: userId }
+            patient: { user_id: patientId }
         },
         relations: ['doctor', 'department'],
         order: {
