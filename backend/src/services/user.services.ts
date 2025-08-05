@@ -1,15 +1,16 @@
+import { instanceToPlain } from "class-transformer";
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entities/user.entity";
 
 const userRepo = AppDataSource.getRepository(User)
 
 
-export const findUserByEmail = async (email: string) => {
+export const getUserByEmail = async (email: string) => {
 
     return await userRepo.findOneBy({ email: email })
 }
 
-export const findUserById = async (id: number) => {
+export const getUserById = async (id: number) => {
 
     return await userRepo.findOneBy({ user_id: id })
 }
@@ -30,3 +31,22 @@ export const updateUser = async (user_id: number, updatedUser: Partial<User>) =>
         updatedUser
     )
 }
+
+export const updateUserById = async (id: number, data: Partial<User>) => {
+
+    await userRepo.update({ user_id: id }, data);
+
+    return await userRepo.findOneBy({ user_id: id });
+};
+
+export const findAllUser = async () => {
+
+    const allUsers = await userRepo.find();
+
+    return instanceToPlain(allUsers)
+}
+
+export const deleteUserById = async (id: number) => {
+
+    return await userRepo.delete({ user_id: id });
+};

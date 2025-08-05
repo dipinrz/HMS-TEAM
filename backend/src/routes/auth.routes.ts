@@ -1,14 +1,14 @@
 
 import express from 'express'
-import { forgotPassword, loginUser, refreshToken, registerUser, resetPassword, } from '../controllers/auth.controllers'
+import { forgotPassword, loginUser, refreshToken, registerPatient, resetPassword, } from '../controllers/auth.controllers'
 import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from '../validations/auth.validations'
 import { validateBody } from '../middlewares/body.validator.middleware'
 
 const router = express.Router()
 
 
-router.route("/register/:role")
-    .post(validateBody(registerSchema), registerUser)
+router.route("/register/patient")
+    .post(validateBody(registerSchema), registerPatient)
 
 router.route("/login")
     .post(validateBody(loginSchema), loginUser)

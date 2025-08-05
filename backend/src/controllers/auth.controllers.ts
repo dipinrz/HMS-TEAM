@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createUser, findUserByEmail, findUserById, updateUser } from "../services/user.services";
+import { createUser, getUserByEmail, getUserById, updateUser } from "../services/user.services";
 import { ApiError } from "../utils/apiError";
 import { UserRole } from "../entities/user.entity";
 import bcrypt from 'bcryptjs'
@@ -7,17 +7,17 @@ import { generateAccessToken, generatePassordResetToken, generateRefreshToken, v
 import { generateResetPasswordEmail } from "../helper/emailTemplates/resetPassword";
 import { sendEmail } from "../utils/email";
 import jwt from 'jsonwebtoken'
+import { createPatient } from "../services/patient.services";
 
 
-export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
+export const registerPatient = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
 
         const { first_name, last_name, email, password } = req.body
 
-        const { role } = req.params
 
-        const userExisting = await findUserByEmail(email)
+        const userExisting = await getUserByEmail(email)
 
         if (userExisting) {
             throw new ApiError("Email already in use", 401)
@@ -30,14 +30,20 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             last_name,
             email,
             password: hashedpassword,
-            role: role as UserRole
+            role: UserRole.PATIENT
+        })
+
+
+
+        await createPatient({
+            user
         })
 
         delete user.password
 
         res.status(201).json({
             success: true,
-            message: `${role} registered successfully`,
+            message: `Patient registered successfully`,
             user,
         });
 
@@ -53,7 +59,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     try {
         const { email, password } = req.body
 
-        const user = await findUserByEmail(email)
+        const user = await getUserByEmail(email)
 
         if (!user) {
             throw new ApiError("Email doesn't exist", 401)
@@ -65,7 +71,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
             throw new ApiError("Invalid credentials", 401)
         }
         const payload = {
-            user_id: user.user_id,
+            userId: user.user_id,
             role: user.role
         }
 
@@ -110,11 +116,11 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
         const decoded = verifyRefreshToken(token)
 
 
-        if (!decoded || typeof decoded === "string" || !decoded.user_id || !decoded.role) {
+        if (!decoded || typeof decoded === "string" || !decoded.userId || !decoded.role) {
             throw new ApiError("Invalid or expired invite token", 401);
         }
         const payload = {
-            user_id: decoded.user_id,
+            userId: decoded.userId,
             role: decoded.role
         }
 
@@ -138,7 +144,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
 
         const { email } = req.body
 
-        const user = await findUserByEmail(email)
+        const user = await getUserByEmail(email)
 
         if (!user) {
             throw new ApiError("User doesn't exist", 404)
@@ -180,11 +186,11 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
 
         const decoded = jwt.decode(token)
 
-        if (!decoded || typeof decoded === "string" || !decoded.user_id) {
+        if (!decoded || typeof decoded === "string" || !decoded.userId) {
             throw new ApiError("Invalid or expired invite token", 401);
         }
 
-        const user = await findUserById(decoded.user_id)
+        const user = await getUserById(decoded.userId)
 
         if (!user) {
             throw new ApiError("User not found", 400)
