@@ -18,6 +18,6 @@ export class MedicalReport {
   patient: User;
 
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   notes: string;
 }
