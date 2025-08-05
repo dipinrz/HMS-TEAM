@@ -1,3 +1,4 @@
+import { Between } from "typeorm";
 import { AppDataSource } from "../config/data-source";
 import { Appointment } from "../entities/appointment.entity";
 import { Doctor } from "../entities/doctor.entity";
@@ -25,13 +26,22 @@ export const getDoctorById = async (doctorId: number) => {
 }
 
 
-export const getDoctorAppointments = async (doctorId: number) => {
+export const getDoctorAppointments = async (doctorId: number, dateRange?: { from: string; to: string }) => {
 
+    const where: any = {
+        doctor: { user_id: doctorId },
+    }
+
+    if (dateRange) {
+        where.appointment_date = Between(dateRange.from, dateRange.to)
+
+    }
     return await appointmentRepo.find({
-        where: {
-            doctor: { user_id: doctorId }
-        },
-        relations: ['patient']
+        where,
+        relations: ['patient'],
+        order: {
+            appointment_date: 'DESC'
+        }
     })
 }
 

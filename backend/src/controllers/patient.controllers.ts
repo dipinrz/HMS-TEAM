@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createPatient, getPatientById, getPatients, updatePatient } from "../services/patient.services";
+import { createPatient, getPatientAppointments, getPatientById, getPatients, updatePatient } from "../services/patient.services";
 import { updateUser } from "../services/user.services";
 
 
@@ -92,3 +92,23 @@ export const updatePatientHandler = async (req: Request, res: Response, next: Ne
         next(error)
     }
 }
+
+export const getAppointmentsHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+
+        const user = (req as any).user
+
+        const appointments = await getPatientAppointments(user.userId)
+
+        res.status(200).json({
+            success: true,
+            message: "Appointments fetched successfully",
+            appointments
+        })
+
+    } catch (error) {        
+        next(error)
+    }
+}
+ 
