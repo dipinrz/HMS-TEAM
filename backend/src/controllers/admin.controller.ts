@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createUser, deleteUserById, findAllUser, findUserByEmail, findUserById, updateUserById, } from "../services/user.services";
+import { createUser, deleteUserById, findAllUser, getUserByEmail, getUserById, updateUserById, } from "../services/user.services";
 import { UserRole } from "../entities/user.entity";
 import { ApiError } from "../utils/apiError";
 import bcrypt from "bcryptjs";
@@ -72,7 +72,7 @@ export const updateUserDetails = async (req: Request, res: Response, next: NextF
             return res.status(400).json({ success: false, message: "Invalid user ID" });
         }
 
-        const existingUser = await findUserById(userId);
+        const existingUser = await getUserById(userId);
         if (!existingUser) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
@@ -163,7 +163,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
             return res.status(400).json({ success: false, message: "Invalid user ID" });
         }
 
-        const user = await findUserById(userId);
+        const user = await getUserById(userId);
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
@@ -194,7 +194,7 @@ export const registerDoctor = async (req: Request, res: Response, next: NextFunc
             years_of_experience
         } = req.body;
 
-        const existingUser = await findUserByEmail(email);
+        const existingUser = await getUserByEmail(email);
         if (existingUser) {
             throw new ApiError('Email already in use', 409);
         }

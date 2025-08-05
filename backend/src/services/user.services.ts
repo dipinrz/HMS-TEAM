@@ -42,7 +42,7 @@ export const updateUserById = async (id: number, data: Partial<User>) => {
 export const findAllUser = async () => {
 
     const allUsers = await userRepo.find();
-    
+
     return instanceToPlain(allUsers)
 }
 
