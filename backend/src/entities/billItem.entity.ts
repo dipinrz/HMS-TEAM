@@ -8,6 +8,11 @@ import {
 import { Bill } from './bill.entity';
 import { Medication } from './medication.entity';
 
+export enum FeeType{
+  CONSULTATION_FEE = 'consultation fee',
+  MEDICATION_FEE = 'medication fee'
+}
+
 @Entity()
 export class BillItem {
   @PrimaryGeneratedColumn()
@@ -21,6 +26,13 @@ export class BillItem {
   @JoinColumn({ name: 'medication_id' })
   medication: Medication;
 
+  @Column({
+    type: 'enum',
+    enum: FeeType,
+    default: FeeType.CONSULTATION_FEE,
+  })
+  fee_type: FeeType;
+
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  subtotal: number;
+  amount: number;
 }
