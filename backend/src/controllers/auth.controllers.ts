@@ -8,6 +8,7 @@ import { generateResetPasswordEmail } from "../helper/emailTemplates/resetPasswo
 import { sendEmail } from "../utils/email";
 import jwt from 'jsonwebtoken'
 import { createPatient } from "../services/patient.services";
+import { createMedicalReport } from "../services/medicalReport.services";
 
 
 export const registerPatient = async (req: Request, res: Response, next: NextFunction) => {
@@ -38,6 +39,8 @@ export const registerPatient = async (req: Request, res: Response, next: NextFun
         await createPatient({
             user
         })
+
+        await createMedicalReport({ patient: user })
 
         delete user.password
 
