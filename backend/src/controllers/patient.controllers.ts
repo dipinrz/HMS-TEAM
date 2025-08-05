@@ -43,7 +43,7 @@ export const updatePatientHandler = async (req: Request, res: Response, next: Ne
 
     try {
 
-        const userId = (req as any).user.user_id
+        const userId = (req as any).user.userId
 
         const {
             first_name,
