@@ -13,14 +13,7 @@ export const createDoctor = async (doctor: Partial<Doctor>) => {
     return await doctorRepo.save(newDoctor)
 }
 
-export const getDoctorByUserId = async (userId: number) => {
-    return await doctorRepo.findOne({
-        where: {
-            user: { user_id: userId }
-        },
-        relations: ['user']
-    })
-}
+
 
 export const getDoctorById = async (doctorId: number) => {
     return await doctorRepo.findOne({
@@ -32,11 +25,11 @@ export const getDoctorById = async (doctorId: number) => {
 }
 
 
-export const getDoctorAppointments = async (userId: number) => {
+export const getDoctorAppointments = async (doctorId: number) => {
 
     return await appointmentRepo.find({
         where: {
-            doctor: { user_id: userId }
+            doctor: { user_id: doctorId }
         },
         relations: ['patient']
     })
