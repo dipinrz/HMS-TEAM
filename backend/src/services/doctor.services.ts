@@ -33,4 +33,3 @@ export const getDoctorAppointments = async (doctorId: number) => {
         },
         relations: ['patient']
     })
-}
