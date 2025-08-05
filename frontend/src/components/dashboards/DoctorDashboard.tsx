@@ -1,8 +1,8 @@
 import { Avatar, Box, Chip, Grid, Typography, useTheme } from "@mui/material";
-import Navbar from "../components/NavBar";
-import { Card, CardContent, CardHeader } from "../components/ui/CustomCards";
+import Navbar from "../NavBar";
+import { Card, CardContent, CardHeader } from "../ui/CustomCards";
 import { AccessTime, CalendarToday, Description, ErrorOutline, Group} from "@mui/icons-material";
-import CustomButton from "../components/ui/CustomButton";
+import CustomButton from "../ui/CustomButton";
 import { Stethoscope } from "lucide-react";
 
 type ThemeColorKey = 
