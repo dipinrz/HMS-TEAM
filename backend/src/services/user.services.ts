@@ -5,12 +5,12 @@ import { User } from "../entities/user.entity";
 const userRepo = AppDataSource.getRepository(User)
 
 
-export const findUserByEmail = async (email: string) => {
+export const getUserByEmail = async (email: string) => {
 
     return await userRepo.findOneBy({ email: email })
 }
 
-export const findUserById = async (id: number) => {
+export const getUserById = async (id: number) => {
 
     return await userRepo.findOneBy({ user_id: id })
 }

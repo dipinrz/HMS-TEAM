@@ -33,11 +33,3 @@ export const getDoctorAppointments = async (doctorId: number) => {
         },
         relations: ['patient']
     })
-}
-
-export const updateDoctorById = async (id: number, data: Partial<Doctor>) => {
-
-    await doctorRepo.update({ doctor_id: id }, data);
-
-    return await doctorRepo.findOneBy({ doctor_id: id });
-};

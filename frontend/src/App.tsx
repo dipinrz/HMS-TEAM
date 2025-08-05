@@ -1,4 +1,4 @@
-import React from "react";
+
 import CustomButton from "./components/ui/CustomButton";
 import CustomInput from "./components/ui/CustomInput";
 import {
@@ -6,8 +6,11 @@ import {
   CardHeader,
   CardContent,
   CardActions,
-  CardImage,
+  
 } from "./components/ui/CustomCards";
+
+
+
 import { Box, Typography } from "@mui/material";
 
 import {
@@ -30,19 +33,21 @@ const statuses: StatusType[] = [
 ];
 const variants: StatusVariant[] = ["dot", "chip", "badge", "icon", "text"];
 
+
 const App = () => {
+  const [open,setOpen]=useState(false);
   return (
     <div>
-      <Navbar/>
+
 
       <CustomInput
         label="Name"
-        width="400px"
+        
         sx={{ backgroundColor: "#4684b6ff", borderRadius: "8px" }}
       />
       <CustomInput
         label="Name"
-        width="250px"
+        
         sx={{ backgroundColor: "#f5f5f5", borderRadius: "8px" }}
       />
 
