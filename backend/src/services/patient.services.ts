@@ -20,6 +20,17 @@ export const getPatientById = async (patientId: number) => {
 
 }
 
+export const getPatientByUserId = async (userId: number) => {
+
+    return await patientRepo.findOne({
+        where: {
+            user: {user_id:userId}
+        },
+        relations: ['user']
+    })
+
+}
+
 export const createPatient = async (patient: Partial<Patient>) => {
 
     const newPatient = patientRepo.create(patient)
