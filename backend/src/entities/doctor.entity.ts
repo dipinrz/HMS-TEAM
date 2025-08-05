@@ -35,5 +35,5 @@ export class Doctor {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'department_id' })
-  department: Department;
+  department: Department | null;
 }
