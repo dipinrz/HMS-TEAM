@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Department } from './department.entity';
+import { MedicalReport } from './medicalReport.entity';
 
 export enum AppointmentStatus {
   SCHEDULED = 'scheduled',
@@ -33,6 +34,10 @@ export class Appointment {
 
   @Column({ type: 'timestamp' })
   appointment_date: Date;
+
+  @ManyToOne(() => MedicalReport, { nullable: false, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'medical_report_id' })
+  medical_report_id: MedicalReport
 
   @Column({
     type: 'enum',
