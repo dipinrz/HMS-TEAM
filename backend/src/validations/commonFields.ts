@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { Gender } from "../entities/user.entity";
 
 export const email = Joi.string()
     .email()
@@ -18,3 +19,17 @@ export const password = Joi.string()
         "string.min": "Password must be at least 6 characters",
         "any.required": "Password cannot be null",
     })
+
+
+export const userDetailsSchema = {
+    first_name: Joi.string().min(2),
+    last_name: Joi.string().min(1),
+    phone_number: Joi.string().pattern(/^[0-9]{10}$/),
+    address: Joi.string(),
+    date_of_birth: Joi.date(),
+    gender: Joi.string()
+        .valid(...Object.values(Gender))
+        .messages({
+            "any.only": `Gender must be one of [${Object.values(Gender).join(", ")}]`,
+        }),
+}
