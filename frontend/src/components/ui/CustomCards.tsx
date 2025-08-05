@@ -52,7 +52,7 @@ const AnimatedCard = styled(MUICard,{
   ({ theme, hoverVariant = 'lift' }) => ({
     width: 'fit-content',
     minWidth: '280px',
-    maxWidth: '400px',
+    maxWidth: '100%',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     cursor: 'pointer',
     position: 'relative',
