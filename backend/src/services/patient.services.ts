@@ -6,12 +6,16 @@ import { Patient } from "../entities/patient.entity";
 
 const patientRepo = AppDataSource.getRepository(Patient)
 const appointmentRepo = AppDataSource.getRepository(Appointment)
-const billRepo = AppDataSource.getRepository(Bill)
 
 
-export const getPatientById = async (patient_id: number) => {
+export const getPatientById = async (patientId: number) => {
 
-    return await patientRepo.findOneBy({ patient_id })
+    return await patientRepo.findOne({
+        where: {
+            patient_id: patientId
+        },
+        relations: ['user']
+    })
 
 }
 
@@ -22,25 +26,37 @@ export const createPatient = async (patient: Partial<Patient>) => {
     return await patientRepo.save(newPatient)
 }
 
-export const updatePatient = async (patient_id: number, updatedPatient: Partial<Patient>) => {
+export const updatePatient = async (PatientId: number, updatedPatient: Partial<Patient>) => {
     await patientRepo.update(
-        { patient_id },
+        { patient_id: PatientId },
         updatedPatient
     )
 
-    return patientRepo.findOneBy({ patient_id })
+    return patientRepo.findOne({
+        where: {
+            patient_id: PatientId
+        },
+        relations: ['user']
+    })
 
 }
 
-export const getPatientAppointments = async (patient_id: number) => {
+export const getPatientAppointments = async (patientId: number) => {
 
     return await appointmentRepo.find({
         where: {
-            patient: { user_id: patient_id }
+            patient: { user_id: patientId }
         },
         relations: ['doctor', 'department'],
         order: {
             appointment_date: 'DESC'
         }
     })
+}
+
+// ----------- GET ALL PATIENTS -----------
+
+export const getPatients = async () => {
+    return await patientRepo.find({})
+
 }
