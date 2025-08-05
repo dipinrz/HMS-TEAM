@@ -71,7 +71,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
             throw new ApiError("Invalid credentials", 401)
         }
         const payload = {
-            user_id: user.user_id,
+            userId: user.user_id,
             role: user.role
         }
 
@@ -116,11 +116,11 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
         const decoded = verifyRefreshToken(token)
 
 
-        if (!decoded || typeof decoded === "string" || !decoded.user_id || !decoded.role) {
+        if (!decoded || typeof decoded === "string" || !decoded.userId || !decoded.role) {
             throw new ApiError("Invalid or expired invite token", 401);
         }
         const payload = {
-            user_id: decoded.user_id,
+            userId: decoded.userId,
             role: decoded.role
         }
 
@@ -186,11 +186,11 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
 
         const decoded = jwt.decode(token)
 
-        if (!decoded || typeof decoded === "string" || !decoded.user_id) {
+        if (!decoded || typeof decoded === "string" || !decoded.userId) {
             throw new ApiError("Invalid or expired invite token", 401);
         }
 
-        const user = await getUserById(decoded.user_id)
+        const user = await getUserById(decoded.userId)
 
         if (!user) {
             throw new ApiError("User not found", 400)
