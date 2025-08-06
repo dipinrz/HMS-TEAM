@@ -16,7 +16,7 @@ export class Prescription {
 
     @ManyToOne(() => Appointment, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'appointment_id' })
-    appointment_id: Appointment;
+    appointment: Appointment;
 
     @Column({ type: 'text' })
     diagnosis: string;
