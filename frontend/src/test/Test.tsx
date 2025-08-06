@@ -1,7 +1,8 @@
-import AdminDashboard from "../components/dashboards/AdminDashboard";
-import DoctorDashboard from "../components/dashboards/DoctorDashboard";
-import PatientDashboard from "../components/dashboards/PatientDashboad";
+
 import Navbar from "../components/NavBar";
+import AdminDashboard from "../pages/dashboards/AdminDashboard";
+import DoctorDashboard from "../pages/dashboards/DoctorDashboard";
+import PatientDashboard from "../pages/dashboards/PatientDashboad";
 
 const Test = () => {
   return (

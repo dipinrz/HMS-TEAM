@@ -15,8 +15,8 @@ import {
   Badge,
   Paper
 } from "@mui/material";
-import Navbar from "../NavBar";
-import { Card, CardContent, CardHeader } from "../ui/CustomCards";
+import Navbar from "../../components/NavBar";
+import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
 import { 
   CalendarToday, 
   Description, 
@@ -34,7 +34,7 @@ import {
   VideoCall,
   Message
 } from "@mui/icons-material";
-import CustomButton from "../ui/CustomButton";
+import CustomButton from "../../components/ui/CustomButton";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
 import { useState } from "react";
@@ -212,7 +212,7 @@ const PatientDashboard = () => {
       {/* Stats */}
       <Grid container spacing={3}>
         {statsData.map((stat, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
+          <Grid size={{xs:12,sm:6,md:3}} key={index}>
             <Card elevation={2} sx={{ height: "100%" }}>
               <CardContent>
                 <Box display="flex" justifyContent="space-between">
@@ -244,7 +244,7 @@ const PatientDashboard = () => {
       {/* Main Content */}
       <Grid container spacing={3} sx={{ mt: 1 }}>
         {/* Left Column */}
-        <Grid item xs={12} lg={8}>
+        <Grid size={{xs:12,lg:8}}>
           <Card sx={{ height: "100%" }}>
             <CardHeader title="Appointments" />
             <CardContent>
@@ -283,7 +283,7 @@ const PatientDashboard = () => {
         </Grid>
 
         {/* Right Column */}
-        <Grid item xs={12} lg={4}>
+        <Grid size={{xs:12,lg:4}} >
           <Box display="flex" flexDirection="column" gap={3}>
             {/* Quick Actions */}
             <Card>
@@ -311,7 +311,7 @@ const PatientDashboard = () => {
         </Grid>
 
         {/* Health Metrics */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <Card sx={{ height: "100%" }}>
             <CardHeader title="Health Metrics" />
             <CardContent>
@@ -335,7 +335,7 @@ const PatientDashboard = () => {
         </Grid>
 
         {/* Medications */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{xs:12,md:6}}>
           <Card sx={{ height: "100%" }}>
             <CardHeader title="Current Medications" />
             <CardContent>
