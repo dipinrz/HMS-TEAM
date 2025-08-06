@@ -1,7 +1,6 @@
 import express from 'express';
 import { addDepartmentHandler, fetchAllDepartmentHandler, removeDepartmentHandler, updateDepartmentHandler } from '../controllers/department.controller';
-import { authorize } from '../middlewares/auth.middlware';
-import { authenticate } from '../middlewares/auth.middleware';
+import { authenticate, authorize } from '../middlewares/auth.middleware';
 import { validateBody } from '../middlewares/body.validator.middleware';
 import { departmentSchema, updateDepartmentSchema } from '../validations/department.validations';
 
