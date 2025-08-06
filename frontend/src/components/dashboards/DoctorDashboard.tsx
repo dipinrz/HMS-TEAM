@@ -1,4 +1,4 @@
-import { Avatar, Box, Chip, Grid, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Chip, Divider, Grid, Typography, useTheme } from "@mui/material";
 import Navbar from "../NavBar";
 import { Card, CardContent, CardHeader } from "../ui/CustomCards";
 import { AccessTime, CalendarToday, Description, ErrorOutline, Group } from "@mui/icons-material";
@@ -32,6 +32,19 @@ interface Appointment {
   duration: string;
   condition: string;
   urgency: string;
+}
+interface Patient {
+  id: number;
+  name: string;
+  age: number;
+  lastVisit: string;
+  condition: string;
+  status: string;
+  vitals: {
+    bp: string;
+    hr: string;
+    temp: string;
+  };
 }
 const statsData: TodayStats[] = [
   {
@@ -116,7 +129,35 @@ const todayAppointments: Appointment[] = [
     urgency: 'normal'
   }
 ];
-
+const recentPatients: Patient[] = [
+  {
+    id: 1,
+    name: 'John Smith',
+    age: 45,
+    lastVisit: '2 days ago',
+    condition: 'Hypertension',
+    status: 'stable',
+    vitals: { bp: '120/80', hr: '72 bpm', temp: '98.6°F' }
+  },
+  {
+    id: 2,
+    name: 'Emily Davis',
+    age: 32,
+    lastVisit: '1 week ago',
+    condition: 'Type 2 Diabetes',
+    status: 'monitoring',
+    vitals: { bp: '118/75', hr: '68 bpm', temp: '98.4°F' }
+  },
+  {
+    id: 3,
+    name: 'Robert Johnson',
+    age: 58,
+    lastVisit: '3 days ago',
+    condition: 'Post-surgery',
+    status: 'recovering',
+    vitals: { bp: '125/85', hr: '75 bpm', temp: '99.1°F' }
+  }
+];
 const DoctorDashboard = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const theme = useTheme();
@@ -125,6 +166,12 @@ const DoctorDashboard = () => {
       case 'completed':
         return 'success';
       case 'upcoming':
+        return 'info';
+      case 'stable':
+        return 'success';
+      case 'monitoring':
+        return 'warning';
+      case 'recovering':
         return 'info';
       default:
         return 'default';
@@ -208,7 +255,7 @@ const DoctorDashboard = () => {
                     </Grid>
                     <Grid display="flex" alignItems="center" gap={1}>
                       {appt.urgency === 'high' && <ErrorOutline color="error" />}
-                      <Chip label={appt.status} color={getStatusChipColor(appt.status)} />
+                      <Chip label={appt.status} size="small" color={getStatusChipColor(appt.status)} />
                       {appt.status === 'upcoming' && (
                         <CustomButton variant="contained" size="small" label="Start"></CustomButton>
                       )}
@@ -232,16 +279,53 @@ const DoctorDashboard = () => {
                 />
               </LocalizationProvider>
               <Box mt={2} display="flex" flexDirection="column" gap={1}>
-                <CustomButton variant="outlined" label="View Full Schedule" startIcon={<CalendarToday />}></CustomButton>
-                <CustomButton variant="outlined" label="Set Availability" startIcon={<AccessTime />}></CustomButton>
+                <CustomButton variant="outlined" label="View Full Schedule" sx={{
+                backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
+                border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
+                }} startIcon={<CalendarToday />}></CustomButton>
+                <CustomButton variant="outlined" label="Set Availability" sx={{
+                backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
+                border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
+                }}startIcon={<AccessTime />}></CustomButton>
               </Box>
             </CardContent>
           </Card>
         </Grid>
-
-
       </Grid>
-    </Box>
+      <Box mt={4}>
+        <Card sx={{width:"100%"}}>
+          <CardHeader title="Recent Patients" subheader="Patients you have recently treated"></CardHeader>
+          <Grid container spacing={5} padding={2}>
+                {recentPatients.map((patient)=>(
+                  <Grid size={{xs:12,md:4}} key={patient.id}>
+                    <Card variant="outlined" sx={{width:"100%"}}>
+                      <CardContent>
+                        <Box display="flex" gap={2} mb={2} alignItems="center">
+                          <Avatar>{patient.name.split(' ').map(n=>n[0]).join('')}</Avatar>
+                          <Box>
+                            <Typography fontWeight={600}>{patient.name}</Typography>
+                            <Typography variant="body2" color="textSecondary">Age {patient.age} • {patient.lastVisit}</Typography>
+                          </Box>
+                        </Box>
+                        <Divider/>
+                        <Box mt={2} mb={2}>
+                          <Box display="flex" justifyContent="space-between"> 
+                            <Typography variant="body2">Condition: </Typography>
+                            <Typography><strong>{patient.condition}</strong></Typography>
+                          </Box>
+                          <Box display="flex" justifyContent="space-between"> 
+                            <Typography variant="body2">Status:  </Typography>
+                            <Typography color={getStatusChipColor(patient.status)}><strong>{patient.status}</strong></Typography>
+                          </Box>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+          </Grid>
+        </Card>
+      </Box>
+    </Box> 
   );
 };
 
