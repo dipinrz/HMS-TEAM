@@ -9,6 +9,7 @@ import adminRoutes from "./routes/admin.routes";
 import doctorRoutes from './routes/doctor.routes'
 import departmentRoutes from "./routes/department.routes";
 import prescriptionRoutes from "./routes/prescription.routes";
+import appointmentRoutes from "./routes/appointment.routes";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api/v1/patients', patientRoutes);
 app.use("/api/v1/doctor", doctorRoutes);
 app.use('/api/v1/department', departmentRoutes);
 app.use('/api/v1/prescription', prescriptionRoutes);
+app.use('/api/v1/appointment', appointmentRoutes);
 
 
 
