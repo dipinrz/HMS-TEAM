@@ -39,3 +39,14 @@ export const appointmentSchema = Joi.object({
         'string.base': 'Notes must be a string',
     }),
 });
+
+export const appointmentQuerySchema = Joi.object({
+    status: Joi.string()
+        .valid('scheduled', 'completed', 'cancelled')
+        .insensitive()
+        .optional()
+        .messages({
+            'any.only': 'Invalid status. Allowed: scheduled, completed, cancelled',
+            'string.base': 'Status must be a string',
+        }),
+});

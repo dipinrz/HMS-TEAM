@@ -32,14 +32,6 @@ export const getBillsByPatientId = async (patientId: number) => {
     })
 }
 
-export const getBillByAppointmentId = async (appointmentId: number) => {
-    return await billRepo.findOne({
-        where: {
-            appointment: { appointment_id: appointmentId }
-        }
-    })
-}
-
 export const updateBillById = async (billId: number, updatedData: Partial<Bill>) => {
 
     console.log(updatedData);
@@ -59,4 +51,18 @@ export const getAllBills = async () => {
 
 
     })
+}
+
+export const getBillByAppointmentId = async(appointmentId: number) => {
+    return await billRepo.find({
+        where:{
+            appointment: {appointment_id: appointmentId }
+        },
+        relations: ['appointment'],
+    })
+}
+
+export const deleteBillById = async(billId: number) => {
+    
+    return await billRepo.delete({ bill_id: billId });
 }

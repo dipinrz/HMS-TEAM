@@ -69,7 +69,7 @@ export const removeDepartmentHandler = async (req: Request, res: Response, next:
 
      try {
 
-        const department_id  = Number(req.params.id)
+        const department_id  = Number(req.params.departmentId)
 
         if (isNaN(department_id)) {
             return res.status(400).json({ success: false, message: "Invalid user ID" });
@@ -96,7 +96,7 @@ export const updateDepartmentHandler = async (req: Request, res: Response, next:
 
     try {
 
-        const department_id = Number(req.params.id);
+        const department_id = Number(req.params.departmentId);
         const { name, description, consultation_fee, head_doctor } = req.body;
 
         if (isNaN(department_id)) {

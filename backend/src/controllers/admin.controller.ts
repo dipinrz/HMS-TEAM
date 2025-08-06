@@ -48,7 +48,7 @@ export const fetchAllUsers = async (req: Request, res: Response, next: NextFunct
 
 export const updateUserDetails = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = Number(req.params.id);
+        const userId = Number(req.params.userId);
         const {
             first_name,
             last_name,
@@ -157,7 +157,7 @@ export const updateUserDetails = async (req: Request, res: Response, next: NextF
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
-        const userId = Number(req.params.id);
+        const userId = Number(req.params.userId);
 
         if (isNaN(userId)) {
             return res.status(400).json({ success: false, message: "Invalid user ID" });

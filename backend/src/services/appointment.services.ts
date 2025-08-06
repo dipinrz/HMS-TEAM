@@ -21,9 +21,10 @@ export const isAppointmentExistsSameDay = async (doctor_id: number, patient_id: 
 
     const existingAppointment = await appointmentRepo.findOne({
         where: {
-            doctor: { user_id: doctor_id },
-            patient: { user_id: patient_id },
-            appointment_date: Between(startOfDay, endOfDay),
+        doctor: { user_id: doctor_id },
+        patient: { user_id: patient_id },
+        appointment_date: Between(startOfDay, endOfDay),
+        status: AppointmentStatus.SCHEDULED
         },
     });
 
@@ -48,3 +49,31 @@ export const updateAppointmentStatus = async (appointmentId: number, status: App
     )
 
 }
+
+export const getScheduledAppointmentById = async (id: number) => {
+
+    return await appointmentRepo.findOneBy({ appointment_id: id, status: AppointmentStatus.SCHEDULED })
+}
+
+export const deleteAppointmentById = async (id: number) => {
+
+    return await appointmentRepo.update({ appointment_id: id }, {status: AppointmentStatus.CANCELLED});
+};
+
+export const updateAppointmentById = async (id: number, data: Partial<Appointment>) => {
+
+    await appointmentRepo.update({ appointment_id: id }, data);
+
+    return await appointmentRepo.findOneBy({ appointment_id: id });
+};
+
+export const getAllAppointments = async (filter: any = {}) => {
+
+    return await appointmentRepo.find({
+        where: filter,
+        relations: ['doctor', 'patient', 'department', 'medical_report_id'],
+        order: {
+            appointment_date: 'DESC'
+        }
+    });
+};

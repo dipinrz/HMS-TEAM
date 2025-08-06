@@ -9,8 +9,8 @@ const adminRoutes = express.Router();
 adminRoutes.use(authenticate)
 
 adminRoutes.get('/all', authorize('admin'), fetchAllUsers);
-adminRoutes.post('/update/:id', authorize('admin'), validateBody(updateUserSchema), updateUserDetails);
-adminRoutes.delete('/delete/:id', authorize('admin'), deleteUser);
+adminRoutes.post('/update/:userId', authorize('admin'), validateBody(updateUserSchema), updateUserDetails);
+adminRoutes.delete('/delete/:userId', authorize('admin'), deleteUser);
 adminRoutes.post('/register-doctor', authorize('admin'), validateBody(doctorSchema), registerDoctor);
 
 export default adminRoutes;

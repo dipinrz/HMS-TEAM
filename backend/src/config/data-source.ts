@@ -14,8 +14,6 @@ import { BillItem } from "../entities/billItem.entity";
 
 dotenv.config();
 
-
-
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: process.env.DB_HOST,
@@ -27,3 +25,49 @@ export const AppDataSource = new DataSource({
     logging: false,
     entities: [User, Patient, Doctor, Department, Appointment, MedicalReport, Prescription, Medication, Medicine, Bill, BillItem],
 });
+
+
+// NeonDB
+
+// import { DataSource } from "typeorm";
+// import dotenv from "dotenv";
+
+// import { User } from "../entities/user.entity";
+// import { Patient } from "../entities/patient.entity";
+// import { Doctor } from "../entities/doctor.entity";
+// import { Department } from "../entities/department.entity";
+// import { Appointment } from "../entities/appointment.entity";
+// import { MedicalReport } from "../entities/medicalReport.entity";
+// import { Prescription } from "../entities/prescription.entity";
+// import { Medication } from "../entities/medication.entity";
+// import { Medicine } from "../entities/medicine.entity";
+// import { Bill } from "../entities/bill.entity";
+// import { BillItem } from "../entities/billItem.entity";
+
+// dotenv.config();
+
+// export const AppDataSource = new DataSource({
+//   type: "postgres",
+//   url: process.env.DATABASE_URL,
+//   synchronize: true,
+//   logging: false,
+//   ssl: true,
+//   extra: {
+//     ssl: {
+//       rejectUnauthorized: false,
+//     },
+//   },
+//   entities: [
+//     User,
+//     Patient,
+//     Doctor,
+//     Department,
+//     Appointment,
+//     MedicalReport,
+//     Prescription,
+//     Medication,
+//     Medicine,
+//     Bill,
+//     BillItem,
+//   ],
+// });
