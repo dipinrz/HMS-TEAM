@@ -34,3 +34,18 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     }
 
 }
+
+
+export interface AuthRequest extends Request {
+  user?: { id: number; role: string };
+}
+
+export const authorize = (...roles: string[]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      res.status(403).json({ message: 'Forbidden: Access denied' });
+      return;
+    }
+    next();
+  };
+};
