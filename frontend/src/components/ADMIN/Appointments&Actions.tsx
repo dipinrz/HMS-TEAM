@@ -22,6 +22,13 @@ const recentAppointments = [
     department: "Neurology",
     time: "11:30 AM",
     status: "Pending",
+  },{
+    id: 3,
+    patient: "Harry Kane",
+    doctor: "Dr. Hane",
+    department: "Ortho",
+    time: "04:10 AM",
+    status: "Cancelled",
   },
 ];
 

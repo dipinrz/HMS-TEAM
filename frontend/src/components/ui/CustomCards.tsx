@@ -7,7 +7,8 @@ import {
   CardContent as MUICardContent, 
   CardActions as MUICardActions, 
   CardMedia, 
-  styled 
+  styled, 
+  type CardHeaderProps
 } from "@mui/material";
 
 // Styled Card with dynamic width and hover effects
@@ -45,14 +46,22 @@ const StyledCard = styled(MUICard)(({ theme }) => ({
   },
 }));
 
+const baseCardStyles = {
+  borderRadius: "16px",
+  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
+  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+};
+
 // Enhanced Card with hover animation variants
 const AnimatedCard = styled(MUICard,{
+  ...baseCardStyles,
   shouldForwardProp: (prop) => prop !== 'hoverVariant'
 })<{ hoverVariant?: 'lift' | 'glow' | 'scale' | 'rotate' }>(
   ({ theme, hoverVariant = 'lift' }) => ({
     width: 'fit-content',
     minWidth: '280px',
     maxWidth: '100%',
+    borderRadius: '12px',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     cursor: 'pointer',
     position: 'relative',
@@ -98,6 +107,10 @@ const AnimatedCard = styled(MUICard,{
   })
 );
 
+const NonAnimatedCard = styled(MUICard)(() => ({
+  ...baseCardStyles,
+}));
+
 type CardProps = React.ComponentProps<typeof MUICard> & {
   hoverVariant?: 'lift' | 'glow' | 'scale' | 'rotate';
   animated?: boolean;
@@ -111,24 +124,18 @@ export function Card({ children, hoverVariant = 'lift', animated = true, ...prop
       </AnimatedCard>
     );
   }
-  
+
   return (
-    <StyledCard {...props}>
+    <NonAnimatedCard {...props}>
       {children}
-    </StyledCard>
+    </NonAnimatedCard>
   );
 }
 
-export function CardHeader({
-  title,
-  subheader,
-}: {
-  title?: string;
-  subheader?: string;
-}) {
-  return <MUICardHeader title={title} subheader={subheader} />;
-}
+export function CardHeader(props: CardHeaderProps) {
+  return <MUICardHeader {...props} />;
 
+}
 export function CardContent({ children }: { children: React.ReactNode }) {
   return <MUICardContent>{children}</MUICardContent>;
 }
