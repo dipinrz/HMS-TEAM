@@ -22,7 +22,7 @@ export class BillItem {
   @JoinColumn({ name: 'bill_id' })
   bill: Bill;
 
-  @ManyToOne(() => Medication, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => Medication, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'medication_id' })
   medication: Medication;
 
