@@ -17,10 +17,7 @@ export class MedicalReport {
   @JoinColumn({ name: 'patient_id' })
   patient: User;
 
-  @ManyToOne(() => Appointment, { nullable: true, onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'appointment_id' })
-  appointment: Appointment | null;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   notes: string;
 }

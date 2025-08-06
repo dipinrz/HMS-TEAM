@@ -23,7 +23,7 @@ export class Bill{
     @JoinColumn({ name: 'patient_id' })
     patient: User;
 
-    @ManyToOne(() => Appointment, { nullable: true, onDelete: 'SET NULL' })
+    @ManyToOne(() => Appointment, { nullable: true, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'appointment_id' })
     appointment: Appointment | null;
 
