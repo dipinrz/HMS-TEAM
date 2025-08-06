@@ -37,12 +37,16 @@ export const createPrescriptionSchema = Joi.object({
                     "any.required": "Dosage is required",
                 }),
 
-                frequency: Joi.string().required().messages({
-                    "any.required": "Frequency is required",
+                frequency: Joi.number().integer().positive().required().messages({
+                    "number.base": "Frequency must be a number",
+                    "number.positive": "Frequency must be a positive number",
+                    "any.required": "Frequency is required"
                 }),
 
-                duration: Joi.string().required().messages({
-                    "any.required": "Duration is required",
+                duration: Joi.number().integer().positive().required().messages({
+                    "number.base": "Duration must be a number",
+                    "number.positive": "Duration must be a positive number",
+                    "any.required": "Duration is required"
                 }),
 
                 instructions: Joi.string().allow("").optional(),
