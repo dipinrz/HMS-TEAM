@@ -5,7 +5,7 @@ import { getUserById } from "../services/user.services";
 import { getDepartmentById } from "../services/department.services";
 import { getMedicalReportByPId } from "../services/medicalReport.services";
 import { ApiError } from "../utils/apiError";
-import { createAppointment, deleteAppointmentById, getAllAppointments, getAppointmentById, getScheduledAppointmentById, isAppointmentExistsSameDay, updateAppointmentById } from "../services/appointment.services";
+import { createAppointment, deleteAppointmentById, getAllAppointments, getAppointmentById, getScheduledAppointmentById, isAppointmentExistsSameDay } from "../services/appointment.services";
 import { createBill, deleteBillById, getBillByAppointmentId } from "../services/bill.services";
 import { createBillItem } from "../services/billItem.services";
 import { FeeType } from "../entities/billItem.entity";

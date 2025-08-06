@@ -21,23 +21,16 @@ export const isAppointmentExistsSameDay = async (doctor_id: number, patient_id: 
 
     const existingAppointment = await appointmentRepo.findOne({
         where: {
-<<<<<<< Updated upstream
-            doctor: { user_id: doctor_id },
-            patient: { user_id: patient_id },
-            appointment_date: Between(startOfDay, endOfDay),
-=======
         doctor: { user_id: doctor_id },
         patient: { user_id: patient_id },
         appointment_date: Between(startOfDay, endOfDay),
         status: AppointmentStatus.SCHEDULED
->>>>>>> Stashed changes
         },
     });
 
     return !!existingAppointment;
 };
 
-<<<<<<< Updated upstream
 
 export const getAppointmentById = async (appointmentId: number) => {
 
@@ -55,11 +48,6 @@ export const updateAppointmentStatus = async (appointmentId: number, status: App
         { status }
     )
 
-}
-=======
-export const getAppointmentById = async (id: number) => {
-
-    return await appointmentRepo.findOneBy({ appointment_id: id })
 }
 
 export const getScheduledAppointmentById = async (id: number) => {
@@ -89,4 +77,3 @@ export const getAllAppointments = async (filter: any = {}) => {
         }
     });
 };
->>>>>>> Stashed changes
