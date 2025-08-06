@@ -1,4 +1,4 @@
-import { 
+import {
     Column,
     Entity,
     JoinColumn,
@@ -24,11 +24,11 @@ export class Medication {
     @Column({ type: 'varchar', length: 100 })
     dosage: string;
 
-    @Column({ type: 'varchar', length: 100 })
-    frequency: string;
+    @Column({ type: 'int' })
+    frequency: number;
 
-    @Column({ type: 'varchar', length: 100 })
-    duration: string;
+    @Column({ type: 'int' })
+    duration: number;
 
     @Column({ type: 'text', nullable: true })
     instructions: string;
