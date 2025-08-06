@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction} from "express";
-import { createDepartment, deleteDepartmentById, getAllDepartments, getDepartmentById, getDeptByName, updateDepartment } from "../services/department.service";
+import { createDepartment, deleteDepartmentById, getAllDepartments, getDepartmentById, getDeptByName, updateDepartment } from "../services/department.services";
 import { ApiError } from "../utils/apiError";
 import { getDoctorById } from "../services/doctor.services";
 
