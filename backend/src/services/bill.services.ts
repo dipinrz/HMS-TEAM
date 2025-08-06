@@ -60,3 +60,17 @@ export const getAllBills = async () => {
 
     })
 }
+
+export const getBillByAppointmentId = async(appointmentId: number) => {
+    return await billRepo.find({
+        where:{
+            appointment: {appointment_id: appointmentId }
+        },
+        relations: ['appointment'],
+    })
+}
+
+export const deleteBillById = async(billId: number) => {
+    
+    return await billRepo.delete({ bill_id: billId });
+}

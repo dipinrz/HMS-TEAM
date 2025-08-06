@@ -9,7 +9,7 @@ departmentRoutes.use(authenticate);
 
 departmentRoutes.get('/', authorize('admin'), fetchAllDepartmentHandler);
 departmentRoutes.post('/', authorize('admin'), validateBody(departmentSchema), addDepartmentHandler);
-departmentRoutes.delete('/:id', authorize('admin'), removeDepartmentHandler);
-departmentRoutes.post('/update/:id', authorize('admin'), validateBody(updateDepartmentSchema), updateDepartmentHandler);
+departmentRoutes.delete('/:departmentId', authorize('admin'), removeDepartmentHandler);
+departmentRoutes.post('/update/:departmentId', authorize('admin'), validateBody(updateDepartmentSchema), updateDepartmentHandler);
 
 export default departmentRoutes;

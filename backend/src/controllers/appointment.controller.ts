@@ -5,10 +5,11 @@ import { getUserById } from "../services/user.services";
 import { getDepartmentById } from "../services/department.services";
 import { getMedicalReportByPId } from "../services/medicalReport.services";
 import { ApiError } from "../utils/apiError";
-import { createAppointment, isAppointmentExistsSameDay } from "../services/appointment.services";
-import { createBill } from "../services/bill.services";
+import { createAppointment, deleteAppointmentById, getAllAppointments, getAppointmentById, getScheduledAppointmentById, isAppointmentExistsSameDay, updateAppointmentById } from "../services/appointment.services";
+import { createBill, deleteBillById, getBillByAppointmentId } from "../services/bill.services";
 import { createBillItem } from "../services/billItem.services";
 import { FeeType } from "../entities/billItem.entity";
+import { appointmentQuerySchema } from "../validations/appointment.validations";
 
 export interface AuthRequest extends Request {
   user?: { userId: number; role: string };
@@ -84,3 +85,94 @@ export const addAppointment = async (req: AuthRequest, res: Response, next: Next
         next(error);
     }
 };
+
+export const cancelAppointmentHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        
+        const appointmentId = Number(req.params.appointmentId);
+
+        if (isNaN(appointmentId)) {
+            return res.status(400).json({ success: false, message: "Invalid appointment ID" });
+        }
+
+        const appointment = await getScheduledAppointmentById(appointmentId);
+
+        if(!appointment){
+            return res.status(404).json({ success: false, message: "Appointment not found" });
+        }
+
+        await deleteAppointmentById(appointmentId); 
+        const bill = await getBillByAppointmentId(appointmentId);
+        
+        await deleteBillById(bill[0].bill_id)
+
+        return res.status(200).json({
+            success: true,
+            message: "Appointment and bill deleted successfully",
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const fetchAllAppointmentsHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+    try{
+        
+        const validatedQuery = await appointmentQuerySchema.validateAsync(req.query);
+
+        const filter: any = {};
+        if (validatedQuery.status) {
+            filter.status = validatedQuery.status;
+        }
+
+        const appointmentData = await getAllAppointments(filter);
+
+        if(!appointmentData){
+            throw new ApiError('Appointments not found', 404)
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Appointments fetched successfully",
+            data: {
+                appointments: appointmentData
+            }
+        });
+
+    } catch(error) {
+        next(error);
+    }
+}
+
+export const fetchAppointmentByIdHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+    try{
+
+        const appointment_id = Number(req.params.appointmentId);
+
+         if (isNaN(appointment_id)) {
+            return res.status(400).json({ success: false, message: "Invalid appointment ID" });
+        }
+        
+        const appointment = await getAppointmentById(appointment_id);
+
+        if(!appointment){
+            throw new ApiError('Appointment not found', 404);
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Appointment fetched successfully',
+            data: {
+                appointment
+            }
+        })
+
+    } catch(error){
+        next(error);
+    }
+
+}

@@ -37,7 +37,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 
 
 export interface AuthRequest extends Request {
-  user?: { id: number; role: string };
+  user?: { userId: number; role: string };
 }
 
 export const authorize = (...roles: string[]) => {
