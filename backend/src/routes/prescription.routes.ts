@@ -1,6 +1,6 @@
 
 import express from 'express'
-import { getPatientPrescription, getPatientPrescriptions } from '../controllers/prescription.controller'
+import { addPrescription, getPatientPrescription, getPatientPrescriptions } from '../controllers/prescription.controller'
 import { authenticate, authorize } from '../middlewares/auth.middleware'
 import { UserRole } from '../entities/user.entity'
 import { createPrescriptionSchema } from '../validations/prescription.validations'
@@ -9,6 +9,8 @@ import { validateBody } from '../middlewares/body.validator.middleware'
 
 const router = express.Router()
 
+router.route("/")
+    .post(authenticate, authorize(UserRole.ADMIN, UserRole.PATIENT), addPrescription)
 
 
 router.route('/patient/:patientId')
