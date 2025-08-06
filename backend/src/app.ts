@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes';
 import adminRoutes from "./routes/admin.routes";
 import doctorRoutes from './routes/doctor.routes'
 import departmentRoutes from "./routes/department.routes";
+import prescriptionRoutes from "./routes/prescription.routes";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use("/api/v1/users", adminRoutes);
 app.use('/api/v1/patients', patientRoutes);
 app.use("/api/v1/doctor", doctorRoutes);
 app.use('/api/v1/department', departmentRoutes);
+app.use('/api/v1/prescription', prescriptionRoutes);
 
 
 
