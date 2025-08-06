@@ -3,7 +3,7 @@ import { addDepartmentHandler, fetchAllDepartmentHandler, removeDepartmentHandle
 import { authorize } from '../middlewares/auth.middlware';
 import { authenticate } from '../middlewares/auth.middleware';
 import { validateBody } from '../middlewares/body.validator.middleware';
-import { departmentSchema } from '../validations/department.validations';
+import { departmentSchema, updateDepartmentSchema } from '../validations/department.validations';
 
 const departmentRoutes = express.Router();
 departmentRoutes.use(authenticate);
@@ -11,6 +11,6 @@ departmentRoutes.use(authenticate);
 departmentRoutes.get('/', authorize('admin'), fetchAllDepartmentHandler);
 departmentRoutes.post('/', authorize('admin'), validateBody(departmentSchema), addDepartmentHandler);
 departmentRoutes.delete('/:id', authorize('admin'), removeDepartmentHandler);
-departmentRoutes.post('/update/:id', authorize('admin'), updateDepartmentHandler);
+departmentRoutes.post('/update/:id', authorize('admin'), validateBody(updateDepartmentSchema), updateDepartmentHandler);
 
 export default departmentRoutes;

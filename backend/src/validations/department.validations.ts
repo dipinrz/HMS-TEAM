@@ -23,3 +23,24 @@ export const departmentSchema = Joi.object({
     }),
 
 });
+
+export const updateDepartmentSchema = Joi.object({
+
+    name: Joi.string().trim().optional().messages({
+        'string.empty': 'Department name cannot be empty',
+    }),
+
+    description: Joi.string().trim().optional().messages({
+        'string.empty': 'Description cannot be empty',
+    }),
+
+    consultation_fee: Joi.number().precision(2).positive().optional().messages({
+        'number.base': 'Consultation fee must be a number',
+        'number.positive': 'Consultation fee must be positive',
+    }),
+
+    head_doctor: Joi.number().optional().allow(null).messages({
+        'number.base': 'Head doctor must be a valid doctor ID or null',
+    }),
+
+});
