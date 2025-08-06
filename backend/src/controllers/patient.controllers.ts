@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { createPatient, getPatientAppointments, getPatientById, getPatients, updatePatient } from "../services/patient.services";
 import { updateUser } from "../services/user.services";
+import { getPrescriptionById, getPrescriptionsByPatientId } from "../services/prescription.services";
+import { ApiError } from "../utils/apiError";
 
 
 export const getAllPatientsHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,6 +29,11 @@ export const getPatientByIdHandler = async (req: Request, res: Response, next: N
         const { patientId } = req.params
 
         const patient = await getPatientById(Number(patientId))
+
+        if (!patient) {
+            throw new ApiError("Patient not found", 404)
+
+        }
 
         res.status(200).json({
             success: true,
@@ -76,7 +83,7 @@ export const updatePatientHandler = async (req: Request, res: Response, next: Ne
             medical_history,
         };
 
-        await updateUser(userId,updatedUserFields)
+        await updateUser(userId, updatedUserFields)
 
 
         const updatedPatient = await updatePatient(userId, updatedPatientFields)
@@ -107,8 +114,27 @@ export const getAppointmentsHandler = async (req: Request, res: Response, next: 
             appointments
         })
 
-    } catch (error) {        
+    } catch (error) {
         next(error)
     }
 }
- 
+
+
+export const getMyPrescriptions = async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        const user = (req as any).user
+
+
+        const prescription = await getPrescriptionsByPatientId(user.userId)
+
+        res.status(200).json({
+            success: true,
+            message: 'Prescriptions fetched successfully',
+            prescription
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}

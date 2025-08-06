@@ -1,3 +1,4 @@
+import { In } from "typeorm";
 import { AppDataSource } from "../config/data-source";
 import { Medicine } from "../entities/medicine.entity";
 
@@ -21,3 +22,8 @@ export const getMedicineById = async (medicineId: number) => {
 }
 
 
+export const getMedicinesByIds = async (medicineIds: [number]) => {
+    return await medicineRepo.findBy({
+        medicine_id: In(medicineIds)
+    })
+}

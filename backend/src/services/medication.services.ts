@@ -12,6 +12,14 @@ export const createMedication = async (medication: Partial<Medication>) => {
 
 }
 
+export const createManyMedications = async (medications: Partial<Medication>[]) => {
+
+    const newMedications = medicationRepo.create(medications)
+
+    return await medicationRepo.save(newMedications)
+
+}
+
 export const getMedicationById = async (medicationId: number) => {
     return await medicationRepo.findOne({
         where: { medication_id: medicationId },
