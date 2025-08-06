@@ -1,9 +1,9 @@
 import express from 'express';
 import { deleteUser, fetchAllUsers, registerDoctor, updateUserDetails } from '../controllers/admin.controller';
-import { authenticate, authorize } from '../middlewares/auth.middlware';
 import { validateBody } from '../middlewares/body.validator.middleware';
 import { updateUserSchema } from '../validations/user.validations';
 import { doctorSchema } from '../validations/doctor.validations';
+import { authenticate, authorize } from '../middlewares/auth.middleware';
 
 const adminRoutes = express.Router();
 adminRoutes.use(authenticate)

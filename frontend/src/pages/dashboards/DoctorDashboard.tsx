@@ -1,12 +1,13 @@
+
 import { Avatar, Box, Chip, Divider, Grid, Typography, useTheme } from "@mui/material";
-import Navbar from "../NavBar";
-import { Card, CardContent, CardHeader } from "../ui/CustomCards";
 import { AccessTime, CalendarToday, Description, ErrorOutline, Group } from "@mui/icons-material";
-import CustomButton from "../ui/CustomButton";
 import { Stethoscope } from "lucide-react";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
 import { useState } from "react";
+import Navbar from "../../components/NavBar";
+import CustomButton from "../../components/ui/CustomButton";
+import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
 
 type ThemeColorKey =
   'primary' |
