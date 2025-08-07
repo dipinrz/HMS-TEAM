@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { getDoctorAppointments } from "../services/doctor.services";
+import { getDoctorAppointments, getPatientsByDoctorId } from "../services/doctor.services";
 import dayjs from "dayjs";
+import { ApiError } from "../utils/apiError";
 
 
 export const getDoctorAppointmentsHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -41,5 +42,30 @@ export const getDoctorAppointmentsHandler = async (req: Request, res: Response, 
 
     } catch (error) {
         next(error)
+    }
+}
+
+export const getDoctorPatientsHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+    const doctorId = Number(req.params.doctor_id);
+
+    try{
+        const patients = await getPatientsByDoctorId(doctorId);
+
+        if(!patients){
+            throw new ApiError('Patients not found', 404);
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Patients fetched successfully",
+            data: {
+                patient_count: patients.length,
+                patients
+            }
+        });
+
+    } catch(error) {
+        next(error);
     }
 }

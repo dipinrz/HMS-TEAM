@@ -1,13 +1,16 @@
 
 import express from 'express'
-import { getDoctorAppointmentsHandler } from '../controllers/doctor.controllers'
+import { getDoctorAppointmentsHandler, getDoctorPatientsHandler } from '../controllers/doctor.controllers'
 import { authenticate } from '../middlewares/auth.middleware'
 
 const router = express.Router()
 
 
 router.route("/appointments")
-    .get(authenticate, getDoctorAppointmentsHandler)
+    .get(authenticate, getDoctorAppointmentsHandler);
+
+router.route("/patients/:doctor_id")
+    .get(authenticate, getDoctorPatientsHandler);
 
 
 
