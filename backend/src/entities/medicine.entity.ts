@@ -20,6 +20,9 @@ export class Medicine {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     cost: number;
 
+    @Column({ type: 'date', nullable: true })
+    expiry_date: Date;
+
     @OneToMany(() => Medication, (medication) => medication.medicine)
     medications: Medication[];
 }
