@@ -21,7 +21,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Bell, Stethoscope } from "lucide-react";
-import { ConnectionStatus } from "./ui/CustomStatus";
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

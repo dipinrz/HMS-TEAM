@@ -8,6 +8,8 @@ import { useState } from "react";
 import Navbar from "../../components/NavBar";
 import CustomButton from "../../components/ui/CustomButton";
 import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
+import { useAuthStore } from "../../store/useAuthStore";
+
 
 type ThemeColorKey =
   'primary' |
@@ -162,6 +164,8 @@ const recentPatients: Patient[] = [
 const DoctorDashboard = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const theme = useTheme();
+  const {user}=useAuthStore()
+  console.log('User Details',user)
   const getStatusChipColor = (status: string) => {
     switch (status) {
       case 'completed':
@@ -184,7 +188,7 @@ const DoctorDashboard = () => {
       <Navbar />
       <Box mb={4} display={"flex"} justifyContent="space-between" alignItems={"center"}>
         <Box>
-          <Typography variant="h4" color="text.primary" fontWeight={600} sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}>Good morning, Dr. Wilson</Typography>
+          <Typography variant="h4" color="text.primary" fontWeight={600} sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}>Good morning, Dr {user?.first_name}</Typography>
           <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: "0.875rem", sm: "1rem" }, mt: 0.5 }}>You have 6 appointments scheduled for today</Typography>
         </Box>
         <Box display="flex" gap={2}>
