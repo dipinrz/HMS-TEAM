@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -24,6 +24,10 @@ import {
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
 import CustomInput from "../../components/ui/CustomInput";
+import { useAuthStore } from "../../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
+import CustomButton from "../../components/ui/CustomButton";
+import { toast } from "react-toastify";
 
 const LoginPage: React.FC = () => {
   const theme = useTheme();
@@ -34,6 +38,11 @@ const LoginPage: React.FC = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { login } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,10 +55,31 @@ const LoginPage: React.FC = () => {
     console.log(`${name} changed to:`, value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
-    setFormData({ email: "", password: "" });
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      const userData = await login(formData);
+      setFormData({ email: "", password: "" });
+      console.log("Login response:", userData);
+      toast.success("Login successful!");
+      if (userData?.role === "admin") {
+        navigate("/admin");
+      } else if (userData?.role === "doctor") {
+        navigate("/doctor");
+      } else if (userData?.role === "patient") {
+        navigate("/patient");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      toast.error("Invalid email or password");
+      console.error("Login error:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -59,7 +89,6 @@ const LoginPage: React.FC = () => {
       flexDirection={{ xs: "column", lg: "row" }}
       bgcolor="linear-gradient(to right, #171f8fff, #ffffff)"
     >
-      {/* Left Side */}
       {isLargeScreen && (
         <Box
           width="50%"
@@ -243,8 +272,8 @@ const LoginPage: React.FC = () => {
                 <CustomInput
                   label="Email Address"
                   name="email"
-                  value={formData.email}
                   onChange={handleChange}
+                  value={formData.email}
                   required
                 />
 
@@ -269,13 +298,16 @@ const LoginPage: React.FC = () => {
                   }}
                 />
 
-                <Button
+                <CustomButton
                   type="submit"
                   fullWidth
+                  disabled={isLoading}
                   variant="contained"
+                  label={isLoading ? "Signing In..." : "Sign In to Dashboard"}
                   sx={{
                     mt: 3,
                     height: 44,
+                    borderRadius: "12px",
                     background:
                       "linear-gradient(to bottom right, #4772e1ff, #1b1857ff)",
                     boxShadow: 3,
@@ -285,9 +317,7 @@ const LoginPage: React.FC = () => {
                         "linear-gradient(to top left, #04064dff, #424bd1ff)",
                     },
                   }}
-                >
-                  Sign In to Dashboard
-                </Button>
+                />
               </form>
 
               <Typography variant="body2" textAlign="center" mt={3}>

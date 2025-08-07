@@ -105,7 +105,7 @@ export const cancelAppointmentHandler = async (req: Request, res: Response, next
         await deleteAppointmentById(appointmentId); 
         const bill = await getBillByAppointmentId(appointmentId);
         
-        await deleteBillById(bill[0].bill_id)
+        await deleteBillById(bill.bill_id)
 
         return res.status(200).json({
             success: true,

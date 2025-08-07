@@ -3,13 +3,14 @@ import { addDepartmentHandler, fetchAllDepartmentHandler, removeDepartmentHandle
 import { authenticate, authorize } from '../middlewares/auth.middleware';
 import { validateBody } from '../middlewares/body.validator.middleware';
 import { departmentSchema, updateDepartmentSchema } from '../validations/department.validations';
+import { UserRole } from '../entities/user.entity';
 
 const departmentRoutes = express.Router();
 departmentRoutes.use(authenticate);
 
-departmentRoutes.get('/', authorize('admin'), fetchAllDepartmentHandler);
-departmentRoutes.post('/', authorize('admin'), validateBody(departmentSchema), addDepartmentHandler);
-departmentRoutes.delete('/:departmentId', authorize('admin'), removeDepartmentHandler);
-departmentRoutes.post('/update/:departmentId', authorize('admin'), validateBody(updateDepartmentSchema), updateDepartmentHandler);
+departmentRoutes.get('/', authorize(UserRole.ADMIN), fetchAllDepartmentHandler);
+departmentRoutes.post('/', authorize(UserRole.ADMIN), validateBody(departmentSchema), addDepartmentHandler);
+departmentRoutes.delete('/:departmentId', authorize(UserRole.ADMIN), removeDepartmentHandler);
+departmentRoutes.post('/update/:departmentId', authorize(UserRole.ADMIN), validateBody(updateDepartmentSchema), updateDepartmentHandler);
 
 export default departmentRoutes;

@@ -54,7 +54,7 @@ export const getAllBills = async () => {
 }
 
 export const getBillByAppointmentId = async(appointmentId: number) => {
-    return await billRepo.find({
+    return await billRepo.findOne({
         where:{
             appointment: {appointment_id: appointmentId }
         },
