@@ -183,7 +183,7 @@ const medications: Medication[] = [
 const PatientDashboard = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const theme = useTheme();
-  const {user} = useAuthStore()
+  const { user } = useAuthStore();
 
   const getStatusChipColor = (status: string) => {
     switch (status) {
@@ -223,7 +223,9 @@ const PatientDashboard = () => {
         gap={1}
       >
         <Box>
-          <Typography variant="h4" fontWeight={600}>Welcome back, Alex</Typography>
+          <Typography variant="h4" fontWeight={600}>
+            Welcome back, {user?.first_name}
+          </Typography>
           <Typography variant="body1" color="text.secondary">
             Here's your health summary for{" "}
             {new Date().toLocaleDateString("en-US", {
