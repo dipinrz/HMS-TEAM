@@ -283,7 +283,11 @@ const PatientDashboard = () => {
       <Grid container spacing={2}>
         {statsData.map((stat, index) => (
           <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
-            <Card elevation={2} sx={{ height: "90%", width: "95%" }}>
+            <Card
+              elevation={2}
+              hoverVariant="rotate"
+              sx={{ height: "90%", width: "95%" }}
+            >
               <CardContent>
                 <Box display="flex" justifyContent="space-between">
                   <Box flex={1}>

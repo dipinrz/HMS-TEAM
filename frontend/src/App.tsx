@@ -6,6 +6,7 @@ import AdminDashboard from "./pages/dashboards/AdminDashboard";
 import DoctorDashboard from "./pages/dashboards/DoctorDashboard";
 import PatientDashboard from "./pages/dashboards/PatientDashboad";
 import { ToastContainer } from "react-toastify";
+import BookAppointment from "./pages/PatientUtility/Appointment";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           }
         />
         <Route path="/patient" element={<PatientDashboard />} />
+        <Route path="book" element={<BookAppointment />} />
 
         <Route path="*" element={<p>Page Not Found</p>} />
       </Routes>
