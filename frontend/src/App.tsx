@@ -30,14 +30,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/patient"
-          element={
-            <ProtectedRoute allowedRoles={["patient"]}>
-              <PatientDashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/patient" element={<PatientDashboard />} />
 
         <Route path="*" element={<p>Page Not Found</p>} />
       </Routes>
