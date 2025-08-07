@@ -5,10 +5,14 @@ import { Medicine } from "../entities/medicine.entity";
 
 const medicineRepo = AppDataSource.getRepository(Medicine)
 
-export const createMedicine = async (medicine: Partial<Medicine>) => {
+export const findMedicine = async(medicine_id)=>{
+    const medicine = await medicineRepo.findOne({where:{medicine_id:medicine_id}})
+    return medicine
+}
+
+export const createMedicineService = async (medicine: Partial<Medicine>) => {
 
     const newMedicine = medicineRepo.create(medicine)
-
     return await medicineRepo.save(newMedicine)
 }
 

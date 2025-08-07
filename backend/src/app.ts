@@ -11,6 +11,7 @@ import departmentRoutes from "./routes/department.routes";
 import prescriptionRoutes from "./routes/prescription.routes";
 import appointmentRoutes from "./routes/appointment.routes";
 import paymentRoutes from "./routes/payment.routes";
+import medicineRoutes from "./routes/medicine.routes";
 
 dotenv.config();
 
@@ -32,6 +33,8 @@ app.use('/api/v1/department', departmentRoutes);
 app.use('/api/v1/prescription', prescriptionRoutes);
 app.use('/api/v1/appointment', appointmentRoutes);
 app.use('/api/v1/payment', paymentRoutes);
+app.use('/api/v1/medicine', medicineRoutes);
+
 
 
 
