@@ -6,7 +6,7 @@ import { UserRole } from '../entities/user.entity';
 const paymentRoutes = Router();
 paymentRoutes.use(authenticate)
 
-paymentRoutes.post('/create-order', authorize(UserRole.PATIENT), createRazorpayOrder);
-paymentRoutes.post('/verify', authorize(UserRole.PATIENT), verifyRazorpayPayment);
+paymentRoutes.post('/create-order', authorize(UserRole.PATIENT, UserRole.ADMIN), createRazorpayOrder);
+paymentRoutes.post('/verify', authorize(UserRole.PATIENT, UserRole.ADMIN), verifyRazorpayPayment);
 
 export default paymentRoutes;
