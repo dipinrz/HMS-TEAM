@@ -38,6 +38,7 @@ import CustomButton from "../../components/ui/CustomButton";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
 import { useState } from "react";
+import { useAuthStore } from "../../store/useAuthStore";
 
 interface ThemeColorKey {
   primary: string;
@@ -146,6 +147,7 @@ const healthMetrics: HealthMetric[] = [
 const PatientDashboard = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const theme = useTheme();
+  const {user} = useAuthStore()
 
   const getStatusChipColor = (status: string) => {
     switch (status) {
@@ -180,7 +182,7 @@ const PatientDashboard = () => {
       {/* Header */}
       <Box mb={4} display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={2}>
         <Box>
-          <Typography variant="h4" fontWeight={600}>Welcome back, Alex</Typography>
+          <Typography variant="h4" fontWeight={600}>Welcome back, {user?.first_name}</Typography>
           <Typography variant="body1" color="text.secondary">
             Here's your health summary for {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </Typography>
