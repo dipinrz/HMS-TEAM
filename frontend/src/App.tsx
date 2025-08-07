@@ -1,9 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 import Test from "./test/Test"
-import AdminDashboard from "./pages/dashboards/AdminDashboard"
-import Navbar from "./components/NavBar"
-import AppointmentsAndActions from "./components/ADMIN/Appointments&Actions"
 import Login from "./pages/Auth/Login"
+import PatientDashboard from "./pages/dashboards/PatientDashboad"
 
 
 const App = () => {
@@ -13,6 +11,7 @@ const App = () => {
       <Routes>
         <Route path="/admin-test" Component={Login}/>
         <Route path='login' Component={Login} />
+        <Route path='/patient' Component={PatientDashboard} />
       </Routes>
     </div>
   )
