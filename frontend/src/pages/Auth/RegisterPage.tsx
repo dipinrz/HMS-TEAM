@@ -262,7 +262,7 @@ const RegisterPage: React.FC = () => {
 
               <Typography variant="body2" textAlign="center" mt={3}>
                 Already have an account?{" "}
-                <MuiLink component={Link} to="/login">
+                <MuiLink component={Link} to="/ ">
                   Sign In
                 </MuiLink>
               </Typography>

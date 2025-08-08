@@ -21,6 +21,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Bell, Stethoscope } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -28,6 +29,7 @@ function Navbar() {
   const userRole = "admin";
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const {user,logout}=useAuthStore()
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -36,7 +38,9 @@ function Navbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const handleLogout=()=>{
+    logout();
+  }
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -272,7 +276,7 @@ function Navbar() {
                       letterSpacing: 0.1,
                     }}
                   >
-                    Dr. John Doe
+                    {user?.first_name}
                   </Typography>
                   <Box
                     sx={{
@@ -300,7 +304,7 @@ function Navbar() {
                       },
                     }}
                   >
-                    {userRole}
+                    {user?.role}
                   </Box>
                 </Box>
               </Box>
@@ -326,7 +330,7 @@ function Navbar() {
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>Settings</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
