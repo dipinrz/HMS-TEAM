@@ -8,11 +8,11 @@ import PatientDashboard from "./pages/dashboards/PatientDashboad";
 import { ToastContainer } from "react-toastify";
 
 import RegisterPage from "./pages/Auth/RegisterPage";
+import BookAppointment from "./pages/PatientUtility/Appointment";
 
 function App() {
   return (
     <>
-      <PaymentButton />
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/unauthorized" element={<p>Unauthorized Access</p>} />
