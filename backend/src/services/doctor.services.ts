@@ -2,6 +2,7 @@ import { Between } from "typeorm";
 import { AppDataSource } from "../config/data-source";
 import { Appointment } from "../entities/appointment.entity";
 import { Doctor } from "../entities/doctor.entity";
+import { User } from "../entities/user.entity";
 
 const doctorRepo = AppDataSource.getRepository(Doctor)
 const appointmentRepo = AppDataSource.getRepository(Appointment)
@@ -50,4 +51,25 @@ export const updateDoctorById = async (id: number, data: Partial<Doctor>) => {
     await doctorRepo.update({ doctor_id: id }, data);
 
     return await doctorRepo.findOneBy({ doctor_id: id });
+};
+
+
+export const getPatientsByDoctorId = async (doctorId: number) => {
+
+    const appointments = await appointmentRepo.find({
+        where: {
+        doctor: { user_id: doctorId }
+        },
+        relations: ['patient'],
+    });
+
+    const uniquePatientsMap = new Map<number, User>();
+
+    for (const appointment of appointments) {
+        uniquePatientsMap.set(appointment.patient.user_id, appointment.patient);
+    }
+
+    const uniquePatients = Array.from(uniquePatientsMap.values());
+
+    return uniquePatients;
 };

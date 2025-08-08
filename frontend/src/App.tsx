@@ -6,11 +6,13 @@ import AdminDashboard from "./pages/dashboards/AdminDashboard";
 import DoctorDashboard from "./pages/dashboards/DoctorDashboard";
 import PatientDashboard from "./pages/dashboards/PatientDashboad";
 import { ToastContainer } from "react-toastify";
+
 import RegisterPage from "./pages/Auth/RegisterPage";
 
 function App() {
   return (
     <>
+      <PaymentButton />
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/unauthorized" element={<p>Unauthorized Access</p>} />
@@ -31,14 +33,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/patient"
-          element={
-            <ProtectedRoute allowedRoles={["patient"]}>
-              <PatientDashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/patient" element={<PatientDashboard />} />
+        <Route path="book" element={<BookAppointment />} />
 
         <Route path="*" element={<p>Page Not Found</p>} />
       </Routes>
