@@ -1,5 +1,5 @@
 import { AppDataSource } from "../config/data-source";
-import { Bill } from "../entities/bill.entity";
+import { Bill, PaymentStatus } from "../entities/bill.entity";
 
 
 const billRepo = AppDataSource.getRepository(Bill)
@@ -14,7 +14,7 @@ export const createBill = async (bill: Partial<Bill>) => {
 }
 
 export const getBillById = async (billId: number) => {
-    return await billRepo.find({
+    return await billRepo.findOne({
         where: { bill_id: billId },
     })
 }
@@ -33,8 +33,6 @@ export const getBillsByPatientId = async (patientId: number) => {
 }
 
 export const updateBillById = async (billId: number, updatedData: Partial<Bill>) => {
-
-    console.log(updatedData);
     
     return await billRepo.update(
         { bill_id: billId },
@@ -66,3 +64,16 @@ export const deleteBillById = async(billId: number) => {
     
     return await billRepo.delete({ bill_id: billId });
 }
+
+export const markBillAsPaid = async (bill: Partial<Bill>)=> {
+
+    if (bill.payment_status === PaymentStatus.PAID) {
+        return true;
+    }
+
+    bill.payment_status = PaymentStatus.PAID;
+
+    await billRepo.save(bill);
+
+    return true;
+};
