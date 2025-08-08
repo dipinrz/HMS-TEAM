@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { loginAPI } from "../services/allAPI";
+import { loginAPI, registerAPI } from "../services/allAPI";
 
 export type UserRole = "admin" | "doctor" | "patient";
 
@@ -16,6 +16,11 @@ export interface User {
 interface AuthState {
   user: User | null;
   login: (credentials: { email: string; password: string }) => Promise<User>;
+  register:(data:{first_name:string;
+    last_name:string;
+    email:string;
+    password:string;
+    phone_number?:string})=>Promise<User>;
   logout: () => void;
 }
 
@@ -40,11 +45,30 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ user: authUser });
       return authUser;
 
+    } catch (err) {
+      console.error("Login failed:", err);
+      throw err;
+    }
+  },
+  register:async({first_name,last_name,email,password}):Promise<User>=>{
+    try{
+      const response=await registerAPI({first_name,last_name,email,password});
+      const {accessToken,user}=response.data;
+
+      const authUser:User={
+        user_id:user.user_id,
+        first_name:user.first_name,
+        last_name:user.last_name,
+        email: user.email,
+        phone_number: user.phone_number,
+        role: user.role,
+        token: accessToken,
+      };
       localStorage.setItem("authUser", JSON.stringify(authUser));
       set({ user: authUser });
       return authUser;
-    } catch (err) {
-      console.error("Login failed:", err);
+    }catch(err){
+      console.log('Registration faild',err);
       throw err;
     }
   },
