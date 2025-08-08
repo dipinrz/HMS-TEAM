@@ -8,6 +8,7 @@ const doctorRepo = AppDataSource.getRepository(Doctor)
 const appointmentRepo = AppDataSource.getRepository(Appointment)
 
 
+
 export const createDoctor = async (doctor: Partial<Doctor>) => {
 
     const newDoctor = doctorRepo.create(doctor)
@@ -50,8 +51,9 @@ export const updateDoctorById = async (id: number, data: Partial<Doctor>) => {
 
     await doctorRepo.update({ doctor_id: id }, data);
 
-    return await doctorRepo.findOneBy({ doctor_id: id });
+    return await doctorRepo.find({ where:{doctor_id:id},relations: ['user'], });
 };
+
 
 
 export const getPatientsByDoctorId = async (doctorId: number) => {
