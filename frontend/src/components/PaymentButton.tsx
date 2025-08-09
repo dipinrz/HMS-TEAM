@@ -67,6 +67,9 @@ const PaymentButton: React.FC = () => {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
+                bill_id: 10,
+                amount_paid: amount,
+
             };
 
             // 2. Send verification request to backend
