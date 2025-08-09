@@ -47,12 +47,22 @@ export const getDoctorAppointments = async (doctorId: number, dateRange?: { from
     })
 }
 
-export const updateDoctorById = async (id: number, data: Partial<Doctor>) => {
+export const updateDoctorById = async (id: number, data: Partial<Doctor> & { department_id?: number }) => {
+    const { department_id, ...rest } = data;
 
-    await doctorRepo.update({ doctor_id: id }, data);
+    const updateData: any = {
+        ...rest,
+        ...(department_id !== undefined ? { department: { department_id } } : {})
+    };
 
-    return await doctorRepo.find({ where:{doctor_id:id},relations: ['user'], });
+    await doctorRepo.update({ doctor_id: id }, updateData);
+
+    return await doctorRepo.find({
+        where: { doctor_id: id },
+        relations: ['user', 'department'],
+    });
 };
+
 
 
 

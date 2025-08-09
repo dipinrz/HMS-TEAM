@@ -15,7 +15,7 @@ router.route("/patients/:doctor_id")
     .get(authenticate, getDoctorPatientsHandler);
 
 router.get('/getProfile',authenticate,getDoctorProfile)
-router.patch('/update',authenticate, updateDoctorProfile)
+router.patch('/update',authenticate,updateDoctorProfile)
 
 
 
