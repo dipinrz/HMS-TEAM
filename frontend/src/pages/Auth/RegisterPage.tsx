@@ -9,14 +9,11 @@ import {
   Link as MuiLink,
   useMediaQuery,
   useTheme,
-  MenuItem,
 } from "@mui/material";
 import {
   Visibility,
   VisibilityOff,
   Favorite,
-  Security,
-  Group,
   MonitorHeart,
   Healing,
   VolunteerActivism,

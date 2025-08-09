@@ -57,7 +57,7 @@ function Navbar() {
       <List>
         {["Dashboard", "Patients", "Doctors", "Appointments", "Reports"].map(
           (text) => (
-            <ListItem>
+            <ListItem key={text}>
               <ListItemText primary={text} />
             </ListItem>
           )

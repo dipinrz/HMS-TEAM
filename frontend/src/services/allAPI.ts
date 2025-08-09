@@ -1,9 +1,9 @@
 import commonAPI from "./commonAPI"
 
-const baseURL = "http://localhost:5000"
+export const baseURL = "http://localhost:5000/api/v1"
 
 export const loginAPI = async(data:{email:string,password:string})=>{
-    return await commonAPI('POST',`${baseURL}/api/v1/auth/login`,data)
+    return await commonAPI('POST',`${baseURL}/auth/login`,data)
 }
 
 export const registerAPI=async(data:{
@@ -13,5 +13,5 @@ export const registerAPI=async(data:{
     password:string;
     phone_number?:string
 })=>{
-    return await commonAPI('POST',`${baseURL}/api/v1/auth/register/patient`,data)
+    return await commonAPI('POST',`${baseURL}/auth/register/patient`,data)
 }
