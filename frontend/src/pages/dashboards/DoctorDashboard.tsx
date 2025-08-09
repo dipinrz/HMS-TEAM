@@ -1,14 +1,15 @@
 
 import { Avatar, Box, Chip, Divider, Grid, Typography, useTheme } from "@mui/material";
 import { AccessTime, CalendarToday, Description, ErrorOutline, Group } from "@mui/icons-material";
-import { Stethoscope } from "lucide-react";
+import { Stethoscope, User } from "lucide-react";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
 import CustomButton from "../../components/ui/CustomButton";
 import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
 import { useAuthStore } from "../../store/useAuthStore";
+import { getDoctorAppointment, getDoctorPatients } from "../../services/doctorAPI";
 
 
 type ThemeColorKey =
@@ -49,36 +50,7 @@ interface Patient {
     temp: string;
   };
 }
-const statsData: TodayStats[] = [
-  {
-    title: "Today's Appointments",
-    value: '8',
-    subtitle: '2 completed, 6 remaining',
-    icon: <CalendarToday color="primary" />,
-    bgcolor: "primary"
-  },
-  {
-    title: 'Total Patients',
-    value: '156',
-    subtitle: 'Under your care',
-    icon: <Group color="success" />,
-    bgcolor: "success"
-  },
-  {
-    title: 'Pending Reports',
-    value: '12',
-    subtitle: 'Require your review',
-    icon: <Description color="warning" />,
-    bgcolor: "warning"
-  },
-  {
-    title: 'Next Appointment',
-    value: '10:30 AM',
-    subtitle: 'Sarah Johnson',
-    icon: <AccessTime color="secondary" />,
-    bgcolor: "secondary"
-  }
-];
+
 
 const todayAppointments: Appointment[] = [
   {
@@ -163,9 +135,40 @@ const recentPatients: Patient[] = [
 ];
 const DoctorDashboard = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [appointments, setAppointments] = useState([]);
+  const [patients, setPatients] = useState([]);
+  const [patientsCount,setPatientsCount]=useState()
   const theme = useTheme();
   const {user}=useAuthStore()
-  console.log('User Details',user)
+  const fetchApointments=async()=>{
+    try{
+      const response=await getDoctorAppointment();
+      const appointments = response.data.appointments|| [];
+      setAppointments(appointments.length);
+      console.log("responses",appointments);
+    }catch(err:any){
+      console.log(err);
+    }
+  };
+  const fetchPatients=async(doctor_id:number)=>{
+    try{
+      const response=await getDoctorPatients(doctor_id);
+      const patients=response.data.data.patients||[];
+      const patientsCount=response.data.data.patient_count;
+      setPatients(patients);
+      setPatientsCount(patientsCount);
+    }catch(err){
+      console.log(err);
+    }
+  };
+  useEffect(()=>{
+    if(user?.user_id){
+      fetchApointments();
+      fetchPatients(user.user_id);
+    }
+    
+    
+  },[])
   const getStatusChipColor = (status: string) => {
     switch (status) {
       case 'completed':
@@ -183,6 +186,36 @@ const DoctorDashboard = () => {
     }
   };
 
+const statsData: TodayStats[] = [
+  {
+    title: "Today's Appointments",
+    value:`${appointments}`,
+    subtitle: '2 completed, 6 remaining',
+    icon: <CalendarToday color="primary" />,
+    bgcolor: "primary"
+  },
+  {
+    title: 'Total Patients',
+    value: `${patientsCount}`,
+    subtitle: 'Under your care',
+    icon: <Group color="success" />,
+    bgcolor: "success"
+  },
+  {
+    title: 'Pending Reports',
+    value: '12',
+    subtitle: 'Require your review',
+    icon: <Description color="warning" />,
+    bgcolor: "warning"
+  },
+  {
+    title: 'Next Appointment',
+    value: '10:30 AM',
+    subtitle: 'Sarah Johnson',
+    icon: <AccessTime color="secondary" />,
+    bgcolor: "secondary"
+  }
+];
   return (
     <Box sx={{ mt: 10 }}>
       <Navbar />

@@ -5,8 +5,9 @@ import DashboardCharts from "../../components/ADMIN/DashboardCharts";
 import DashboardMetrics from "../../components/ADMIN/DashboardMetrics";
 import AppointmentsAndActions from "../../components/ADMIN/Appointments&Actions";
 import SystemStatusCard from "../../components/ADMIN/SystemStatusCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomModal from "../../components/ui/CustomModal";
+import { getDoctorAppointment } from "../../services/doctorAPI";
 
 const AdminDashboard = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -18,6 +19,7 @@ const AdminDashboard = () => {
     console.log("Submitted user!");
     handleCloseModal();
   };
+
 
   return (
     <Box>
