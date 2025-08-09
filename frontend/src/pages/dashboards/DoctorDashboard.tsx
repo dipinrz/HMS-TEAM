@@ -9,7 +9,9 @@ import Navbar from "../../components/NavBar";
 import CustomButton from "../../components/ui/CustomButton";
 import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
 import { useAuthStore } from "../../store/useAuthStore";
-import { getDoctorAppointment, getDoctorPatients } from "../../services/doctorAPI";
+import { getDoctorAppointment, getDoctorPatients, getRecentPatient } from "../../services/doctorAPI";
+import { getRecentUniquePatientAppointments } from "../../utility/DoctorUtility";
+import type { Appointment } from "../../types/doctorType";  
 
 
 type ThemeColorKey =
@@ -27,125 +29,72 @@ interface TodayStats {
   icon: React.ReactNode;
   bgcolor: ThemeColorKey;
 }
-interface Appointment {
-  id: number;
-  time: string;
-  patient: string;
-  type: string;
-  status: string;
-  duration: string;
-  condition: string;
-  urgency: string;
-}
-interface Patient {
-  id: number;
-  name: string;
-  age: number;
-  lastVisit: string;
-  condition: string;
-  status: string;
-  vitals: {
-    bp: string;
-    hr: string;
-    temp: string;
-  };
-}
 
 
-const todayAppointments: Appointment[] = [
-  {
-    id: 1,
-    time: '09:00 AM',
-    patient: 'John Smith',
-    type: 'Follow-up',
-    status: 'completed',
-    duration: '30 min',
-    condition: 'Hypertension',
-    urgency: 'normal'
-  },
-  {
-    id: 2,
-    time: '09:30 AM',
-    patient: 'Emily Davis',
-    type: 'Consultation',
-    status: 'completed',
-    duration: '45 min',
-    condition: 'Diabetes',
-    urgency: 'normal'
-  },
-  {
-    id: 3,
-    time: '10:30 AM',
-    patient: 'Sarah Johnson',
-    type: 'Check-up',
-    status: 'upcoming',
-    duration: '30 min',
-    condition: 'Routine',
-    urgency: 'normal'
-  },
-  {
-    id: 4,
-    time: '11:00 AM',
-    patient: 'Michael Brown',
-    type: 'Emergency',
-    status: 'upcoming',
-    duration: '60 min',
-    condition: 'Chest Pain',
-    urgency: 'high'
-  },
-  {
-    id: 5,
-    time: '02:00 PM',
-    patient: 'Lisa Wilson',
-    type: 'Follow-up',
-    status: 'upcoming',
-    duration: '30 min',
-    condition: 'Recovery',
-    urgency: 'normal'
-  }
-];
-const recentPatients: Patient[] = [
-  {
-    id: 1,
-    name: 'John Smith',
-    age: 45,
-    lastVisit: '2 days ago',
-    condition: 'Hypertension',
-    status: 'stable',
-    vitals: { bp: '120/80', hr: '72 bpm', temp: '98.6°F' }
-  },
-  {
-    id: 2,
-    name: 'Emily Davis',
-    age: 32,
-    lastVisit: '1 week ago',
-    condition: 'Type 2 Diabetes',
-    status: 'monitoring',
-    vitals: { bp: '118/75', hr: '68 bpm', temp: '98.4°F' }
-  },
-  {
-    id: 3,
-    name: 'Robert Johnson',
-    age: 58,
-    lastVisit: '3 days ago',
-    condition: 'Post-surgery',
-    status: 'recovering',
-    vitals: { bp: '125/85', hr: '75 bpm', temp: '99.1°F' }
-  }
-];
+
+
+// const recentPatients: Patient[] = [
+//   {
+//     id: 1,
+//     name: 'John Smith',
+//     age: 45,
+//     lastVisit: '2 days ago',
+//     condition: 'Hypertension',
+//     status: 'stable',
+//     vitals: { bp: '120/80', hr: '72 bpm', temp: '98.6°F' }
+//   },
+//   {
+//     id: 2,
+//     name: 'Emily Davis',
+//     age: 32,
+//     lastVisit: '1 week ago',
+//     condition: 'Type 2 Diabetes',
+//     status: 'monitoring',
+//     vitals: { bp: '118/75', hr: '68 bpm', temp: '98.4°F' }
+//   },
+//   {
+//     id: 3,
+//     name: 'Robert Johnson',
+//     age: 58,
+//     lastVisit: '3 days ago',
+//     condition: 'Post-surgery',
+//     status: 'recovering',
+//     vitals: { bp: '125/85', hr: '75 bpm', temp: '99.1°F' }
+//   }
+// ];
 const DoctorDashboard = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [appointments, setAppointments] = useState([]);
   const [patients, setPatients] = useState([]);
-  const [patientsCount,setPatientsCount]=useState()
+  const [todayAppointments,setTodayAppointments]=useState<Appointment[]>([]);
+  const [patientsCount,setPatientsCount]=useState();
+  const [remainingCount, setRemainingCount] = useState<number>(0);
+  const [completedCount, setCompletedCount] = useState<number>(0);
+  const [allApointments,setAllAppointments]=useState<Appointment[]>([])
+  const [recentPatients, setRecentPatients] = useState<Appointment[]>([]);
+
   const theme = useTheme();
   const {user}=useAuthStore()
+  const fetchRecentPatients=async()=>{
+    try{
+      const response=await getRecentPatient();
+      const data=response.data.appointments;
+      setAllAppointments(data);
+    }catch(err){
+      console.log("faild to featch all apointmnet",err);
+    }
+  }
   const fetchApointments=async()=>{
     try{
       const response=await getDoctorAppointment();
-      const appointments = response.data.appointments|| [];
-      setAppointments(appointments.length);
-      console.log("responses",appointments);
+      const app = response.data.appointments|| [];
+      const data=response.data;
+      
+      setAppointments(app);
+      setTodayAppointments(app);
+      setRemainingCount(data.remaining_appointments);
+      setCompletedCount(data.completed_appointments);
+      
     }catch(err:any){
       console.log(err);
     }
@@ -165,15 +114,22 @@ const DoctorDashboard = () => {
     if(user?.user_id){
       fetchApointments();
       fetchPatients(user.user_id);
-    }
-    
-    
+      fetchRecentPatients();
+    }    
   },[])
+
+  useEffect(()=>{
+    if(allApointments.length>0){
+      const recent=getRecentUniquePatientAppointments(allApointments,3);
+      setRecentPatients(recent);
+    }
+  },[allApointments]);
+  
   const getStatusChipColor = (status: string) => {
     switch (status) {
       case 'completed':
         return 'success';
-      case 'upcoming':
+      case 'scheduled':
         return 'info';
       case 'stable':
         return 'success';
@@ -185,12 +141,16 @@ const DoctorDashboard = () => {
         return 'default';
     }
   };
-
+const getInitials = (firstName?: string, lastName?: string): string => {
+  const firstInitial = firstName?.trim()?.[0]?.toUpperCase() || '';
+  const lastInitial = lastName?.trim()?.[0]?.toUpperCase() || '';
+  return firstInitial + lastInitial;
+};
 const statsData: TodayStats[] = [
   {
     title: "Today's Appointments",
-    value:`${appointments}`,
-    subtitle: '2 completed, 6 remaining',
+    value:`${appointments.length}`,
+    subtitle: `${completedCount} completed, ${remainingCount} remaining`,
     icon: <CalendarToday color="primary" />,
     bgcolor: "primary"
   },
@@ -222,7 +182,7 @@ const statsData: TodayStats[] = [
       <Box mb={4} display={"flex"} justifyContent="space-between" alignItems={"center"}>
         <Box>
           <Typography variant="h4" color="text.primary" fontWeight={600} sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}>Good morning, Dr {user?.first_name}</Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: "0.875rem", sm: "1rem" }, mt: 0.5 }}>You have 6 appointments scheduled for today</Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: "0.875rem", sm: "1rem" }, mt: 0.5 }}>You have {appointments.length} appointments scheduled for today</Typography>
         </Box>
         <Box display="flex" gap={2}>
           <CustomButton startIcon={<Description />} sx={{
@@ -273,11 +233,12 @@ const statsData: TodayStats[] = [
           <Card sx={{ width: '100%' }}>
             <CardHeader title="Today's Schedule" subheader={new Date().toLocaleDateString()} />
             <CardContent>
-              {todayAppointments.map((appt) => (
+              
+              {todayAppointments.map((appointent) => (
                 <Box
-                  key={appt.id}
+                  key={appointent.appointment_id}
                   borderLeft={4}
-                  borderColor={appt.urgency === 'high' ? 'error.main' : 'primary.main'}
+                  borderColor={appointent.status=== 'scheduled' ? 'primary.main':appointent.status==='completed'?'success.main' :'error.main' }
                   bgcolor="#f9f9f9"
                   p={2}
                   mb={2}
@@ -285,16 +246,16 @@ const statsData: TodayStats[] = [
                 >
                   <Grid container alignItems="center" justifyContent="space-between">
                     <Grid size={{ xs: 8 }} display="flex" alignItems="center" gap={2}>
-                      <Avatar>{appt.patient.split(' ').map(n => n[0]).join('')}</Avatar>
+                      <Avatar>{getInitials(appointent.patient.first_name,appointent.patient.last_name)}</Avatar>
                       <Box>
-                        <Typography fontWeight={600}>{appt.patient}</Typography>
-                        <Typography variant="body2">{appt.type} • {appt.condition}</Typography>
+                        <Typography fontWeight={600}>{appointent.patient.first_name}{appointent.patient.last_name}</Typography>
+                        <Typography variant="body2">{appointent.reason_for_visit} {appointent.notes}</Typography>
                       </Box>
                     </Grid>
                     <Grid display="flex" alignItems="center" gap={1}>
-                      {appt.urgency === 'high' && <ErrorOutline color="error" />}
-                      <Chip label={appt.status} size="small" color={getStatusChipColor(appt.status)} />
-                      {appt.status === 'upcoming' && (
+                      {/* {appointent.urgency === 'high' && <ErrorOutline color="error" />} */}
+                      <Chip label={appointent.status} size="small" color={getStatusChipColor(appointent.status)} />
+                      {appointent.status === 'scheduled' && (
                         <CustomButton variant="contained" size="small" label="Start"></CustomButton>
                       )}
                     </Grid>
@@ -334,32 +295,32 @@ const statsData: TodayStats[] = [
         <Card sx={{width:"100%"}}>
           <CardHeader title="Recent Patients" subheader="Patients you have recently treated"></CardHeader>
           <Grid container spacing={5} padding={2}>
-                {recentPatients.map((patient)=>(
-                  <Grid size={{xs:12,md:4}} key={patient.id}>
+                {recentPatients.map((appointent)=>(
+                  <Grid size={{xs:12,md:4}} key={appointent.patient.user_id}>
                     <Card variant="outlined" sx={{width:"100%"}}>
                       <CardContent>
                         <Box display="flex" gap={2} mb={2} alignItems="center">
-                          <Avatar>{patient.name.split(' ').map(n=>n[0]).join('')}</Avatar>
+                          <Avatar>{getInitials(appointent.patient.first_name,appointent.patient.last_name)}</Avatar>
                           <Box>
-                            <Typography fontWeight={600}>{patient.name}</Typography>
-                            <Typography variant="body2" color="textSecondary">Age {patient.age} • {patient.lastVisit}</Typography>
+                            <Typography fontWeight={600}>{appointent.patient.first_name}</Typography>
+                            <Typography variant="body2" color="textSecondary">Age {appointent.patient.date_of_birth} • {appointent.patient.gender}</Typography>
                           </Box>
                         </Box>
                         <Divider/>
                         <Box mt={2} mb={2}>
                           <Box display="flex" justifyContent="space-between"> 
                             <Typography variant="body2">Condition: </Typography>
-                            <Typography><strong>{patient.condition}</strong></Typography>
+                            <Typography><strong>{appointent.reason_for_visit}</strong></Typography>
                           </Box>
                           <Box display="flex" justifyContent="space-between"> 
                             <Typography variant="body2">Status:  </Typography>
-                            <Typography color={getStatusChipColor(patient.status)}><strong>{patient.status}</strong></Typography>
+                            <Typography color={getStatusChipColor(appointent.status)}><strong>{appointent.status}</strong></Typography>
                           </Box>
                         </Box>
                       </CardContent>
                     </Card>
                   </Grid>
-                ))}
+                ))} 
           </Grid>
         </Card>
       </Box>
