@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express";
 
 import {
   createMedicineService,
-  findMedicine,
+  findMedicineById,
+  findMedicineByName,
   getAllMedicines,
 } from "../services/medicine.services";
 import { ApiError } from "../utils/apiError";
@@ -17,10 +18,10 @@ export const createMedicine = async (
   next: NextFunction
 ) => {
   try {
-    const { medicine_id, medicine_name, description, cost, expire_date } =
+    const { medicine_name, description, cost, expire_date } =
       req.body;
-    console.log(medicine_name);
-    const existinMedicine = await findMedicine(medicine_id);
+
+    const existinMedicine = await findMedicineByName(medicine_name);
     if (existinMedicine) {
       throw new ApiError("Medicine already added", 409);
     }
@@ -69,7 +70,7 @@ export const deleteMedicine = async (
       throw new ApiError("Medicine ID is required", 400);
     }
 
-    const response = await findMedicine(id);
+    const response = await findMedicineById(Number(id));
     if (!response) {
       throw new ApiError("Medicine not found", 404);
     }

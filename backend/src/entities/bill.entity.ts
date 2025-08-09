@@ -4,10 +4,12 @@ import {
     Entity, 
     JoinColumn, 
     ManyToOne, 
+    OneToMany, 
     PrimaryGeneratedColumn
 } from "typeorm";
 import { User } from "./user.entity";
 import { Appointment } from "./appointment.entity";
+import { Payment } from "./payment.entity";
 
 export enum PaymentStatus{
     PAID = 'paid',
@@ -15,7 +17,8 @@ export enum PaymentStatus{
 }
 
 @Entity()
-export class Bill{
+export class Bill {
+    
     @PrimaryGeneratedColumn()
     bill_id: number;
 
@@ -27,28 +30,22 @@ export class Bill{
     @JoinColumn({ name: 'appointment_id' })
     appointment: Appointment | null;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2})
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
     total_amount: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2})
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
     tax_amount: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2})
-    paid_amount: number;
-
-    @Column({ 
+    @Column({
         type: 'enum',
         enum: PaymentStatus,
-        default: PaymentStatus.UNPAID
+        default: PaymentStatus.UNPAID,
     })
     payment_status: PaymentStatus;
 
     @CreateDateColumn()
     billing_date: Date;
 
-    @Column({ type: 'varchar', length: 100, nullable: true })
-    payment_method: string | null;
-
-    @Column({ type: 'varchar', length: 255, nullable: true })
-    transaction_id: string | null;
+    @OneToMany(() => Payment, (payment) => payment.bill)
+    payments: Payment[];
 }

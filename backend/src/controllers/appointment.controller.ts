@@ -64,7 +64,6 @@ export const addAppointment = async (req: AuthRequest, res: Response, next: Next
             appointment,
             tax_amount: tax,
             total_amount: total,
-            paid_amount: 0,
             payment_status: PaymentStatus.UNPAID,
         });
 

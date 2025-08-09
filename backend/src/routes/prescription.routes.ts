@@ -10,7 +10,7 @@ import { validateBody } from '../middlewares/body.validator.middleware'
 const router = express.Router()
 
 router.route("/")
-    .post(authenticate, authorize(UserRole.ADMIN, UserRole.PATIENT), addPrescription)
+    .post(authenticate, authorize(UserRole.ADMIN, UserRole.DOCTOR), addPrescription)
 
 
 router.route('/patient/:patientId')
