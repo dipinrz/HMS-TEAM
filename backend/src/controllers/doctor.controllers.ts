@@ -171,7 +171,7 @@ export const updateDoctorProfile = async (
             qualification,
             license_number,
             years_of_experience,
-            department_id  
+            department_id  ,
         };
 
         await updateUser(doctor_id, updatedUserFields)

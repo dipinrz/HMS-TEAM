@@ -12,7 +12,7 @@ import { Department } from './department.entity';
 @Entity()
 export class Doctor {
   @PrimaryColumn()
-  doctor_id: number;
+  doctor_id: number;  
 
   @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'doctor_id' })

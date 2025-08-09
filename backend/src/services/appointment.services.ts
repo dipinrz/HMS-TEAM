@@ -77,3 +77,5 @@ export const getAllAppointments = async (filter: any = {}) => {
         }
     });
 };
+
+

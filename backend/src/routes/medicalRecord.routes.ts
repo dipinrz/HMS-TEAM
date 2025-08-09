@@ -1,0 +1,11 @@
+import express from 'express';
+import { authenticate, authorize } from '../middlewares/auth.middleware';
+import { UserRole } from '../entities/user.entity';
+import { fetchPatientMedicalRecordController } from '../controllers/medicalRecord.controller';
+
+const medicalRecordRoutes = express.Router();
+medicalRecordRoutes.use(authenticate)
+
+medicalRecordRoutes.get('/get-records',authorize(UserRole.PATIENT),fetchPatientMedicalRecordController)
+
+export default medicalRecordRoutes
