@@ -23,9 +23,9 @@ export const createOrder = async (amount: number, currency: string = 'INR') => {
     };
 
     return await razorpay.orders.create(options);
-    };
+};
 
-    export const verifySignature = async (
+export const verifySignature = async (
     razorpayOrderId: string,
     razorpayPaymentId: string,
     razorpaySignature: string,
