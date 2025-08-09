@@ -11,6 +11,7 @@ import { updateUser } from "../services/user.services";
 import { instanceToPlain } from "class-transformer";
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import { AppointmentStatus } from "../entities/appointment.entity";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -52,6 +53,8 @@ export const getDoctorAppointmentsHandler = async (
       }
 
       const appointments = await getDoctorAppointments(user.userId, dateRange);
+      const remainingAppointments  = appointments.filter((appointment) => appointment.status === AppointmentStatus.SCHEDULED);
+      const completedAppointments  = appointments.filter((appointment) => appointment.status === AppointmentStatus.COMPLETED);
 
       const formattedAppointments = appointments.map((appointment) => {
         return {
@@ -65,6 +68,8 @@ export const getDoctorAppointmentsHandler = async (
       res.status(200).json({
         success: true,
         message: "Appointments fetched successfully",
+        remaining_appointments: remainingAppointments.length, 
+        completed_appointments: completedAppointments.length, 
         appointments: formattedAppointments,
       });
     } catch (error) {
@@ -110,7 +115,6 @@ export const getDoctorProfile = async (
 ) => {
     try {
       const doctor_id = req.user.userId;
-      console.log(doctor_id);
       const response = await getDoctorById(Number(doctor_id));
       if (!response) {
         throw new ApiError("Doctor not found", 404);
