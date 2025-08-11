@@ -22,7 +22,6 @@ import {
   ReceiptLong,
   MedicalServices,
   AccessTime,
-  Download,
   Notifications,
   FavoriteRounded,
   TrendingUp,
@@ -37,6 +36,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
 import { useAuthStore } from "../../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 interface ThemeColorKey {
   primary: string;
@@ -151,6 +151,22 @@ const appointmentHistory: Appointment[] = [
     status: "completed",
     duration: "45 min",
   },
+  {
+    id: 5,
+    time: "15 Jul 2025 - 9:00 AM",
+    doctor: "Dr. Robert Brown",
+    type: "Orthopedic Consultation",
+    status: "completed",
+    duration: "60 min",
+  },
+  {
+    id: 6,
+    time: "05 Jul 2025 - 3:30 PM",
+    doctor: "Dr. Lisa Davis",
+    type: "Annual Physical",
+    status: "completed",
+    duration: "45 min",
+  },
 ];
 
 const medications: Medication[] = [
@@ -178,12 +194,21 @@ const medications: Medication[] = [
     remaining: 5,
     refillDate: "2025-08-15",
   },
+  {
+    id: 4,
+    name: "Aspirin",
+    dosage: "81mg",
+    frequency: "Daily",
+    remaining: 20,
+    refillDate: "2025-08-30",
+  },
 ];
 
 const PatientDashboard = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const theme = useTheme();
   const { user } = useAuthStore();
+  const navigate = useNavigate();
 
   const getStatusChipColor = (status: string) => {
     switch (status) {
@@ -208,6 +233,21 @@ const PatientDashboard = () => {
         return <MedicalServices color="primary" />;
     }
   };
+
+  const alerts = [
+    {
+      type: "info",
+      message: "Your appointment with Dr. Sarah Wilson is today at 2:00 PM.",
+      actionLabel: "View Details",
+      onAction: () => console.log("Viewing appointment details"),
+    },
+    {
+      type: "warning",
+      message: "Your Vitamin D3 is running low (5 pills remaining).",
+      actionLabel: "Request Refill",
+      onAction: () => console.log("Requesting refill"),
+    },
+  ];
 
   return (
     <Box sx={{ mt: 10, maxWidth: "90%", mx: "auto" }}>
@@ -245,6 +285,9 @@ const PatientDashboard = () => {
             />
           </Badge>
           <CustomButton
+            onClick={() => {
+              navigate("/bookAppointment");
+            }}
             startIcon={<MedicalServices />}
             label="Book Appointment"
           />
@@ -253,30 +296,28 @@ const PatientDashboard = () => {
 
       {/* Alerts */}
       <Box mb={3}>
-        <Alert severity="info" sx={{ mb: 2 }}>
-          <Typography variant="body2">
-            <strong>Reminder:</strong> Your appointment with Dr. Sarah Wilson is
-            today at 2:00 PM.
-            <CustomButton
-              variant="text"
-              size="small"
-              label="View Details"
-              sx={{ ml: 1 }}
-            />
-          </Typography>
-        </Alert>
-        <Alert severity="warning">
-          <Typography variant="body2">
-            <strong>Prescription Alert:</strong> Your Vitamin D3 is running low
-            (5 pills remaining).
-            <CustomButton
-              variant="text"
-              size="small"
-              label="Request Refill"
-              sx={{ ml: 1 }}
-            />
-          </Typography>
-        </Alert>
+        {alerts.length > 0 &&
+          alerts.map((alert, index) => (
+            <Alert
+              key={index}
+              severity={alert.type as "info" | "warning" | "error" | "success"}
+              sx={{ mb: 2 }}
+            >
+              <Typography variant="body2">
+                <strong>
+                  {alert.type === "info" ? "Reminder:" : "Prescription Alert:"}
+                </strong>{" "}
+                {alert.message}
+                <CustomButton
+                  variant="text"
+                  size="small"
+                  label={alert.actionLabel}
+                  sx={{ ml: 1 }}
+                  onClick={alert.onAction}
+                />
+              </Typography>
+            </Alert>
+          ))}
       </Box>
 
       {/* Stats */}
@@ -340,101 +381,155 @@ const PatientDashboard = () => {
       </Grid>
 
       {/* Main Content */}
-      <Grid container spacing={2} sx={{ mt: 1 }} maxHeight={"90%"}>
-        {/* Left Column */}
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <Card sx={{ height: "98%" }}>
+      <Grid container spacing={4} sx={{ mt: 1 }} alignItems="stretch">
+        {/* Left Column - Appointments */}
+        <Grid size={{ xs: 12, lg: 3.5 }}>
+          <Card sx={{ height: 600 }}>
             <CardHeader title="Appointments" />
-            <CardContent>
-              {appointmentHistory.slice(0, 4).map((appt) => (
-                <Paper
-                  key={appt.id}
-                  sx={{
-                    p: 2,
-                    mb: 1,
-                    bgcolor: "#f8f9fa",
-                    border: "1px solid #e9ecef",
-                  }}
-                >
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    flexWrap="wrap"
-                    gap={2}
-                  >
-                    <Box display="flex" gap={2} flex={1} minWidth={0}>
-                      {getAppointmentIcon(appt.appointmentType || "in-person")}
-                      <Avatar>
-                        {appt.doctor
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </Avatar>
-                      <Box flex={1} minWidth={0}>
-                        <Typography fontWeight={600} noWrap>
-                          {appt.type}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          noWrap
+            <CardContent sx={{ height: "calc(100% - 80px)", pb: 1 }}>
+              <Box
+                sx={{
+                  height: "100%",
+                  overflowY: "auto",
+                  pr: 1,
+                  "&::-webkit-scrollbar": {
+                    width: "6px",
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    background: "#f1f1f1",
+                    borderRadius: "10px",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    background: "#c1c1c1",
+                    borderRadius: "10px",
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                    background: "#a8a8a8",
+                  },
+                }}
+              >
+                <Box display="flex" flexDirection="column" gap={2}>
+                  {appointmentHistory.map((appt) => (
+                    <Paper
+                      key={appt.id}
+                      sx={{
+                        p: 2,
+                        bgcolor: "#f8f9fa",
+                        border: "1px solid #e9ecef",
+                        borderRadius: 2,
+                      }}
+                      
+                    >
+                      <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="flex-start"
+                        gap={2}
+                      >
+                        {/* Left Section */}
+                        <Box display="flex" gap={2} flex={1} minWidth={0}>
+                          {getAppointmentIcon(
+                            appt.appointmentType || "in-person"
+                          )}
+                          <Avatar sx={{ width: 32, height: 32 }}>
+                            {appt.doctor
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </Avatar>
+                          <Box flex={1} minWidth={0}>
+                            <Typography
+                              variant="body2"
+                              fontWeight={600}
+                              sx={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {appt.type}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                              sx={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                                display: "block",
+                              }}
+                            >
+                              {appt.doctor}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                              display="flex"
+                              alignItems="center"
+                              sx={{ mt: 0.5 }}
+                            >
+                              <AccessTime fontSize="inherit" sx={{ mr: 0.5 }} />
+                              {appt.time.split(" - ")[1]} • {appt.duration}
+                            </Typography>
+                          </Box>
+                        </Box>
+
+                        {/* Right Section - Status and Actions */}
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          alignItems="flex-end"
+                          gap={1}
                         >
-                          {appt.doctor}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          <AccessTime fontSize="small" sx={{ mr: 0.5 }} />
-                          {appt.time} • {appt.duration}{" "}
-                          {appt.location && ` • ${appt.location}`}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <Chip
-                        label={appt.status}
-                        color={getStatusChipColor(appt.status)}
-                        size="small"
-                        variant="outlined"
-                      />
-                      {appt.status === "upcoming" && (
-                        <>
-                          <CustomButton
+                          <Chip
+                            label={appt.status}
+                            color={getStatusChipColor(appt.status)}
+                            size="small"
                             variant="outlined"
-                            size="small"
-                            label="Join"
-                            startIcon={
-                              appt.appointmentType === "video" ? (
-                                <VideoCall />
-                              ) : (
-                                <MedicalServices />
-                              )
-                            }
                           />
-                          <CustomButton
-                            variant="text"
-                            size="small"
-                            label="Reschedule"
-                          />
-                        </>
-                      )}
-                      {appt.status === "completed" && (
-                        <CustomButton
-                          variant="outlined"
-                          size="small"
-                          label="Download"
-                          startIcon={<Download />}
-                        />
-                      )}
-                    </Box>
-                  </Box>
-                </Paper>
-              ))}
+                          {appt.status === "upcoming" && (
+                            <CustomButton
+                              variant="outlined"
+                              size="small"
+                              label="Join"
+                              startIcon={
+                                appt.appointmentType === "video" ? (
+                                  <VideoCall />
+                                ) : (
+                                  <MedicalServices />
+                                )
+                              }
+                            />
+                          )}
+                          {appt.status === "completed" && (
+                            <CustomButton
+                              variant="text"
+                              size="small"
+                              label="View"
+                            />
+                          )}
+                        </Box>
+                      </Box>
+                    </Paper>
+                  ))}
+                </Box>
+              </Box>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={4} container height={"100%"}>
-          <Grid size={12} display={"flex"}>
-            <Card sx={{ width: "100%" }}>
+        {/* Middle Column */}
+        <Grid
+          size={{ xs: 12, lg: 4 }}
+          container
+          spacing={2}
+          sx={{ height: "fit-content" }}
+        >
+          <Grid
+            size={12}
+            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          >
+            <Card sx={{ height: 290, width: "100%", flex: 1 }}>
               <CardHeader title="Quick Actions" />
               <CardContent>
                 <Box display="flex" flexDirection="column" gap={1.5}>
@@ -466,71 +561,120 @@ const PatientDashboard = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid size={12} display={"flex"}>
-            {" "}
-            <Card sx={{ width: "100%" }}>
+          <Grid size={12}>
+            <Card sx={{ height: 300, width: "100%", flex: 1 }}>
               <CardHeader title="Current Medications" />
-              <CardContent>
-                <List dense>
-                  {medications.map((med) => (
-                    <ListItem key={med.id} sx={{ px: 0 }}>
-                      <ListItemIcon>
-                        <LocalPharmacy color="primary" />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <Box display="flex" justifyContent="space-between">
-                            <Typography fontWeight={600}>
-                              {med.name} {med.dosage}
-                            </Typography>
-                            <Chip
-                              label={`${med.remaining} left`}
-                              size="small"
-                              color={med.remaining <= 7 ? "error" : "default"}
-                              variant="outlined"
-                            />
-                          </Box>
-                        }
-                        secondary={
-                          <>
-                            <Typography variant="caption">
-                              {med.frequency} • Refill due:{" "}
-                              {new Date(med.refillDate).toLocaleDateString()}
-                            </Typography>
-                            {med.remaining <= 7 && (
-                              <LinearProgress
-                                variant="determinate"
-                                value={(med.remaining / 30) * 100}
-                                color="error"
-                                sx={{ height: 4, borderRadius: 2, mt: 1 }}
+              <CardContent sx={{ height: "calc(100% - 80px)", pb: 1 }}>
+                <Box
+                  sx={{
+                    height: "100%",
+                    overflowY: "auto",
+                    pr: 1,
+                    "&::-webkit-scrollbar": {
+                      width: "6px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      background: "#f1f1f1",
+                      borderRadius: "10px",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      background: "#c1c1c1",
+                      borderRadius: "10px",
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                      background: "#a8a8a8",
+                    },
+                  }}
+                >
+                  <List dense sx={{ pt: 0 }}>
+                    {medications.map((med) => (
+                      <ListItem key={med.id} sx={{ px: 0, pb: 1 }}>
+                        <ListItemIcon sx={{ minWidth: 40 }}>
+                          <LocalPharmacy color="primary" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <Box
+                              display="flex"
+                              justifyContent="space-between"
+                              alignItems="center"
+                            >
+                              <Typography variant="body2" fontWeight={600}>
+                                {med.name} {med.dosage}
+                              </Typography>
+                              <Chip
+                                label={`${med.remaining} left`}
+                                size="small"
+                                color={med.remaining <= 7 ? "error" : "default"}
+                                variant="outlined"
                               />
-                            )}
-                          </>
-                        }
-                      />
-                    </ListItem>
-                  ))}
-                </List>
+                            </Box>
+                          }
+                          secondary={
+                            <>
+                              <Typography variant="caption" display="block">
+                                {med.frequency} • Refill due:{" "}
+                                {new Date(med.refillDate).toLocaleDateString()}
+                              </Typography>
+                              {med.remaining <= 7 && (
+                                <LinearProgress
+                                  variant="determinate"
+                                  value={(med.remaining / 30) * 100}
+                                  color="error"
+                                  sx={{ height: 4, borderRadius: 2, mt: 1 }}
+                                />
+                              )}
+                            </>
+                          }
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Box>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
-        <Grid size={4}>
-          {" "}
-          <Card sx={{ width: "100%", height: "98%" }}>
+
+        {/* Right Column - Calendar */}
+        <Grid size={{ lg: 4.5, xs: 12 }}>
+          <Card
+            sx={{
+              height: {
+                lg: "100%",
+                xs: "auto",
+              },
+              width: "100%",
+            }}
+          >
             <CardHeader title="Calendar" />
-            <CardContent>
+            <CardContent
+              sx={{
+                height: "calc(100% - 80px)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-start",
+                pt: 1,
+              }}
+            >
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <StaticDatePicker
                   value={selectedDate}
                   onChange={(date) => setSelectedDate(date)}
+                  sx={{
+                    "& .MuiPickersCalendarHeader-root": {
+                      paddingLeft: 1,
+                      paddingRight: 1,
+                    },
+                    "& .MuiDayCalendar-root": {
+                      width: "100%",
+                    },
+                  }}
                 />
               </LocalizationProvider>
             </CardContent>
           </Card>
         </Grid>
-
-        {/* Right Column */}
       </Grid>
     </Box>
   );
