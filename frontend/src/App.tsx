@@ -143,7 +143,10 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/appointmentDetail" element={<AppointmentDetail />} />
+            <Route
+              path="/appointmentDetail/:id"
+              element={<AppointmentDetail />}
+            />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>

@@ -199,7 +199,18 @@ const AppointmentDetail: React.FC = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+    <Paper
+      elevation={3}
+      sx={{
+        p: 3,
+        mb: 3,
+        mt: {
+          lg: 8,
+          xs: 15,
+        },
+        height: "100%",
+      }}
+    >
       <Box
         display="flex"
         justifyContent="space-between"

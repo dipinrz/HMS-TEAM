@@ -418,7 +418,6 @@ const PatientDashboard = () => {
                         border: "1px solid #e9ecef",
                         borderRadius: 2,
                       }}
-                      
                     >
                       <Box
                         display="flex"
@@ -489,21 +488,20 @@ const PatientDashboard = () => {
                           />
                           {appt.status === "upcoming" && (
                             <CustomButton
+                              onClick={() => {
+                                navigate(`/appointmentDetail/:${appt.id}`);
+                              }}
                               variant="outlined"
                               size="small"
-                              label="Join"
-                              startIcon={
-                                appt.appointmentType === "video" ? (
-                                  <VideoCall />
-                                ) : (
-                                  <MedicalServices />
-                                )
-                              }
+                              label="View"
                             />
                           )}
                           {appt.status === "completed" && (
                             <CustomButton
-                              variant="text"
+                              onClick={() => {
+                                navigate(`/appointmentDetail/:${appt.id}`);
+                              }}
+                              variant="outlined"
                               size="small"
                               label="View"
                             />
