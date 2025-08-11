@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   );
 
   const commonLinks = [
-    { path: "/dashboard", name: "Dashboard", icon: <DashboardIcon /> },
+    { path: "/admin/dashboard", name: "Dashboard", icon: <DashboardIcon /> },
   ];
 
   const roleLinks = {
@@ -133,7 +133,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <PersonIcon sx={{ fontSize: 28 }} />
           </Avatar>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
-            User Name
+            {user?.first_name.toUpperCase()} {user?.last_name.toLowerCase()}
           </Typography>
           <Chip
             label={user?.role?.toUpperCase() || "USER"}

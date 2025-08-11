@@ -13,6 +13,8 @@ import BookAppointment from './pages/PatientUtility/Appointment';
 import Sidebar from './components/SideBar';
 import { useAuthStore } from './store/useAuthStore';
 import Navbar from './components/NavBar';
+import AllPatients from './pages/Admin-pages/AllPatients';
+import AllDoctors from './pages/Admin-pages/AllDoctors';
 
 const theme = createTheme({
   palette: {
@@ -81,12 +83,11 @@ function App() {
           component="main"
           sx={{
             flexGrow: 1,
-            p: 3,
             width: '100%',
             minHeight: '100vh',
             backgroundColor: '#f5f5f5',
             ...(shouldShowSidebar && {
-              marginLeft: { xs: 0, sm: '64px'},
+              marginLeft: { xs: 0,},
               width: { xs: '100%', sm: 'calc(100% - 64px)', md: 'calc(100% - 240px)' },
             }),
           }}
@@ -104,6 +105,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/admin/users" element={<AllPatients />} />
+            <Route path="/admin/doctors" element={<AllDoctors />} />
             
             <Route
               path="/doctor/*"
