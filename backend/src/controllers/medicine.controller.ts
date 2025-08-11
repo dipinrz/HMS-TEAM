@@ -18,9 +18,9 @@ export const createMedicine = async (
   next: NextFunction
 ) => {
   try {
-    const { medicine_name, description, cost, expire_date } =
+    const { medicine_name, description, cost, expiry_date } =
       req.body;
-
+      
     const existinMedicine = await findMedicineByName(medicine_name);
     if (existinMedicine) {
       throw new ApiError("Medicine already added", 409);
@@ -29,7 +29,7 @@ export const createMedicine = async (
       medicine_name,
       description,
       cost,
-      expire_date,
+      expiry_date,  
     };
     const savedMedicine = await createMedicineService(newMedicineData);
 
