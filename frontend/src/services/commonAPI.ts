@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const commonAPI = async(
-  httpMethod: 'GET' | 'POST' | 'PATCH' | 'PUT',
+  httpMethod: 'GET' | 'POST' | 'PATCH' | 'PUT'|'DELETE',
   url: string,
   reqBody?: any
 ) => {

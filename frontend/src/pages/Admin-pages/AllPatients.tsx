@@ -1,61 +1,41 @@
-import {Box,Button,IconButton,Paper,Table,TableBody,TableCell,TableContainer,TableHead,
-  TableRow,  Typography,TextField,InputAdornment,Avatar,TableSortLabel,
-  Chip,Tooltip,Divider,Badge,} from "@mui/material";
-import {Edit as EditIcon,Delete as DeleteIcon,Search as SearchIcon,
+import {
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  TextField,
+  InputAdornment,
+  Avatar,
+  TableSortLabel,
+  Chip,
+  Tooltip,
+  Divider,
+  Badge,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import {
+  Delete as DeleteIcon,
+  Search as SearchIcon,
 } from "@mui/icons-material";
 import { FilterIcon } from "lucide-react";
 import CustomButton from "../../components/ui/CustomButton";
-
-const dummyPatients = [
-  {
-    userId: 1,
-    name: "John Doe",
-    email: "john.doe@example.com",
-    bloodGroup: "A+",
-    phoneNumber: "+91 9876543210",
-    createdAt: "2025-01-10",
-    status: "active",
-  },
-  {
-    userId: 2,
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    bloodGroup: "B-",
-    phoneNumber: "+91 9988776655",
-    createdAt: "2025-02-15",
-    status: "active",
-  },
-  {
-    userId: 3,
-    name: "Robert Johnson",
-    email: "robert.johnson@example.com",
-    bloodGroup: "O+",
-    phoneNumber: "+91 9123456780",
-    createdAt: "2025-03-20",
-    status: "inactive",
-  },
-  {
-    userId: 4,
-    name: "Emily Davis",
-    email: "emily.davis@example.com",
-    bloodGroup: "AB+",
-    phoneNumber: "+91 9456781230",
-    createdAt: "2025-04-05",
-    status: "active",
-  },
-  {
-    userId: 5,
-    name: "Michael Wilson",
-    email: "michael.wilson@example.com",
-    bloodGroup: "A-",
-    phoneNumber: "+91 9789456123",
-    createdAt: "2025-05-12",
-    status: "active",
-  },
-];
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { deletePatient, getAllPatients } from "../../services/adminAPi";
 
 const headCells = [
-  { id: "userId", numeric: true, label: "ID" },
+  { id: "userId", numeric: true, label: "Sl.No" },
   { id: "name", numeric: false, label: "Patient" },
   { id: "email", numeric: false, label: "Email" },
   { id: "bloodGroup", numeric: false, label: "Blood Group" },
@@ -65,6 +45,54 @@ const headCells = [
 ];
 
 const AdminPatientsPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [allPatients, setAllPatients] = useState([]);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(
+    null
+  );
+
+  useEffect(() => {
+    fetchAllPatients();
+  }, []);
+
+  const handleOpenDeleteDialog = (id: number) => {
+    setSelectedPatientId(id);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setSelectedPatientId(null);
+  };
+
+  const fetchAllPatients = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getAllPatients();
+      setAllPatients(response.data.patients);
+    } catch (error) {
+      toast.error("Could fetch patients");
+      console.log("Error in fetching patients:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeletePatient = async () => {
+    if (selectedPatientId === null) return;
+
+    try {
+      await deletePatient(selectedPatientId);
+      toast.success("Patient deleted successfully");
+      fetchAllPatients()
+      handleCloseDeleteDialog();
+    } catch (error:any) {
+      toast.error("Couldn't delete patient");
+      console.log("Error in deleting patient", error);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -86,8 +114,8 @@ const AdminPatientsPage = () => {
       }}
     >
       <Box sx={{ position: "relative", zIndex: 1 }}>
-         <Typography
-        textAlign={'center'}
+        <Typography
+          textAlign={"center"}
           variant="h4"
           fontWeight="bold"
           sx={{ mb: 3, color: "#1e293b" }}
@@ -176,7 +204,7 @@ const AdminPatientsPage = () => {
                   {headCells.map((headCell) => (
                     <TableCell
                       key={headCell.id}
-                      align={headCell.numeric ? "right" : "left"}
+                      align="left"
                       sx={{
                         fontWeight: "bold",
                         fontSize: "0.95rem",
@@ -191,137 +219,135 @@ const AdminPatientsPage = () => {
                   ))}
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {dummyPatients.map((patient) => (
-                  <TableRow
-                    key={patient.userId}
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "rgba(25, 118, 210, 0.04)",
-                        transform: "scale(1.001)",
+              {isLoading ? (
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  height="200px"
+                >
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <TableBody>
+                  {allPatients.map((patient: any, index) => (
+                    <TableRow
+                      key={patient.patient_id}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "rgba(25, 118, 210, 0.04)",
+                          transform: "scale(1.001)",
+                          transition: "all 0.2s ease",
+                        },
+                        "&:last-child td": { border: 0 },
                         transition: "all 0.2s ease",
-                      },
-                      "&:last-child td": { border: 0 },
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    <TableCell align="right">
-                      <Badge
-                        badgeContent={patient.userId}
-                        color="primary"
-                        sx={{
-                          "& .MuiBadge-badge": {
-                            right: -3,
-                            top: 13,
-                          },
-                        }}
-                      >
-                        <Box sx={{ width: 20 }} />
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Box display="flex" alignItems="center" gap={2}>
-                        <Avatar
-                          sx={{
-                            width: 44,
-                            height: 44,
-                            fontWeight: "bold",
-                            fontSize: "0.9rem",
-                          }}
-                        >
-                          {patient.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </Avatar>
-                        <Box>
-                          <Typography
-                            variant="body1"
-                            fontWeight="600"
-                            color="#2c3e50"
-                          >
-                            {patient.name}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            ID: {patient.userId}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary">
-                        {patient.email}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={patient.bloodGroup}
-                        size="medium"
-                        sx={{
-                          fontWeight: "bold",
-                          fontSize: "0.8rem",
-                          borderRadius: 2,
-                          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary">
-                        {patient.phoneNumber}
-                      </Typography>
-                    </TableCell>
+                      }}
+                    >
+                      <TableCell align="left">
+                        <Badge badgeContent={index + 1} color="primary">
+                          <Box sx={{ width: 20 }} />
+                        </Badge>
+                      </TableCell>
 
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary">
-                        {new Date(patient.createdAt).toLocaleDateString(
-                          "en-US",
-                          {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          }
-                        )}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Box display="flex" gap={1}>
-                        <Tooltip title="Edit Patient" arrow>
-                          <IconButton
-                            size="small"
+                      <TableCell>
+                        <Box display="flex" alignItems="center" gap={2}>
+                          <Avatar
                             sx={{
-                              color: "#1976d2",
-                              backgroundColor: "rgba(25, 118, 210, 0.08)",
-                              "&:hover": {
-                                backgroundColor: "rgba(25, 118, 210, 0.15)",
-                                transform: "scale(1.1)",
-                              },
-                              transition: "all 0.2s ease",
+                              width: 44,
+                              height: 44,
+                              fontWeight: "bold",
+                              fontSize: "0.9rem",
                             }}
                           >
-                            <EditIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete Patient" arrow>
-                          <IconButton
-                            size="small"
-                            sx={{
-                              color: "#d32f2f",
-                              backgroundColor: "rgba(211, 47, 47, 0.08)",
-                              "&:hover": {
-                                backgroundColor: "rgba(211, 47, 47, 0.15)",
-                                transform: "scale(1.1)",
-                              },
-                              transition: "all 0.2s ease",
-                            }}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+                            {`${patient.user.first_name} ${patient.user.last_name}`
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </Avatar>
+                          <Box>
+                            <Typography
+                              variant="body1"
+                              fontWeight="600"
+                              color="#2c3e50"
+                            >
+                              {patient.user.first_name} {patient.user.last_name}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
+                              ID: {patient.patient_id}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary">
+                          {patient.user.email}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Chip
+                          label={patient.blood_group}
+                          size="medium"
+                          sx={{
+                            fontWeight: "bold",
+                            fontSize: "0.8rem",
+                            borderRadius: 2,
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                          }}
+                        />
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary">
+                          {patient.user.phone_number}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary">
+                          {new Date(patient.user.created_at).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }
+                          )}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Box display="flex" gap={1}>
+                          
+                          <Tooltip title="Delete Patient" arrow>
+                            <IconButton
+                              size="small"
+                              sx={{
+                                color: "#d32f2f",
+                                backgroundColor: "rgba(211, 47, 47, 0.08)",
+                                "&:hover": {
+                                  backgroundColor: "rgba(211, 47, 47, 0.15)",
+                                  transform: "scale(1.1)",
+                                },
+                                transition: "all 0.2s ease",
+                              }}
+                              onClick={() =>
+                                handleOpenDeleteDialog(patient.patient_id)
+                              }
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              )}
             </Table>
           </TableContainer>
 
@@ -332,13 +358,13 @@ const AdminPatientsPage = () => {
               display: "flex",
               justifyContent: "space-evenly",
               alignItems: "center",
-              px: 3, 
-              py: 2, 
+              px: 3,
+              py: 2,
               backgroundColor: "rgba(25,118,210,0.02)",
             }}
           >
             <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              Total Patients: {dummyPatients.length}
+              Total Patients: {allPatients.length}
             </Typography>
             <Box>
               <CustomButton
@@ -347,11 +373,28 @@ const AdminPatientsPage = () => {
                 label="Download PDF"
                 sx={{ mr: 1, borderRadius: 2 }}
               />
-
             </Box>
           </Box>
         </Paper>
       </Box>
+      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this patient?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeletePatient}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

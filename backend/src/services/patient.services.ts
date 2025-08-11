@@ -57,6 +57,10 @@ export const getPatientAppointments = async (patientId: number) => {
 // ----------- GET ALL PATIENTS -----------
 
 export const getPatients = async () => {
-    return await patientRepo.find({})
+    return await patientRepo.find({relations:['user'],
+        order:{
+            patient_id:'ASC'
+        }
+    })
 
 }
