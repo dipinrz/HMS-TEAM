@@ -30,7 +30,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 
-const drawerWidth = 280; // Increased width for better spacing
+const drawerWidth = 280;
 
 type SidebarProps = {
   mobileOpen: boolean;
@@ -38,6 +38,7 @@ type SidebarProps = {
 };
 
 type UserRole = "admin" | "doctor" | "patient";
+
 
 const Sidebar: React.FC<SidebarProps> = ({
   mobileOpen,
@@ -49,47 +50,53 @@ const Sidebar: React.FC<SidebarProps> = ({
     theme.breakpoints.down("sm")
   );
 
-  const commonLinks = [
-    { path: "/admin/dashboard", name: "Dashboard", icon: <DashboardIcon /> },
-  ];
+  const getLinksForRole = (role: UserRole) => {
+    const basePath = `/${role}`;
+    
+    const commonLinks = [
+      { path: `${basePath}/dashboard`, name: "Dashboard", icon: <DashboardIcon /> },
+    ];
 
-  const roleLinks = {
-    admin: [
-      { path: "/admin/users", name: "Users", icon: <PeopleIcon /> },
-      {
-        path: "/admin/departments",
-        name: "Departments",
-        icon: <HospitalIcon />,
-      },
-      { path: "/admin/medicines", name: "Medicines", icon: <MedicationIcon /> },
-      { path: "/admin/doctors", name: "Doctors", icon: <DoctorIcon /> },
-    ],
-    doctor: [
-      {
-        path: "/doctor/appointments",
-        name: "Appointments",
-        icon: <CalendarIcon />,
-      },
-      {
-        path: "/doctor/prescriptions",
-        name: "Prescriptions",
-        icon: <PrescriptionIcon />,
-      },
-    ],
-    patient: [
-      {
-        path: "/patient/appointments",
-        name: "Appointments",
-        icon: <CalendarIcon />,
-      },
-      { path: "/patient/doctors", name: "Doctors", icon: <DoctorIcon /> },
-    ],
+    const roleSpecificLinks = {
+      admin: [
+        { path: "/admin/users", name: "Users", icon: <PeopleIcon /> },
+        {
+          path: "/admin/departments",
+          name: "Departments",
+          icon: <HospitalIcon />,
+        },
+        { path: "/admin/medicines", name: "Medicines", icon: <MedicationIcon /> },
+        { path: "/admin/doctors", name: "Doctors", icon: <DoctorIcon /> },
+      ],
+      doctor: [
+        {
+          path: "/doctor/appointments",
+          name: "Appointments",
+          icon: <CalendarIcon />,
+        },
+        {
+          path: "/doctor/prescriptions",
+          name: "Prescriptions",
+          icon: <PrescriptionIcon />,
+        },
+      ],
+      patient: [
+        {
+          path: "/patient/appointments",
+          name: "Appointments",
+          icon: <CalendarIcon />,
+        },
+        { path: "/patient/doctors", name: "Doctors", icon: <DoctorIcon /> },
+      ],
+    };
+
+    return [
+      ...commonLinks,
+      ...(roleSpecificLinks[role] || []),
+    ];
   };
 
-  const allLinks = [
-    ...commonLinks,
-    ...(roleLinks[user?.role as UserRole] || []),
-  ];
+  const allLinks = getLinksForRole(user?.role as UserRole);
 
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -105,11 +112,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const drawer = (
-    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column", mt: {xs: '10vh', lg:0} }}>
       <Toolbar />
 
       {/* User Profile Section */}
-      <Box sx={{ p: 3, pb: 2 }}>
+      <Box sx={{ p: 3, pb: 2, flexShrink: 0 }}>
         <Paper
           elevation={0}
           sx={{
@@ -133,7 +140,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <PersonIcon sx={{ fontSize: 28 }} />
           </Avatar>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
-            {user?.first_name.toUpperCase()} {user?.last_name.toLowerCase()}
+            User Name
           </Typography>
           <Chip
             label={user?.role?.toUpperCase() || "USER"}
@@ -148,10 +155,16 @@ const Sidebar: React.FC<SidebarProps> = ({
         </Paper>
       </Box>
 
-      <Divider sx={{ mx: 2, mb: 1 }} />
+      <Divider sx={{ mx: 2, mb: 1, flexShrink: 0 }} />
 
-      {/* Navigation Links */}
-      <Box sx={{ flex: 1, px: 2 }}>
+      {/* Navigation Links with Custom Scrollbar */}
+      <Box sx={{ 
+        flex: 1, 
+        px: 2,
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column"
+      }}>
         <Typography
           variant="overline"
           sx={{
@@ -162,71 +175,91 @@ const Sidebar: React.FC<SidebarProps> = ({
             color: "text.secondary",
             fontSize: "0.75rem",
             letterSpacing: 1,
+            flexShrink: 0,
           }}
         >
           NAVIGATION
         </Typography>
 
-        <List sx={{ pt: 0 }}>
-          {allLinks.map((link) => {
-            const isSelected = location.pathname.startsWith(link.path);
+        <Box
+          sx={{
+            flex: 1,
+            overflow: "auto",
+            // Hide scrollbar but keep scroll functionality
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            scrollbarWidth: "none", // Firefox
+            msOverflowStyle: "none", // IE/Edge
+          }}
+        >
+          <List sx={{ pt: 0 }}>
+            {allLinks.map((link) => {
+              const isSelected = location.pathname.startsWith(link.path);
 
-            return (
-              <ListItem key={link.path} disablePadding sx={{ mb: 2 }}>
-                <ListItemButton
-                  component={Link}
-                  to={link.path}
-                  selected={isSelected}
-                  onClick={isMobile ? handleDrawerToggle : undefined}
-                  sx={{
-                    borderRadius: 2,
-                    mx: 1,
-                    transition: "all 0.3s ease",
-                    background:
-                      "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
-                    "&.Mui-selected": {
-                      bgcolor: getRoleColor(user?.role || "admin"),
+              return (
+                <ListItem key={link.path} disablePadding sx={{ mb: 2 }}>
+                  <ListItemButton
+                    component={Link}
+                    to={link.path}
+                    selected={isSelected}
+                    onClick={isMobile ? handleDrawerToggle : undefined}
+                    sx={{
+                      borderRadius: 2,
+                      mx: 1,
+                      transition: "all 0.3s ease",
                       color: "white",
-                      transform: "translateX(4px)",
-                      "&:hover": {
+                      background: isSelected
+                        ? getRoleColor(user?.role || "admin")
+                        : "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                      "&.Mui-selected": {
                         bgcolor: getRoleColor(user?.role || "admin"),
+                        color: "white",
+                        transform: "translateX(4px)",
+                        "&:hover": {
+                          bgcolor: getRoleColor(user?.role || "admin"),
+                          filter: "brightness(1.1)",
+                        },
+                        "& .MuiListItemIcon-root": {
+                          color: "white",
+                        },
+                      },
+                      "&:hover": {
+                        bgcolor: isSelected 
+                          ? getRoleColor(user?.role || "admin")
+                          : "rgba(2, 10, 165, 0.8)",
+                        transform: "translateX(2px)",
                         filter: "brightness(1.1)",
                       },
-                      "& .MuiListItemIcon-root": {
-                        color: "white",
-                      },
-                    },
-                    "&:hover": {
-                      bgcolor: "rgba(0,0,0,0.04)",
-                      transform: "translateX(2px)",
-                    },
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      color: isSelected ? "#e0e7ff" : "white",
-                      minWidth: 44,
-                      transition: "color 0.3s ease",
                     }}
                   >
-                    {link.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={link.name}
-                    primaryTypographyProps={{
-                      fontWeight: isSelected ? 600 : 500,
-                      fontSize: "0.95rem",
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            );
-          })}
-        </List>
+                    <ListItemIcon
+                      sx={{
+                        color: "white",
+                        minWidth: 44,
+                        transition: "color 0.3s ease",
+                      }}
+                    >
+                      {link.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={link.name}
+                      primaryTypographyProps={{
+                        fontWeight: isSelected ? 600 : 500,
+                        fontSize: "0.95rem",
+                        color: "white",
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </List>
+        </Box>
       </Box>
 
       {/* Footer Section */}
-      <Box sx={{ p: 3, pt: 2 }}>
+      <Box sx={{ p: 3, pt: 2, flexShrink: 0 }}>
         <Paper
           elevation={0}
           sx={{
@@ -257,12 +290,16 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <Box
       component="nav"
-      sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+      sx={{ 
+        width: { sm: drawerWidth }, 
+        flexShrink: { sm: 0 },
+        zIndex: (theme) => theme.zIndex.drawer,
+      }}
       aria-label="navigation sidebar"
     >
       <Drawer
         variant={isMobile ? "temporary" : "permanent"}
-        open={mobileOpen}
+        open={isMobile ? mobileOpen : true}
         onClose={handleDrawerToggle}
         ModalProps={{
           keepMounted: true,
@@ -275,6 +312,20 @@ const Sidebar: React.FC<SidebarProps> = ({
             borderRight: "1px solid",
             borderColor: "divider",
             backgroundImage: "none",
+            zIndex: (theme) => theme.zIndex.drawer,
+            ...(isMobile ? {
+              // Mobile drawer
+              height: "100vh",
+              position: "fixed",
+              top: 0,
+              left: 0,
+            } : {
+              // Desktop drawer
+              position: "fixed",
+              height: "100vh",
+              top: 0,
+              left: 0,
+            }),
           },
         }}
       >

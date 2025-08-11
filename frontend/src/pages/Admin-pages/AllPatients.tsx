@@ -192,7 +192,7 @@ const AdminPatientsPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dummyPatients.map((patient, __) => (
+                {dummyPatients.map((patient) => (
                   <TableRow
                     key={patient.userId}
                     sx={{

@@ -51,8 +51,8 @@ const AdminDashboard = () => {
       <Box
         sx={{
           marginTop: {
-            xs: "28vh",
-            md: "10vh",
+            xs: "20vh",
+            md: "3vh",
           },
         }}
         display="flex"

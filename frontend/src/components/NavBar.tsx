@@ -23,9 +23,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Bell, Stethoscope } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
-function Navbar() {
+type NavBarPropsType = {
+  handleDrawerToggle: () => void;
+};
+
+export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [mobileOpen, setMobileOpen] = React.useState(false);
   const userRole = "admin";
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -41,9 +44,6 @@ function Navbar() {
   const handleLogout=()=>{
     logout();
   }
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   const drawer = (
     <Box sx={{ width: 250 }}>
@@ -198,19 +198,6 @@ function Navbar() {
                 ml: "auto",
               }}
             >
-              {/* <IconButton
-                size="large"
-                aria-label="connection status"
-                color="inherit"
-                disableRipple
-                sx={{ position: "relative" }}
-              >
-                <Bell />
-                <Box sx={{ position: "absolute", top: -8, right: 0 }}>
-                  <ConnectionStatus connected={false} variant="dot" />
-                </Box>
-              </IconButton> */}
-
               <IconButton
                   size="large"
                   aria-label="show notifications"
@@ -337,7 +324,6 @@ function Navbar() {
       <Box component="nav">
         <Drawer
           variant="temporary"
-          open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
