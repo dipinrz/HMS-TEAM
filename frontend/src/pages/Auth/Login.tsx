@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const { login } = useAuthStore();
@@ -56,7 +56,7 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    // setError(null);
     setIsLoading(true);
 
     try {
@@ -65,11 +65,11 @@ const LoginPage: React.FC = () => {
       console.log("Login response:", userData);
       toast.success("Login successful!");
       if (userData?.role === "admin") {
-        navigate("/admin");
+        navigate("/admin/dashboard");
       } else if (userData?.role === "doctor") {
-        navigate("/doctor");
+        navigate("/doctor/dashboard");
       } else if (userData?.role === "patient") {
-        navigate("/patient");
+        navigate("/patient/dashboard");
       } else {
         navigate("/");
       }
