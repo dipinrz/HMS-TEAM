@@ -28,3 +28,21 @@ export const getRecentUniquePatientAppointments = (
   return Array.from(uniquePatientAppointments.values());
 };
 
+export const getInitials = (firstName?: string, lastName?: string): string => {
+  const firstInitial = firstName?.trim()?.[0]?.toUpperCase() || '';
+  const lastInitial = lastName?.trim()?.[0]?.toUpperCase() || '';
+  return firstInitial + lastInitial;
+};
+
+export const getStatusColor = (status: string) => {
+    switch (status) {
+        case "completed":
+            return "success";
+        case "scheduled":
+            return "info";
+        case "cancelled":
+            return "error";
+        default:
+            return "default";
+    }
+};

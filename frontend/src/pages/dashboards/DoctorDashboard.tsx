@@ -8,10 +8,9 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/NavBar";
 import CustomButton from "../../components/ui/CustomButton";
 import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
-import { useAuthStore } from "../../store/useAuthStore";
-import { getDoctorAppointment, getDoctorPatients, getRecentPatient } from "../../services/doctorAPI";
-import { getRecentUniquePatientAppointments } from "../../utility/DoctorUtility";
-import type { Appointment } from "../../types/doctorType";  
+import { useAuthStore } from "../../store/useAuthStore"; 
+import { useDoctorStore } from "../../store/doctorStore";
+import { getInitials } from "../../utility/DoctorUtility";
 
 
 type ThemeColorKey =
@@ -30,100 +29,34 @@ interface TodayStats {
   bgcolor: ThemeColorKey;
 }
 
-
-
-
-// const recentPatients: Patient[] = [
-//   {
-//     id: 1,
-//     name: 'John Smith',
-//     age: 45,
-//     lastVisit: '2 days ago',
-//     condition: 'Hypertension',
-//     status: 'stable',
-//     vitals: { bp: '120/80', hr: '72 bpm', temp: '98.6°F' }
-//   },
-//   {
-//     id: 2,
-//     name: 'Emily Davis',
-//     age: 32,
-//     lastVisit: '1 week ago',
-//     condition: 'Type 2 Diabetes',
-//     status: 'monitoring',
-//     vitals: { bp: '118/75', hr: '68 bpm', temp: '98.4°F' }
-//   },
-//   {
-//     id: 3,
-//     name: 'Robert Johnson',
-//     age: 58,
-//     lastVisit: '3 days ago',
-//     condition: 'Post-surgery',
-//     status: 'recovering',
-//     vitals: { bp: '125/85', hr: '75 bpm', temp: '99.1°F' }
-//   }
-// ];
 const DoctorDashboard = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [appointments, setAppointments] = useState([]);
-  const [patients, setPatients] = useState([]);
-  const [todayAppointments,setTodayAppointments]=useState<Appointment[]>([]);
-  const [patientsCount,setPatientsCount]=useState();
-  const [remainingCount, setRemainingCount] = useState<number>(0);
-  const [completedCount, setCompletedCount] = useState<number>(0);
-  const [allApointments,setAllAppointments]=useState<Appointment[]>([])
-  const [recentPatients, setRecentPatients] = useState<Appointment[]>([]);
+  const {
+  appointments,
+  todayAppointments,
+  patients,
+  patientsCount,
+  remainingCount,
+  completedCount,
+  recentPatients,
+  fetchAppointments,
+  fetchPatients,
+  fetchRecentPatients
+} = useDoctorStore();
 
   const theme = useTheme();
   const {user}=useAuthStore()
-  const fetchRecentPatients=async()=>{
-    try{
-      const response=await getRecentPatient();
-      const data=response.data.appointments;
-      setAllAppointments(data);
-    }catch(err){
-      console.log("faild to featch all apointmnet",err);
-    }
-  }
-  const fetchApointments=async()=>{
-    try{
-      const response=await getDoctorAppointment();
-      const app = response.data.appointments|| [];
-      const data=response.data;
-      
-      setAppointments(app);
-      setTodayAppointments(app);
-      setRemainingCount(data.remaining_appointments);
-      setCompletedCount(data.completed_appointments);
-      
-    }catch(err:any){
-      console.log(err);
-    }
-  };
-  const fetchPatients=async(doctor_id:number)=>{
-    try{
-      const response=await getDoctorPatients(doctor_id);
-      const patients=response.data.data.patients||[];
-      const patientsCount=response.data.data.patient_count;
-      setPatients(patients);
-      setPatientsCount(patientsCount);
-    }catch(err){
-      console.log(err);
-    }
-  };
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  
+ 
   useEffect(()=>{
     if(user?.user_id){
-      fetchApointments();
+      fetchAppointments();
       fetchPatients(user.user_id);
       fetchRecentPatients();
     }    
   },[])
 
-  useEffect(()=>{
-    if(allApointments.length>0){
-      const recent=getRecentUniquePatientAppointments(allApointments,3);
-      setRecentPatients(recent);
-    }
-  },[allApointments]);
+
   
   const getStatusChipColor = (status: string) => {
     switch (status) {
@@ -141,11 +74,7 @@ const DoctorDashboard = () => {
         return 'default';
     }
   };
-const getInitials = (firstName?: string, lastName?: string): string => {
-  const firstInitial = firstName?.trim()?.[0]?.toUpperCase() || '';
-  const lastInitial = lastName?.trim()?.[0]?.toUpperCase() || '';
-  return firstInitial + lastInitial;
-};
+
 const statsData: TodayStats[] = [
   {
     title: "Today's Appointments",

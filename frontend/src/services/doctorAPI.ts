@@ -6,7 +6,7 @@ export const getDoctorAppointment=async()=>{
     return response;
 }
 
-export const getRecentPatient=async()=>{
+export const getRecentPatientFromAllAppointment=async()=>{
     const response=await commonAPI('GET',`${baseURL}/doctor/appointments`);
     return response;
 }
@@ -14,3 +14,8 @@ export const getDoctorPatients=async(doctor_id:number)=>{
     const response=await commonAPI('GET',`${baseURL}/doctor/patients/${doctor_id}`)
     return response;
 }
+
+export const getDoctorAppointmentById = async(id: number) => {
+    const response=await commonAPI('GET',`${baseURL}/appointment/${id}`);
+    return response;
+};
