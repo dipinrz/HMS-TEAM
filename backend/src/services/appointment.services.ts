@@ -38,6 +38,7 @@ export const getAppointmentById = async (appointmentId: number) => {
         where: {
             appointment_id: appointmentId
         },
+        relations:['patient']
     })
 }
 

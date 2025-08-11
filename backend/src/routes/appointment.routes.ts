@@ -10,7 +10,7 @@ appointmentRoutes.use(authenticate);
 appointmentRoutes.post('/', authorize(UserRole.PATIENT), addAppointment);
 appointmentRoutes.delete('/:appointmentId', authorize(UserRole.PATIENT), cancelAppointmentHandler);
 appointmentRoutes.get('/', authorize(UserRole.ADMIN), fetchAllAppointmentsHandler);
-appointmentRoutes.get('/:appointmentId', authorize(UserRole.ADMIN, UserRole.PATIENT), fetchAppointmentByIdHandler);
+appointmentRoutes.get('/:appointmentId', authorize(UserRole.ADMIN, UserRole.PATIENT,UserRole.DOCTOR), fetchAppointmentByIdHandler);
 
 
 export default appointmentRoutes;
