@@ -5,9 +5,8 @@ import DashboardCharts from "../../components/ADMIN/DashboardCharts";
 import DashboardMetrics from "../../components/ADMIN/DashboardMetrics";
 import AppointmentsAndActions from "../../components/ADMIN/Appointments&Actions";
 import SystemStatusCard from "../../components/ADMIN/SystemStatusCard";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CustomModal from "../../components/ui/CustomModal";
-import { getDoctorAppointment } from "../../services/doctorAPI";
 
 const AdminDashboard = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -22,7 +21,7 @@ const AdminDashboard = () => {
 
 
   return (
-    <Box>
+    <Box sx={{paddingX: '30px'}}>
       <CustomModal
         open={openModal}
         onClose={handleCloseModal}
