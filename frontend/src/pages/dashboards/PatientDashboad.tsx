@@ -65,7 +65,7 @@ interface Appointment {
   status: string;
   duration: string;
   location?: string;
-  appointmentType?: "in-person" | "video" | "phone";
+  appointmentType?: "in-person";
 }
 
 interface Medication {
@@ -123,7 +123,6 @@ const appointmentHistory: Appointment[] = [
     status: "upcoming",
     duration: "45 min",
     location: "Room 302",
-    appointmentType: "in-person",
   },
   {
     id: 2,
@@ -132,7 +131,6 @@ const appointmentHistory: Appointment[] = [
     type: "Telemedicine Consultation",
     status: "upcoming",
     duration: "30 min",
-    appointmentType: "video",
   },
   {
     id: 3,
@@ -427,9 +425,7 @@ const PatientDashboard = () => {
                       >
                         {/* Left Section */}
                         <Box display="flex" gap={2} flex={1} minWidth={0}>
-                          {getAppointmentIcon(
-                            appt.appointmentType || "in-person"
-                          )}
+                          {getAppointmentIcon("in-person")}
                           <Avatar sx={{ width: 32, height: 32 }}>
                             {appt.doctor
                               .split(" ")
@@ -489,7 +485,8 @@ const PatientDashboard = () => {
                           {appt.status === "upcoming" && (
                             <CustomButton
                               onClick={() => {
-                                navigate(`/appointmentDetail/:${appt.id}`);
+                                console.log(`appointment id: ${appt.id}`);
+                                navigate(`/appointmentDetail/${appt.id}`);
                               }}
                               variant="outlined"
                               size="small"
@@ -499,7 +496,8 @@ const PatientDashboard = () => {
                           {appt.status === "completed" && (
                             <CustomButton
                               onClick={() => {
-                                navigate(`/appointmentDetail/:${appt.id}`);
+                                console.log(`appointment id: ${appt.id}`);
+                                navigate(`/appointmentDetail/${appt.id}`);
                               }}
                               variant="outlined"
                               size="small"

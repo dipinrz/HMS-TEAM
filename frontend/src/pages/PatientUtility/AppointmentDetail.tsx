@@ -115,6 +115,7 @@ const DetailItem = styled(ListItem)(({ theme }) => ({
 }));
 
 const AppointmentDetail: React.FC = () => {
+  const { id } = useParams();
   const { appointmentId } = useParams<{ appointmentId: string }>();
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -124,9 +125,10 @@ const AppointmentDetail: React.FC = () => {
     const fetchAppointment = () => {
       try {
         // Simulate API call
+
         setTimeout(() => {
           const foundAppointment = mockAppointments.find(
-            (appt) => appt.appointment_id === Number(1)
+            (appt) => appt.appointment_id === Number(id)
           );
 
           if (foundAppointment) {
@@ -143,7 +145,7 @@ const AppointmentDetail: React.FC = () => {
     };
 
     fetchAppointment();
-  }, [appointmentId]);
+  }, [appointmentId, id]);
 
   if (loading) {
     return (
@@ -208,7 +210,10 @@ const AppointmentDetail: React.FC = () => {
           lg: 8,
           xs: 15,
         },
-        height: "100%",
+        height: {
+          lg: "93%",
+          xs: "100%",
+        },
       }}
     >
       <Box
