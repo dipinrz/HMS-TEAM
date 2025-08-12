@@ -18,6 +18,7 @@ import TestBookAppointment from "./pages/PatientUtility/Appointment";
 import { AllMedicines } from './pages/Admin-pages/AllMedicines';
 import DoctorAppointments from './pages/Doctor-pages/DoctorAppointments';
 import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
+import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
 
 const theme = createTheme({
   palette: {

@@ -11,6 +11,7 @@ const appointmentRepo = AppDataSource.getRepository(Appointment)
 
 
 export const createDoctor = async (doctor: Partial<Doctor>) => {
+    console.log(`doctor====================${doctor}`);
 
     const newDoctor = doctorRepo.create(doctor)
 

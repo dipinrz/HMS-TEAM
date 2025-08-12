@@ -11,6 +11,7 @@ import { UserRole } from "../entities/user.entity";
 import { ApiError } from "../utils/apiError";
 import bcrypt from "bcryptjs";
 import { createDoctor, updateDoctorById } from "../services/doctor.services";
+import { getDepartmentById } from "../services/department.services";
 import { AuthRequest } from "./doctor.controllers";
 
 export const fetchAllUsers = async (
@@ -214,6 +215,7 @@ export const registerDoctor = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log("ADMIN CONTROLLER",req.body)
   try {
     const {
       first_name,
@@ -224,12 +226,16 @@ export const registerDoctor = async (
       qualification,
       license_number,
       years_of_experience,
+      department_id
     } = req.body;
 
+    
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
       throw new ApiError("Email already in use", 409);
     }
+
+    const department = await getDepartmentById(department_id);
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -241,12 +247,13 @@ export const registerDoctor = async (
       role: UserRole.DOCTOR,
     });
 
-    const doctorData = {
+    const doctorData: any = {
       doctor_id: user.user_id,
       specialization,
       qualification,
       license_number,
       years_of_experience,
+      department
     };
 
     const doctor = await createDoctor(doctorData);

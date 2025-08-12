@@ -18,15 +18,26 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  TextField,
+  InputAdornment,
+  Modal,
+  Stack,
 } from "@mui/material";
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-} from "@mui/icons-material";
+
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import CustomButton from "../../components/ui/CustomButton";
 import { toast } from "react-toastify";
-import { fetchAllDepartments } from "../../services/adminAPi";
+import {
+  addDept,
+  deleteDept,
+  fetchAllDepartments,
+  getAllDoctors,
+} from "../../services/adminAPi";
+import { SearchIcon } from "lucide-react";
+
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const headCells = [
   { id: "id", numeric: true, label: "Sl.No" },
@@ -37,19 +48,79 @@ const headCells = [
   { id: "actions", numeric: false, label: "Actions" },
 ];
 
-
+interface dept_data {
+  name: string;
+  description: string;
+  consultation_fee: number;
+  head_doctor: number;
+}
 
 const AdminDepartmentsPage = () => {
   const [departments, setDepartments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedDeptId, setSelectedDeptId] = useState<number | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [allDoctors, setAllDoctors] = useState([]);
+  const handleOpenModal = () => setIsOpen(true);
+  const handleCloseModal = () => setIsOpen(false);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    loadDepartments();
+    fetchAllDoctors();
+  }, []);
+
+  const [formData, setFormData] = useState<dept_data>({
+    name: "",
+    description: "",
+    consultation_fee: 0,
+    head_doctor: 0,
+  });
+
+  const downloadDepartmentsPDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text("Department List", 14, 20);
+
+    const tableColumn = [
+      "Sl.No",
+      "Department Name",
+      "Description",
+      "Consultation Fee",
+      "Head Doctor",
+    ];
+
+    const tableRows = departments.map((dept: any, index: number) => [
+      index + 1,
+      dept.name,
+      dept.description,
+      `₹${dept.consultation_fee}`,
+      dept?.head_doctor?.user
+        ? `${dept.head_doctor.user.first_name} ${dept.head_doctor.user.last_name}`
+        : "N/A",
+    ]);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 30,
+    });
+
+    doc.save("departments.pdf");
+  };
 
   const loadDepartments = async () => {
     try {
       setIsLoading(true);
       const response = await fetchAllDepartments();
-      setDepartments(response.data.data.departments)
+      setDepartments(response.data.data.departments);
+      console.log(
+        "DEPARTMENTS PAGE=================",
+        response.data.data.departments
+      );
     } catch (error) {
       toast.error("Couldn't fetch all departments");
       console.error("Error fetching departments:", error);
@@ -58,9 +129,16 @@ const AdminDepartmentsPage = () => {
     }
   };
 
-  useEffect(() => {
-    loadDepartments();
-  }, []);
+  const fetchAllDoctors = async () => {
+    try {
+      const response = await getAllDoctors();
+      console.log("All doctors for admin dept page", response.data.data);
+      setAllDoctors(response.data.data);
+    } catch (error) {
+      toast.error("Couldn't fetch all doctors");
+      console.log("Error in fetching all doctors", error);
+    }
+  };
 
   const handleOpenDeleteDialog = (id: number) => {
     setSelectedDeptId(id);
@@ -72,10 +150,51 @@ const AdminDepartmentsPage = () => {
     setSelectedDeptId(null);
   };
 
-  const handleDeleteDepartment = () => {
+  const handleDeleteDepartment = async () => {
+    if (!selectedDeptId) return;
 
-    toast.success("Department deleted successfully");
-    handleCloseDeleteDialog();
+    try {
+      await deleteDept(selectedDeptId);
+      toast.success("Department deleted successfully");
+      handleCloseDeleteDialog();
+      loadDepartments();
+    } catch (error) {
+      toast.error("Failed to delete department");
+      console.error("Error deleting department:", error);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev: any) => ({
+      ...prev,
+      [name]:
+        name === "consultation_fee" || name === "head_doctorId"
+          ? Number(value)
+          : value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      await addDept(formData);
+      toast.success("Department added successfully");
+      loadDepartments;
+      setIsOpen(false);
+      setFormData({
+        name: "",
+        description: "",
+        consultation_fee: 0,
+        head_doctor: 0,
+      });
+      loadDepartments(); // Refresh table
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add department");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -98,6 +217,146 @@ const AdminDepartmentsPage = () => {
         },
       }}
     >
+      <Modal open={isOpen} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 700,
+            bgcolor: "#fff",
+            borderRadius: 3,
+            boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
+            overflow: "hidden",
+          }}
+        >
+          {/* Header */}
+          <Box
+            sx={{
+              px: 3,
+              py: 2,
+              background:
+                "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+              color: "#fff",
+              fontWeight: "bold",
+              fontSize: "1.2rem",
+            }}
+          >
+            ADD NEW DEPARTMENT
+          </Box>
+
+          {/* Body */}
+          <Box sx={{ p: 3, bgcolor: "#f5f7fa" }}>
+            <Stack
+              spacing={3}
+              sx={{
+                "& .MuiTextField-root": {
+                  backgroundColor: "#fff",
+                  borderRadius: 1.5,
+                },
+              }}
+            >
+              <Stack spacing={2}>
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontWeight: 700,
+                    color: "#011d39ff",
+                    borderBottom: "2px solid #e3f2fd",
+                    pb: 0.5,
+                  }}
+                >
+                  DEPARTMENT DETAILS
+                </Typography>
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    name="name"
+                    label="Department Name"
+                    fullWidth
+                    size="small"
+                    value={formData.name}
+                    onChange={handleChange}
+                  />
+                  <TextField
+                    name="description"
+                    label="Description"
+                    fullWidth
+                    size="small"
+                    value={formData.description}
+                    onChange={handleChange}
+                  />
+                </Stack>
+                <TextField
+                  name="consultation_fee"
+                  label="Consultation Fee"
+                  fullWidth
+                  size="small"
+                  value={formData.consultation_fee}
+                  onChange={handleChange}
+                />
+                <TextField
+                  select
+                  name="head_doctor"
+                  label="HOD"
+                  fullWidth
+                  size="small"
+                  value={formData.head_doctor}
+                  onChange={handleChange}
+                  SelectProps={{ native: true }}
+                >
+                  <option value={0}>Select Head Doctor</option>
+                  {allDoctors.map((doc: any) => (
+                    <option key={doc.doctor_id} value={doc.doctor_id}>
+                      {doc.user.first_name} {doc.user.last_name}
+                    </option>
+                  ))}
+                </TextField>
+              </Stack>
+            </Stack>
+          </Box>
+
+          {/* Actions */}
+          <Box
+            sx={{
+              px: 3,
+              py: 2,
+              bgcolor: "#f5f7fa",
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 2,
+            }}
+          >
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleCloseModal}
+              disabled={loading}
+              sx={{ borderRadius: 2 }}
+            >
+              Close
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={loading}
+              sx={{
+                borderRadius: 2,
+                px: 3,
+                background:
+                  "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #020aa5ff 0%, #000000ff 100%)",
+                },
+              }}
+            >
+              {loading ? "Submitting..." : "Submit"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
       <Box sx={{ position: "relative", zIndex: 1 }}>
         <Typography
           textAlign={"center"}
@@ -107,6 +366,67 @@ const AdminDepartmentsPage = () => {
         >
           Department Management
         </Typography>
+
+        <Box display="flex" gap={2} mb={3}>
+          <TextField
+            variant="outlined"
+            placeholder="Search department by name or description..."
+            size="medium"
+            fullWidth
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+              sx: {
+                borderRadius: 3,
+                backgroundColor: "white",
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "#1976d2",
+                  },
+                },
+              },
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-1px)",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                },
+              },
+            }}
+          />
+
+          <Button
+            variant="contained"
+            size="large"
+            sx={{
+              borderRadius: 3,
+              textTransform: "none",
+              px: 4,
+              py: 1.5,
+              backgroundColor: "#46923c",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#3b8123",
+                transform: "translateY(-1px)",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              },
+              transition: "all 0.3s ease",
+              width: 300,
+              fontWeight: 600,
+              letterSpacing: 0.5,
+            }}
+            onClick={() => setIsOpen(true)}
+          >
+            ADD DEPARTMENTS
+          </Button>
+        </Box>
 
         {/* Data Table */}
         <Paper
@@ -157,82 +477,96 @@ const AdminDepartmentsPage = () => {
                 </Box>
               ) : (
                 <TableBody>
-                  {departments?.map((dept:any, index) => (
-                    <TableRow
-                      key={dept?.department_id}
-                      sx={{
-                        "&:hover": {
-                          backgroundColor: "rgba(25, 118, 210, 0.04)",
-                          transform: "scale(1.001)",
+                  {departments
+                    ?.filter(
+                      (dept: any) =>
+                        dept.name
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase()) ||
+                        dept.description
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase())
+                    )
+                    .map((dept: any, index) => (
+                      <TableRow
+                        key={dept.department_id}
+                        sx={{
+                          "&:hover": {
+                            backgroundColor: "rgba(25, 118, 210, 0.04)",
+                            transform: "scale(1.001)",
+                            transition: "all 0.2s ease",
+                          },
+                          "&:last-child td": { border: 0 },
                           transition: "all 0.2s ease",
-                        },
-                        "&:last-child td": { border: 0 },
-                        transition: "all 0.2s ease",
-                      }}
-                    >
-                      <TableCell align="left">
-                        <Badge badgeContent={index + 1} color="primary">
-                          <Box sx={{ width: 20 }} />
-                        </Badge>
-                      </TableCell>
+                        }}
+                      >
+                        <TableCell align="left">
+                          <Badge badgeContent={index + 1} color="primary">
+                            <Box sx={{ width: 20 }} />
+                          </Badge>
+                        </TableCell>
 
-                      <TableCell>{dept?.name}</TableCell>
+                        <TableCell>{dept.name}</TableCell>
 
-                      <TableCell>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          noWrap
-                          sx={{ maxWidth: 250 }}
-                        >
-                          {dept?.description}
-                        </Typography>
-                      </TableCell>
+                        <TableCell>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            noWrap
+                            sx={{ maxWidth: 250 }}
+                          >
+                            {dept.description}
+                          </Typography>
+                        </TableCell>
 
-                      <TableCell>₹{dept?.consultation_fee}</TableCell>
+                        <TableCell>₹{dept.consultation_fee}</TableCell>
 
+                        <TableCell>
+                          {dept?.head_doctor?.user?.first_name}{" "}
+                          {dept?.head_doctor?.user?.last_name}
+                        </TableCell>
 
-                      <TableCell>{dept?.head_doctor?.user.first_name}</TableCell>
-
-                      <TableCell>
-                        <Box display="flex" gap={1}>
-                          <Tooltip title="Edit Department" arrow>
-                            <IconButton
-                              size="small"
-                              sx={{
-                                color: "#1976d2",
-                                backgroundColor: "rgba(25, 118, 210, 0.08)",
-                                "&:hover": {
-                                  backgroundColor: "rgba(25, 118, 210, 0.15)",
-                                  transform: "scale(1.1)",
-                                },
-                                transition: "all 0.2s ease",
-                              }}
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Delete Department" arrow>
-                            <IconButton
-                              size="small"
-                              sx={{
-                                color: "#d32f2f",
-                                backgroundColor: "rgba(211, 47, 47, 0.08)",
-                                "&:hover": {
-                                  backgroundColor: "rgba(211, 47, 47, 0.15)",
-                                  transform: "scale(1.1)",
-                                },
-                                transition: "all 0.2s ease",
-                              }}
-                              onClick={() => handleOpenDeleteDialog(dept.id)}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        <TableCell>
+                          <Box display="flex" gap={1}>
+                            <Tooltip title="Edit Department" arrow>
+                              <IconButton
+                                size="small"
+                                sx={{
+                                  color: "#1976d2",
+                                  backgroundColor: "rgba(25, 118, 210, 0.08)",
+                                  "&:hover": {
+                                    backgroundColor: "rgba(25, 118, 210, 0.15)",
+                                    transform: "scale(1.1)",
+                                  },
+                                  transition: "all 0.2s ease",
+                                }}
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Delete Department" arrow>
+                              <IconButton
+                                size="small"
+                                sx={{
+                                  color: "#d32f2f",
+                                  backgroundColor: "rgba(211, 47, 47, 0.08)",
+                                  "&:hover": {
+                                    backgroundColor: "rgba(211, 47, 47, 0.15)",
+                                    transform: "scale(1.1)",
+                                  },
+                                  transition: "all 0.2s ease",
+                                }}
+                                onClick={() =>
+                                  handleOpenDeleteDialog(dept.department_id)
+                                }
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               )}
             </Table>
@@ -259,7 +593,7 @@ const AdminDepartmentsPage = () => {
                 size="small"
                 label="Download PDF"
                 sx={{ mr: 1, borderRadius: 2 }}
-                onClick={() => toast.info("Download PDF not implemented yet")}
+                onClick={downloadDepartmentsPDF}
               />
             </Box>
           </Box>

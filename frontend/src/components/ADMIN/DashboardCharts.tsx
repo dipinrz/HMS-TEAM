@@ -47,12 +47,20 @@ const DashboardCharts: React.FC = () => {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="revenue" fill="#2563eb" radius={4} barSize={50} />
-              </BarChart>
+  <defs>
+    <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stopColor="#020aa5ff" />
+      <stop offset="100%" stopColor="#0a036bff" />
+    </linearGradient>
+  </defs>
+
+  <CartesianGrid strokeDasharray="3 3" />
+  <XAxis dataKey="month" />
+  <YAxis />
+  <Tooltip />
+  <Bar dataKey="revenue" fill="url(#revenueGradient)" radius={4} barSize={50} />
+</BarChart>
+
             </ResponsiveContainer>
           </CardContent>
         </Card>

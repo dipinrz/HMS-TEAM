@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "../ui/CustomCards";
 export default function SystemStatusCard() {
   return (
     <Box>
-      <Card sx={{width:'100%'}} elevation={1}>
+      <Card sx={{ width: "100%" }} elevation={1}>
         <CardHeader
           title="System Status"
           subheader="Real-time system health and performance metrics"
@@ -13,13 +13,19 @@ export default function SystemStatusCard() {
           <Box
             display="grid"
             gridTemplateColumns={{ xs: "1fr", md: "repeat(3, 1fr)" }}
-            gap={2}>
+            gap={2}
+          >
             <Box>
               <Box display="flex" justifyContent="space-between">
                 <Typography
                   variant="body2"
                   fontWeight={500}
-                  color="text.secondary"
+                  sx={{
+                    background:
+                      "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
                 >
                   Server Uptime
                 </Typography>
@@ -39,7 +45,12 @@ export default function SystemStatusCard() {
                 <Typography
                   variant="body2"
                   fontWeight={500}
-                  color="text.secondary"
+                  sx={{
+                    background:
+                      "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
                 >
                   Database Performance
                 </Typography>
@@ -59,7 +70,12 @@ export default function SystemStatusCard() {
                 <Typography
                   variant="body2"
                   fontWeight={500}
-                  color="text.secondary"
+                  sx={{
+                    background:
+                      "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
                 >
                   Storage Usage
                 </Typography>

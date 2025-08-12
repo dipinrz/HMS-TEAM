@@ -1,10 +1,22 @@
-import React from 'react';
-import {Box,Grid,Avatar,Typography,Stack,Divider,Chip,
-} from '@mui/material';
-import {UserPlus,Stethoscope,Building2,CreditCard,Activity,
-} from 'lucide-react';
-import CustomButton from '../ui/CustomButton';
-import { Card, CardContent, CardHeader } from '../ui/CustomCards';
+import React from "react";
+import {
+  Box,
+  Grid,
+  Avatar,
+  Typography,
+  Stack,
+  Divider,
+  Chip,
+} from "@mui/material";
+import {
+  UserPlus,
+  Stethoscope,
+  Building2,
+  CreditCard,
+  Activity,
+} from "lucide-react";
+import CustomButton from "../ui/CustomButton";
+import { Card, CardContent, CardHeader } from "../ui/CustomCards";
 
 const recentAppointments = [
   {
@@ -22,7 +34,8 @@ const recentAppointments = [
     department: "Neurology",
     time: "11:30 AM",
     status: "Pending",
-  },{
+  },
+  {
     id: 3,
     patient: "Harry Kane",
     doctor: "Dr. Hane",
@@ -32,38 +45,36 @@ const recentAppointments = [
   },
 ];
 
-
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
-    case 'confirmed':
-      return 'success';
-    case 'pending':
-      return 'warning';
-    case 'cancelled':
-      return 'error';
+    case "confirmed":
+      return "success";
+    case "pending":
+      return "warning";
+    case "cancelled":
+      return "error";
     default:
-      return 'default';
+      return "default";
   }
 };
 
 const AppointmentsAndActions: React.FC = () => {
   return (
-    <Box sx={{ width: '100%', mt: 5 }}>
+    <Box sx={{ width: "100%", mt: 5 }}>
       <Grid container spacing={3}>
-        <Grid size={{xs:12,lg:8}}>
+        <Grid size={{ xs: 12, lg: 8 }}>
           <Card
             sx={{
-              border: 'none',
-              boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
-              borderRadius: '2rem',
-              width: '100%',
-              height:'100%'
+              border: "none",
+              boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
+              borderRadius: "2rem",
+              width: "100%",
+              height: "100%",
             }}
           >
             <CardHeader
               title="Today's Appointments"
               subheader="Recent appointment bookings and status updates"
-
             />
             <CardContent>
               <Stack spacing={2}>
@@ -71,20 +82,20 @@ const AppointmentsAndActions: React.FC = () => {
                   <Box
                     key={appointment.id}
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                       p: 2,
-                      bgcolor: 'grey.50',
+                      bgcolor: "grey.50",
                       borderRadius: 2,
                     }}
                   >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                       <Avatar>
                         {appointment.patient
-                          .split(' ')
+                          .split(" ")
                           .map((n) => n[0])
-                          .join('')}
+                          .join("")}
                       </Avatar>
                       <Box>
                         <Typography fontWeight={600} color="text.primary">
@@ -97,8 +108,8 @@ const AppointmentsAndActions: React.FC = () => {
                     </Box>
                     <Box
                       sx={{
-                        display: 'flex',
-                        alignItems: 'center',
+                        display: "flex",
+                        alignItems: "center",
                         gap: 1.5,
                       }}
                     >
@@ -116,7 +127,7 @@ const AppointmentsAndActions: React.FC = () => {
                         sx={{
                           fontWeight: 500,
                           minWidth: 80,
-                          justifyContent: 'center',
+                          justifyContent: "center",
                         }}
                       />
                     </Box>
@@ -124,19 +135,23 @@ const AppointmentsAndActions: React.FC = () => {
                 ))}
               </Stack>
               <Divider sx={{ my: 3 }} />
-              <CustomButton fullWidth variant="outlined" label="View All Appointments" />
+              <CustomButton
+                fullWidth
+                variant="outlined"
+                label="View All Appointments"
+              />
             </CardContent>
           </Card>
         </Grid>
 
         {/* Quick Actions */}
-        <Grid size={{xs:12,lg:4}}>
+        <Grid size={{ xs: 12, lg: 4 }}>
           <Card
             sx={{
-              border: 'none',
-              boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
-              borderRadius: '2rem',
-              width: '100%',
+              border: "none",
+              boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
+              borderRadius: "2rem",
+              width: "100%",
             }}
           >
             <CardHeader
@@ -150,13 +165,17 @@ const AppointmentsAndActions: React.FC = () => {
                   variant="contained"
                   startIcon={<UserPlus />}
                   sx={{
-                    bgcolor: 'primary.main',
+                    background:
+                      "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, #0a036bff 0%, #020aa5ff 100%)",
+                    },
                     py: 1.5,
                     borderRadius: 2,
-                    textTransform: 'none',
+                    textTransform: "none",
                     fontWeight: 500,
-                    justifyContent: 'center',
-                    '&:hover': { bgcolor: 'primary.dark' },
+                    justifyContent: "center",
                   }}
                   label="Add New Patient"
                 />
@@ -165,13 +184,17 @@ const AppointmentsAndActions: React.FC = () => {
                   variant="contained"
                   startIcon={<Stethoscope />}
                   sx={{
-                    bgcolor: 'primary.main',
+                    background:
+                      "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, #0a036bff 0%, #020aa5ff 100%)",
+                    },
                     py: 1.5,
                     borderRadius: 2,
-                    textTransform: 'none',
+                    textTransform: "none",
                     fontWeight: 500,
-                    justifyContent: 'center',
-                    '&:hover': { bgcolor: 'primary.dark' },
+                    justifyContent: "center",
                   }}
                   label="Register Doctor"
                 />
@@ -180,13 +203,17 @@ const AppointmentsAndActions: React.FC = () => {
                   variant="contained"
                   startIcon={<Building2 />}
                   sx={{
-                    bgcolor: 'primary.main',
+                    background:
+                      "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, #0a036bff 0%, #020aa5ff 100%)",
+                    },
                     py: 1.5,
                     borderRadius: 2,
-                    textTransform: 'none',
+                    textTransform: "none",
                     fontWeight: 500,
-                    justifyContent: 'center',
-                    '&:hover': { bgcolor: 'primary.dark' },
+                    justifyContent: "center",
                   }}
                   label="Manage Departments"
                 />
@@ -195,28 +222,37 @@ const AppointmentsAndActions: React.FC = () => {
                   variant="contained"
                   startIcon={<CreditCard />}
                   sx={{
-                    bgcolor: 'primary.main',
                     py: 1.5,
                     borderRadius: 2,
-                    textTransform: 'none',
+                    textTransform: "none",
                     fontWeight: 500,
-                    justifyContent: 'center',
-                    '&:hover': { bgcolor: 'primary.dark' },
+                    justifyContent: "center",
+                    background:
+                      "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, #0a036bff 0%, #020aa5ff 100%)",
+                    },
                   }}
                   label="Process Billing"
                 />
+
                 <CustomButton
                   fullWidth
                   variant="contained"
                   startIcon={<Activity />}
                   sx={{
-                    bgcolor: 'primary.main',
+                    background:
+                      "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, #0a036bff 0%, #020aa5ff 100%)",
+                    },
                     py: 1.5,
                     borderRadius: 2,
-                    textTransform: 'none',
+                    textTransform: "none",
                     fontWeight: 500,
-                    justifyContent: 'center',
-                    '&:hover': { bgcolor: 'primary.dark' },
+                    justifyContent: "center",
                   }}
                   label="System Reports"
                 />

@@ -8,6 +8,7 @@ export const addDepartmentHandler = async (req: Request, res: Response, next: Ne
     try {
         
         const { name, description, consultation_fee, head_doctor } = req.body;
+       
 
         const deptExisting = await getDeptByName(name);
 
@@ -16,6 +17,7 @@ export const addDepartmentHandler = async (req: Request, res: Response, next: Ne
         }
 
         const  headDoctor = await getDoctorById(head_doctor);
+        console.log("Head doctor==========",headDoctor)
 
         if (!headDoctor) {
             throw new ApiError("Head doctor not found", 404);
@@ -25,7 +27,7 @@ export const addDepartmentHandler = async (req: Request, res: Response, next: Ne
             name,
             description,
             consultation_fee,
-            head_doctor: headDoctor
+            head_doctor
         });
 
         res.status(200).json({
