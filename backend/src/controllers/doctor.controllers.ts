@@ -13,6 +13,8 @@ import { instanceToPlain } from "class-transformer";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { AppointmentStatus } from "../entities/appointment.entity";
+import { getPrescriptionsByAppoinment } from "../services/medicalReport.services";
+import { getPrescriptionByIds } from "../services/prescription.services";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -202,7 +204,6 @@ export const getAllDoctors = async (
 ) => {
   try {
     const response = await fetchAllDoctors();
-    console.log(response);
     res.status(201).json({
       success: true,
       message: "Data fetched successfully",
@@ -212,3 +213,29 @@ export const getAllDoctors = async (
     next(error);
   }
 };
+
+export const getDoctorPrescriptionHandler = async (req: AuthRequest, res: Response, next: NextFunction) => {
+
+  const doctor_id = req.user.userId;
+
+  if(isNaN(doctor_id)){
+    throw new ApiError('Invalid Doctor Id', 400);
+  }
+
+  try{
+    
+    const appointments = await getDoctorAppointments(doctor_id);
+    const appointmentIds = appointments.map(a => a.appointment_id);
+
+    const prescriptions = await getPrescriptionByIds(appointmentIds);
+
+    res.json({
+      success: true,
+      message: 'Prescriptions fetched successfully',
+      prescriptions
+    })
+
+  } catch(error){
+    next(error);
+  }
+}

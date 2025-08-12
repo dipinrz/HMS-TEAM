@@ -1,3 +1,4 @@
+import { In } from "typeorm";
 import { AppDataSource } from "../config/data-source";
 import { Prescription } from "../entities/prescription.entity";
 
@@ -37,4 +38,14 @@ export const getPrescriptionsByPatientId = async (patientId: number) => {
         }
     })
 
+}
+
+export const getPrescriptionByIds = async (appointmentIds: number[]) => {
+
+    return await prescriptionRepo.find({
+        where: {
+            appointment: { appointment_id: In(appointmentIds) }
+        },
+        relations: ['appointment']
+    });
 }
