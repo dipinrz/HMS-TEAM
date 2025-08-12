@@ -99,9 +99,9 @@ function App() {
             backgroundColor: "#f5f5f5",
             width: '100%',
             ...(shouldShowSidebar && {
-              width: { xs: "100%", sm: `calc(100% - ${drawerWidth}px)` },
-              ml: { sm: `${drawerWidth}px`, md: 0 },
-              pt: { md: "64px" },
+              width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
+              ml: { md: 0 },
+              pt: { xs: '64px' },
             }),
           }}
         >

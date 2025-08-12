@@ -11,6 +11,7 @@ import { UserRole } from "../entities/user.entity";
 import { ApiError } from "../utils/apiError";
 import bcrypt from "bcryptjs";
 import { createDoctor, updateDoctorById } from "../services/doctor.services";
+import { AuthRequest } from "./doctor.controllers";
 
 export const fetchAllUsers = async (
   req: Request,
@@ -56,7 +57,7 @@ export const fetchAllUsers = async (
 };
 
 export const updateUserDetails = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
