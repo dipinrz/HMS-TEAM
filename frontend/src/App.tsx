@@ -77,13 +77,16 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      <Box sx={{ display: "flex", minHeight: "100vh" }}>
         {shouldShowSidebar && (
           <Navbar handleDrawerToggle={handleDrawerToggle} />
         )}
-        
+
         {shouldShowSidebar && (
-          <Sidebar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
+          <Sidebar
+            mobileOpen={mobileOpen}
+            handleDrawerToggle={handleDrawerToggle}
+          />
         )}
 
         <Box
@@ -96,9 +99,9 @@ function App() {
             backgroundColor: "#f5f5f5",
             width: '100%',
             ...(shouldShowSidebar && {
-              width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
+              width: { xs: "100%", sm: `calc(100% - ${drawerWidth}px)` },
               ml: { sm: `${drawerWidth}px`, md: 0 },
-              pt: { md: '64px' },
+              pt: { md: "64px" },
             }),
           }}
         >
@@ -106,7 +109,7 @@ function App() {
             <Route path="/" element={<LoginPage />} />
             <Route path="/unauthorized" element={<p>Unauthorized Access</p>} />
             <Route path="/signup" element={<RegisterPage />} />
-            
+
             {/* Admin Routes */}
             <Route
               path="/admin/dashboard"
@@ -119,7 +122,7 @@ function App() {
             <Route
               path="/admin/users"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <AllPatients />
                 </ProtectedRoute>
               }
@@ -127,7 +130,7 @@ function App() {
             <Route
               path="/admin/doctors"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <AllDoctors />
                 </ProtectedRoute>
               }
@@ -143,12 +146,12 @@ function App() {
             <Route
               path="/admin/medicines"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <AllMedicines />
                 </ProtectedRoute>
               }
             />
-            
+
             {/* Doctor Routes */}
             <Route
               path="/doctor/dashboard"
@@ -169,12 +172,12 @@ function App() {
             <Route
               path="/doctor/prescriptions"
               element={
-                <ProtectedRoute allowedRoles={['doctor']}>
+                <ProtectedRoute allowedRoles={["doctor"]}>
                   <div>Doctor Prescriptions Page</div>
                 </ProtectedRoute>
               }
             />
-            
+
             {/* Patient Routes */}
             <Route
               path="/patient/dashboard"
@@ -195,14 +198,14 @@ function App() {
             <Route
               path="/patient/doctors"
               element={
-                <ProtectedRoute allowedRoles={['patient']}>
+                <ProtectedRoute allowedRoles={["patient"]}>
                   <div>Patient Doctors Page</div>
                 </ProtectedRoute>
               }
             />
-            
-            <Route path="/book" element={<TestBookAppointment />} />
-            
+
+            <Route path="/appointment/:id" element={<AppointmentDetail />} />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>

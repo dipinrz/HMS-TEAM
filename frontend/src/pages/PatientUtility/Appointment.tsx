@@ -255,7 +255,7 @@ const TestBookAppointment: React.FC = () => {
         minHeight: "100vh",
         background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
         py: 4,
-        mt: 8,
+        // pt: 8,
       }}
     >
       <Container maxWidth="lg">
