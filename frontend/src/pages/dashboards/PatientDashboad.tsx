@@ -14,7 +14,6 @@ import {
   Badge,
   Paper,
 } from "@mui/material";
-import Navbar from "../../components/NavBar";
 import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
 import {
   CalendarToday,
@@ -248,10 +247,7 @@ const PatientDashboard = () => {
   ];
 
   return (
-    <Box sx={{ mt: 10, maxWidth: "90%", mx: "auto" }}>
-      <Navbar />
-
-      {/* Header */}
+    <Box sx={{ mt: { lg: 5, xs: 15 }, maxWidth: "90%", mx: "auto" }}>
       <Box
         // mb={4}
         display="flex"
@@ -284,7 +280,7 @@ const PatientDashboard = () => {
           </Badge>
           <CustomButton
             onClick={() => {
-              navigate("/bookAppointment");
+              navigate("/patient/appointments");
             }}
             startIcon={<MedicalServices />}
             label="Book Appointment"
@@ -321,7 +317,7 @@ const PatientDashboard = () => {
       {/* Stats */}
       <Grid container spacing={2}>
         {statsData.map((stat, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+          <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index}>
             <Card
               elevation={2}
               hoverVariant="rotate"
@@ -355,8 +351,9 @@ const PatientDashboard = () => {
                   <Box
                     sx={{
                       p: 1.5,
-                      borderRadius: "12px",
+                      borderRadius: "20px",
                       backgroundColor: `${theme.palette[stat.bgcolor].main}1A`,
+                      height: "100%",
                     }}
                   >
                     {stat.icon}
@@ -382,7 +379,7 @@ const PatientDashboard = () => {
       <Grid container spacing={4} sx={{ mt: 1 }} alignItems="stretch">
         {/* Left Column - Appointments */}
         <Grid size={{ xs: 12, lg: 3.5 }}>
-          <Card sx={{ height: 600 }}>
+          <Card sx={{ height: 600, width: "100%" }}>
             <CardHeader title="Appointments" />
             <CardContent sx={{ height: "calc(100% - 80px)", pb: 1 }}>
               <Box
@@ -486,7 +483,7 @@ const PatientDashboard = () => {
                             <CustomButton
                               onClick={() => {
                                 console.log(`appointment id: ${appt.id}`);
-                                navigate(`/appointmentDetail/${appt.id}`);
+                                navigate(`/appointment/${appt.id}`);
                               }}
                               variant="outlined"
                               size="small"

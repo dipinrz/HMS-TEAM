@@ -51,7 +51,7 @@ const mockAppointments: Appointment[] = [
     appointment_id: 1,
     patient: {
       user_id: 101,
-      name: "John Doe",
+      name: "1.John Doe",
       email: "john@example.com",
     },
     doctor: {
@@ -77,7 +77,7 @@ const mockAppointments: Appointment[] = [
     appointment_id: 2,
     patient: {
       user_id: 102,
-      name: "Jane Smith",
+      name: "2.Jane Smith",
       email: "jane@example.com",
     },
     doctor: {
@@ -205,13 +205,14 @@ const AppointmentDetail: React.FC = () => {
       elevation={3}
       sx={{
         p: 3,
-        mb: 3,
         mt: {
-          lg: 8,
-          xs: 15,
+          lg: 0,
+          sm: 0,
+          xs: 14,
         },
+
         height: {
-          lg: "93%",
+          lg: "100%",
           xs: "100%",
         },
       }}
