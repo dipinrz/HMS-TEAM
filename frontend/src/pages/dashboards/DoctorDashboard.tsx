@@ -5,7 +5,7 @@ import { Stethoscope, User } from "lucide-react";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
 import { useEffect, useState } from "react";
-import Navbar from "../../components/NavBar";
+
 import CustomButton from "../../components/ui/CustomButton";
 import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
 import { useAuthStore } from "../../store/useAuthStore"; 
@@ -107,7 +107,7 @@ const statsData: TodayStats[] = [
 ];
   return (
     <Box sx={{ mt: 10 }}>
-      <Navbar />
+      
       <Box mb={4} display={"flex"} justifyContent="space-between" alignItems={"center"}>
         <Box>
           <Typography variant="h4" color="text.primary" fontWeight={600} sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}>Good morning, Dr {user?.first_name}</Typography>
