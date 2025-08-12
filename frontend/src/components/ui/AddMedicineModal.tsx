@@ -87,7 +87,6 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ open, onClos
   };
 
   const handleCancel = () => {
-    // Reset form and close modal
     setNewMedicine({
       medicine_name: '',
       description: '',
@@ -111,7 +110,6 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ open, onClos
       cost: parseFloat(newMedicine.cost)
     });
     
-    // Reset form
     setNewMedicine({
       medicine_name: '',
       description: '',
@@ -201,7 +199,7 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ open, onClos
               error={!!errors.cost}
               helperText={errors.cost}
               InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                startAdornment: <InputAdornment position="start">₹</InputAdornment>,
               }}
               sx={{
                 '& .MuiOutlinedInput-root': {

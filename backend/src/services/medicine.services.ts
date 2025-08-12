@@ -39,3 +39,7 @@ export const getMedicinesByIds = async (medicineIds: [number]) => {
         medicine_id: In(medicineIds)
     })
 }
+
+export const updateMedicineById = async (medicine_id: number, medicineData: Partial<Medicine>) => {
+    return await medicineRepo.update({medicine_id}, medicineData);
+}

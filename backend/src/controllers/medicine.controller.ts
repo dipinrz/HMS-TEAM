@@ -5,6 +5,7 @@ import {
   findMedicineById,
   findMedicineByName,
   getAllMedicines,
+  updateMedicineById,
 } from "../services/medicine.services";
 import { ApiError } from "../utils/apiError";
 import { AppDataSource } from "../config/data-source";
@@ -84,3 +85,33 @@ export const deleteMedicine = async (
     next(error);
   }
 };
+
+export const updateMedicineHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+  try {
+    const medicine_id = Number(req.params.medicineId);
+    const medicine = await findMedicineById(medicine_id);
+    if(!medicine){
+      throw new ApiError('medicine not found', 404);
+    }
+    const {medicine_name, description, cost, expiry_date } = req.body;
+    
+    const medicineData = {
+      medicine_name,
+      description,
+      cost,
+      expiry_date
+    }
+
+    await updateMedicineById(medicine_id, medicineData);
+    
+    res.json({
+      success: true,
+      message: 'medicine updated successfully'
+    })
+
+  } catch (error) {
+    next(error)
+  }
+
+}

@@ -16,3 +16,11 @@ export const getMedicineAPI = async()=>{
 export const addMedicineAPI = async (medicine: medicineType) => {
     return await commonAPI('POST', `${baseURL}/medicine/create`, medicine)
 }
+
+export const deleteMedicineAPI = async (medicineId: number) => {
+    return await commonAPI('DELETE', `${baseURL}/medicine/delete/${medicineId}`);
+}
+
+export const updateMedicineAPI = async (medicineId: number, data: medicineType) => {
+    return await commonAPI('POST', `${baseURL}/medicine/update/${medicineId}`, data);
+}
