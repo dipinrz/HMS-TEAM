@@ -3,6 +3,7 @@ import { AppDataSource } from "../config/data-source";
 import { Appointment } from "../entities/appointment.entity";
 import { Doctor } from "../entities/doctor.entity";
 import { User } from "../entities/user.entity";
+import { instanceToPlain } from "class-transformer";
 
 const doctorRepo = AppDataSource.getRepository(Doctor)
 const appointmentRepo = AppDataSource.getRepository(Appointment)
@@ -85,3 +86,9 @@ export const getPatientsByDoctorId = async (doctorId: number) => {
 
     return uniquePatients;
 };
+
+
+export const fetchAllDoctors = async()=>{
+    const response = await doctorRepo.find({relations:['department','user']})
+    return instanceToPlain(response)
+}

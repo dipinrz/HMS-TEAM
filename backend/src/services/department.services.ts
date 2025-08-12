@@ -24,9 +24,7 @@ export const getDepartmentById = async (id: number) => {
 
 export const getAllDepartments =  async () => {
 
-    return await deptRepo.find({
-        relations: ['head_doctor']
-    });
+    return await deptRepo.find({relations:['head_doctor','head_doctor.user']});
 }
 
 export const updateDepartment = async (department_id: number, data: Partial<Department>) => {

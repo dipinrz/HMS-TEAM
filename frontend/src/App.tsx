@@ -17,17 +17,18 @@ import AllPatients from './pages/Admin-pages/AllPatients';
 import AllDoctors from './pages/Admin-pages/AllDoctors';
 import { AllMedicines } from './pages/Admin-pages/AllMedicines';
 import DoctorAppointments from './pages/Doctor-pages/DoctorAppointments';
+import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: "#1976d2",
     },
     secondary: {
-      main: '#dc004e',
+      main: "#dc004e",
     },
     background: {
-      default: '#f5f5f5',
+      default: "#f5f5f5",
     },
   },
   typography: {
@@ -37,19 +38,19 @@ const theme = createTheme({
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#1a237e',
-          color: 'white',
+          backgroundColor: "#1a237e",
+          color: "white",
         },
       },
     },
     MuiListItemButton: {
       styleOverrides: {
         root: {
-          '&.Mui-selected': {
-            backgroundColor: 'rgba(255, 255, 255, 0.16)',
+          "&.Mui-selected": {
+            backgroundColor: "rgba(255, 255, 255, 0.16)",
           },
-          '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+          "&:hover": {
+            backgroundColor: "rgba(255, 255, 255, 0.08)",
           },
         },
       },
@@ -68,9 +69,10 @@ function App() {
     setMobileOpen(!mobileOpen);
   };
 
-  const noSidebarRoutes = ['/', '/signup', '/unauthorized'];
+  const noSidebarRoutes = ["/", "/signup", "/unauthorized"];
 
-  const shouldShowSidebar = user && !noSidebarRoutes.includes(location.pathname);
+  const shouldShowSidebar =
+    user && !noSidebarRoutes.includes(location.pathname);
 
   return (
     <ThemeProvider theme={theme}>
@@ -83,15 +85,15 @@ function App() {
         {shouldShowSidebar && (
           <Sidebar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
         )}
-        
+
         <Box
           component="main"
           sx={{
             flexGrow: 1,
             display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100vh',
-            backgroundColor: '#f5f5f5',
+            flexDirection: "column",
+            minHeight: "100vh",
+            backgroundColor: "#f5f5f5",
             width: '100%',
             ...(shouldShowSidebar && {
               width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
@@ -109,7 +111,7 @@ function App() {
             <Route
               path="/admin/dashboard"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminDashboard />
                 </ProtectedRoute>
               }
@@ -134,7 +136,7 @@ function App() {
               path="/admin/departments"
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
-                  <div>Departments Page</div>
+                  <AdminDepartmentsPage/>
                 </ProtectedRoute>
               }
             />
@@ -151,7 +153,7 @@ function App() {
             <Route
               path="/doctor/dashboard"
               element={
-                <ProtectedRoute allowedRoles={['doctor']}>
+                <ProtectedRoute allowedRoles={["doctor"]}>
                   <DoctorDashboard />
                 </ProtectedRoute>
               }
@@ -177,7 +179,7 @@ function App() {
             <Route
               path="/patient/dashboard"
               element={
-                <ProtectedRoute allowedRoles={['patient']}>
+                <ProtectedRoute allowedRoles={["patient"]}>
                   <PatientDashboard />
                 </ProtectedRoute>
               }
