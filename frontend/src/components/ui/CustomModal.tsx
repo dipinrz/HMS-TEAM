@@ -42,7 +42,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           borderRadius: 3,
           backgroundColor: theme.palette.background.paper,
           boxShadow: `0 10px 30px rgba(0,0,0,0.1)`,
-          textAlign: 'center',
+          
         },
       }}
     >

@@ -15,8 +15,9 @@ import Navbar from "./components/NavBar";
 import AllPatients from "./pages/Admin-pages/AllPatients";
 import AllDoctors from "./pages/Admin-pages/AllDoctors";
 import TestBookAppointment from "./pages/PatientUtility/Appointment";
-import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
-import { AllMedicines } from "./pages/Admin-pages/AllMedicines";
+import { AllMedicines } from './pages/Admin-pages/AllMedicines';
+import DoctorAppointments from './pages/Doctor-pages/DoctorAppointments';
+import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
 
 const theme = createTheme({
   palette: {
@@ -92,11 +93,11 @@ function App() {
           component="main"
           sx={{
             flexGrow: 1,
-            display: "flex",
+            display: 'flex',
             flexDirection: "column",
             minHeight: "100vh",
             backgroundColor: "#f5f5f5",
-            width: "100%",
+            width: '100%',
             ...(shouldShowSidebar && {
               width: { xs: "100%", sm: `calc(100% - ${drawerWidth}px)` },
               ml: { sm: `${drawerWidth}px`, md: 0 },
@@ -137,8 +138,8 @@ function App() {
             <Route
               path="/admin/departments"
               element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <div>Departments Page</div>
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDepartmentsPage/>
                 </ProtectedRoute>
               }
             />
@@ -163,8 +164,8 @@ function App() {
             <Route
               path="/doctor/appointments"
               element={
-                <ProtectedRoute allowedRoles={["doctor"]}>
-                  <div>Doctor Appointments Page</div>
+                <ProtectedRoute allowedRoles={['doctor']}>
+                  <DoctorAppointments />
                 </ProtectedRoute>
               }
             />
@@ -189,7 +190,7 @@ function App() {
             <Route
               path="/patient/appointments"
               element={
-                <ProtectedRoute allowedRoles={["patient"]}>
+                <ProtectedRoute allowedRoles={['patient']}>
                   <TestBookAppointment />
                 </ProtectedRoute>
               }

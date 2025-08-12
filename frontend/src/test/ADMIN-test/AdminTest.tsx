@@ -1,7 +1,6 @@
-import Navbar from "../../components/NavBar"
+
 import AdminDoctorsPage from "../../pages/Admin-pages/AllDoctors"
-import AdminPatientsPage from "../../pages/Admin-pages/allPatients"
-import AdminDashboard from "../../pages/dashboards/AdminDashboard"
+import AdminPatientsPage from "../../pages/Admin-pages/AllPatients"
 
 
 const AdminTest = () => {
@@ -9,6 +8,7 @@ const AdminTest = () => {
     <div>
        <AdminPatientsPage/>
        <AdminDoctorsPage/>
+       
     </div>
   )
 }
