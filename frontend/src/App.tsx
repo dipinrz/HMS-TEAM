@@ -17,6 +17,7 @@ import AllPatients from './pages/Admin-pages/AllPatients';
 import AllDoctors from './pages/Admin-pages/AllDoctors';
 import { AllMedicines } from './pages/Admin-pages/AllMedicines';
 import DoctorAppointments from './pages/Doctor-pages/DoctorAppointments';
+import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
 
 const theme = createTheme({
   palette: {
@@ -135,7 +136,7 @@ function App() {
               path="/admin/departments"
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
-                  <div>Departments Page</div>
+                  <AdminDepartmentsPage/>
                 </ProtectedRoute>
               }
             />
