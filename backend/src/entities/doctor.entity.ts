@@ -24,8 +24,9 @@ export class Doctor {
   @Column()
   qualification: string;
 
-  @Column()
-  license_number: string;
+  @Column({ nullable: true })
+license_number: string;
+
 
   @Column('int')
   years_of_experience: number;

@@ -1,32 +1,8 @@
-import {
-  Box,
-  Button,
-  IconButton,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  TextField,
-  InputAdornment,
-  Avatar,
-  TableSortLabel,
-  Chip,
-  Tooltip,
-  Divider,
-  Badge,
-  CircularProgress,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
-import {
-  Delete as DeleteIcon,
-  Search as SearchIcon,
+import { Box,Button,IconButton,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Typography,
+  TextField,InputAdornment,Avatar,TableSortLabel,Chip,Tooltip,Divider,Badge,CircularProgress,
+  Dialog,DialogTitle,DialogContent,DialogActions,} from "@mui/material";
+
+import {Delete as DeleteIcon,Search as SearchIcon,
 } from "@mui/icons-material";
 import { FilterIcon } from "lucide-react";
 import CustomButton from "../../components/ui/CustomButton";
@@ -155,28 +131,6 @@ const AdminPatientsPage = () => {
               },
             }}
           />
-          <Button
-            variant="outlined"
-            size="large"
-            startIcon={<FilterIcon />}
-            sx={{
-              borderRadius: 3,
-              textTransform: "none",
-              px: 4,
-              backgroundColor: "white",
-              borderColor: "#e0e0e0",
-              color: "#666",
-              "&:hover": {
-                backgroundColor: "#f5f5f5",
-                borderColor: "#1976d2",
-                transform: "translateY(-1px)",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-              },
-              transition: "all 0.3s ease",
-            }}
-          >
-            Advanced Filters
-          </Button>
         </Box>
 
         {/* Data Table */}
@@ -303,7 +257,7 @@ const AdminPatientsPage = () => {
 
                       <TableCell>
                         <Typography variant="body2" color="text.secondary">
-                          {patient.user.phone_number}
+                          {patient.user.phone_number?patient.user.phone_number:<div style={{color:'red',fontWeight:"bold"}}>N/A</div>}
                         </Typography>
                       </TableCell>
 

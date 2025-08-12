@@ -277,6 +277,7 @@ export const AllMedicines: React.FC = () => {
                     },
                   }}
                 >
+<<<<<<< Updated upstream
                   {headCells.map((headCell) => (
                     <TableCell
                       key={headCell.id}
@@ -288,6 +289,76 @@ export const AllMedicines: React.FC = () => {
                         py: 2,
                         whiteSpace: "nowrap",
                       }}
+=======
+                    Medicine Management
+                </Typography>
+                
+                
+
+                <Box display="flex" gap={2} mb={3} alignItems="center">
+                    <TextField
+                        variant="outlined"
+                        placeholder="Search Medicine by name..."
+                        size="medium"
+                        fullWidth
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon color="action" />
+                                </InputAdornment>
+                            ),
+                            sx: {
+                                borderRadius: 3,
+                                backgroundColor: "white",
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                    borderColor: "#e2e8f0",
+                                },
+                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                    borderColor: "#cbd5e1",
+                                },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                    borderColor: "#1976d2",
+                                    borderWidth: "1px",
+                                },
+                            },
+                        }}
+                        sx={{
+                            "& .MuiOutlinedInput-root": {
+                                transition: "all 0.3s ease",
+                                "&:hover": {
+                                    transform: "translateY(-1px)",
+                                    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                                },
+                                "&.Mui-focused": {
+                                    boxShadow: "0 4px 12px rgba(25, 118, 210, 0.1)",
+                                },
+                            },
+                        }}
+                    />
+                    <Button
+                        variant="contained"
+                        size="large"
+                        sx={{
+                            borderRadius: 3,
+                            textTransform: "none",
+                            px: 4,
+                            py: 1.5,
+                            backgroundColor: "#46923c",
+                            color: '#fff',
+                            "&:hover": {
+                                backgroundColor: "#3b8123",
+                                transform: "translateY(-1px)",
+                                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                            },
+                            transition: "all 0.3s ease",
+                            width: 300,
+                            fontWeight: 600,
+                            letterSpacing: 0.5,
+                        }}
+                        onClick={() => setIsOpen(true)}
+>>>>>>> Stashed changes
                     >
                       <TableSortLabel
                         sx={{

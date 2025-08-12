@@ -186,7 +186,6 @@ export const updateDoctorProfile = async (
       doctor_id,
       updatedDoctorFields
     );
-    console.log(updatedDoctor);
 
     res.status(200).json({
       success: true,

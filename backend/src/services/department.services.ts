@@ -6,6 +6,7 @@ const deptRepo = AppDataSource.getRepository(Department);
 const doctorRepo = AppDataSource.getRepository(Doctor);
 
 export const createDepartment = async (department: Partial<Department>) => {
+    console.log("=====", department);
     
     const newDepartment = deptRepo.create(department);
 

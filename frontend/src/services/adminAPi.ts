@@ -1,22 +1,55 @@
-import commonAPI from "./commonAPI"
-export const baseURL = "http://localhost:5000/api/v1"
+import commonAPI from "./commonAPI";
+export const baseURL = "http://localhost:5000/api/v1";
 
-export const getAllPatients = async()=>{
-    return await commonAPI('GET',`${baseURL}/patients`)
+interface doctor_data {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  specialization: string;
+  qualification: string;
+  years_of_experience: number;
+  license_number: string;
+  department_id:number
 }
 
-export const getAllDoctors = async()=>{
-    return await commonAPI('GET',`${baseURL}/doctor/all`)
+interface dept_data{
+  name: string;
+  description: string;
+  consultation_fee: number;
+ head_doctor: number;
 }
 
-export const deletePatient = async(id:number)=>{
-    return await commonAPI('DELETE',`${baseURL}/users/delete/${id}`) 
-}
 
-export const deleteDoctor = async(id:number)=>{
-    return await commonAPI('DELETE',`${baseURL}/users/delete/${id}`) 
-}
 
-export const fetchAllDepartments = async ()=>{
-    return await commonAPI('GET',`${baseURL}/department`)
+export const getAllPatients = async () => {
+  return await commonAPI("GET", `${baseURL}/patients`);
+};
+
+export const getAllDoctors = async () => {
+  return await commonAPI("GET", `${baseURL}/doctor/all`);
+};
+
+export const deletePatient = async (id: number) => {
+  return await commonAPI("DELETE", `${baseURL}/users/delete/${id}`);
+};
+
+export const deleteDoctor = async (id: number) => {
+  return await commonAPI("DELETE", `${baseURL}/users/delete/${id}`);
+};
+
+export const fetchAllDepartments = async () => {
+  return await commonAPI("GET", `${baseURL}/department`);
+};
+
+export const registerDoctor = async (data:doctor_data) => {
+  return commonAPI('POST',`${baseURL}/users/register-doctor`,data)
+};
+
+export const deleteDept = async(id:number)=>{
+  return commonAPI('DELETE',`${baseURL}/department/${id}`)
+} 
+
+export const addDept = async(data:dept_data)=>{
+  return commonAPI('POST',`${baseURL}/department`,data)
 }
