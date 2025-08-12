@@ -89,7 +89,7 @@ const mockDoctors: Doctor[] = [
   { id: "8", name: "Dr. Robert Miller", specialization: "Pediatrics" },
 ];
 
-const TestBookAppointment: React.FC = () => {
+const  TestBookAppointment: React.FC = () => {
   const theme = useTheme();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);

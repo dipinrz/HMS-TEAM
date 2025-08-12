@@ -32,7 +32,7 @@ export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
   const userRole = "admin";
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const {user,logout}=useAuthStore()
+  const {user}=useAuthStore();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -41,9 +41,6 @@ export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleLogout=()=>{
-    logout();
-  }
 
   const drawer = (
     <Box sx={{ width: 250 }}>
@@ -317,7 +314,6 @@ export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>Settings</MenuItem>
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
