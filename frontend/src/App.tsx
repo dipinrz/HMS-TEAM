@@ -16,6 +16,7 @@ import AllPatients from "./pages/Admin-pages/AllPatients";
 import AllDoctors from "./pages/Admin-pages/AllDoctors";
 import TestBookAppointment from "./pages/PatientUtility/Appointment";
 import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
+import { AllMedicines } from './pages/Admin-pages/AllMedicines';
 
 const theme = createTheme({
   palette: {
@@ -56,6 +57,8 @@ const theme = createTheme({
   },
 });
 
+const drawerWidth = 280;
+
 function App() {
   const location = useLocation();
   const { user } = useAuthStore();
@@ -73,31 +76,28 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         {shouldShowSidebar && (
-          <>
-            <Navbar />
-            <Sidebar
-              mobileOpen={mobileOpen}
-              handleDrawerToggle={handleDrawerToggle}
-            />
-          </>
+          <Navbar handleDrawerToggle={handleDrawerToggle} />
+        )}
+        
+        {shouldShowSidebar && (
+          <Sidebar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
         )}
 
         <Box
           component="main"
           sx={{
             flexGrow: 1,
-            width: "100%",
-            minHeight: "100vh",
-            backgroundColor: "#f5f5f5",
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
+            backgroundColor: '#f5f5f5',
+            width: '100%',
             ...(shouldShowSidebar && {
-              marginLeft: { xs: 0 },
-              width: {
-                xs: "100%",
-                sm: "calc(100% - 64px)",
-                md: "calc(100% - 240px)",
-              },
+              width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
+              ml: { sm: `${drawerWidth}px`, md: 0 },
+              pt: { md: '64px' },
             }),
           }}
         >
@@ -105,48 +105,103 @@ function App() {
             <Route path="/" element={<LoginPage />} />
             <Route path="/unauthorized" element={<p>Unauthorized Access</p>} />
             <Route path="/signup" element={<RegisterPage />} />
-
+            
+            {/* Admin Routes */}
             <Route
-              path="/admin/*"
+              path="/admin/dashboard"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminDashboard />
                 </ProtectedRoute>
               }
             />
-            <Route path="/admin/users" element={<AllPatients />} />
-            <Route path="/admin/doctors" element={<AllDoctors />} />
-
             <Route
-              path="/doctor/*"
+              path="/admin/users"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AllPatients />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/doctors"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AllDoctors />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/departments"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <div>Departments Page</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/medicines"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AllMedicines />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Doctor Routes */}
+            <Route
+              path="/doctor/dashboard"
               element={
                 <ProtectedRoute allowedRoles={["doctor"]}>
                   <DoctorDashboard />
                 </ProtectedRoute>
               }
             />
-
             <Route
-              path="/patient/*"
+              path="/doctor/appointments"
+              element={
+                <ProtectedRoute allowedRoles={['doctor']}>
+                  <div>Doctor Appointments Page</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor/prescriptions"
+              element={
+                <ProtectedRoute allowedRoles={['doctor']}>
+                  <div>Doctor Prescriptions Page</div>
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Patient Routes */}
+            <Route
+              path="/patient/dashboard"
               element={
                 <ProtectedRoute allowedRoles={["patient"]}>
                   <PatientDashboard />
                 </ProtectedRoute>
               }
             />
-
             <Route
-              path="/bookAppointment"
+              path="/patient/appointments"
               element={
-                <ProtectedRoute allowedRoles={["patient", "admin"]}>
-                  <TestBookAppointment />
+                <ProtectedRoute allowedRoles={['patient']}>
+                  <BookAppointment />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/appointmentDetail/:id"
-              element={<AppointmentDetail />}
+              path="/patient/doctors"
+              element={
+                <ProtectedRoute allowedRoles={['patient']}>
+                  <div>Patient Doctors Page</div>
+                </ProtectedRoute>
+              }
             />
+            
+            <Route path="/book" element={<BookAppointment />} />
+            
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>
