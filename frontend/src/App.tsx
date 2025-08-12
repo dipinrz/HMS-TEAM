@@ -15,7 +15,6 @@ import Navbar from "./components/NavBar";
 import AllPatients from "./pages/Admin-pages/AllPatients";
 import AllDoctors from "./pages/Admin-pages/AllDoctors";
 import TestBookAppointment from "./pages/PatientUtility/Appointment";
-import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
 import { AllMedicines } from './pages/Admin-pages/AllMedicines';
 import DoctorAppointments from './pages/Doctor-pages/DoctorAppointments';
 import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
@@ -189,7 +188,7 @@ function App() {
               path="/patient/appointments"
               element={
                 <ProtectedRoute allowedRoles={['patient']}>
-                  <BookAppointment />
+                  <TestBookAppointment />
                 </ProtectedRoute>
               }
             />
@@ -202,7 +201,7 @@ function App() {
               }
             />
             
-            <Route path="/book" element={<BookAppointment />} />
+            <Route path="/book" element={<TestBookAppointment />} />
             
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
