@@ -46,6 +46,6 @@ export const getPrescriptionByIds = async (appointmentIds: number[]) => {
         where: {
             appointment: { appointment_id: In(appointmentIds) }
         },
-        relations: ['appointment']
+        relations: ['appointment', 'appointment.patient']
     });
 }

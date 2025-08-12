@@ -13,9 +13,9 @@ import {
   Box,
   Typography,
   Avatar,
-  Stack,
   Paper,
   Chip,
+  Button,
 } from "@mui/material";
 import {
   Dashboard as DashboardIcon,
@@ -29,6 +29,7 @@ import {
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
+import { LogOutIcon } from "lucide-react";
 
 const drawerWidth = 280;
 
@@ -44,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   mobileOpen,
   handleDrawerToggle,
 }) => {
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const location = useLocation();
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("sm")
@@ -97,6 +98,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const allLinks = getLinksForRole(user?.role as UserRole);
+  
+  const handleLogout = () => {
+      logout();
+  }
 
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -140,7 +145,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <PersonIcon sx={{ fontSize: 28 }} />
           </Avatar>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
-            User Name
+            {user?.first_name.toUpperCase()} {user?.last_name.toUpperCase()}
           </Typography>
           <Chip
             label={user?.role?.toUpperCase() || "USER"}
@@ -258,32 +263,31 @@ const Sidebar: React.FC<SidebarProps> = ({
         </Box>
       </Box>
 
-      {/* Footer Section */}
-      <Box sx={{ p: 3, pt: 2, flexShrink: 0 }}>
-        <Paper
-          elevation={0}
+      <Box sx={{ px: 2, py: 1.5, mt: 'auto' }}>
+        <Button
+          fullWidth
+          startIcon={<LogOutIcon />}
+          onClick={handleLogout}
           sx={{
-            p: 2,
-            bgcolor: "grey.50",
+            justifyContent: 'flex-start',
+            color: '#ff6b6b',
+            backgroundColor: 'rgba(255, 107, 107, 0.1)',
             borderRadius: 2,
-            border: "1px solid",
-            borderColor: "grey.200",
+            px: 3,
+            py: 1.5,
+            textTransform: 'none',
+            fontWeight: 500,
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 107, 107, 0.2)',
+              transform: 'translateX(2px)',
+            }
           }}
         >
-          <Stack spacing={1}>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ fontWeight: 500 }}
-            >
-              Healthcare Management System
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Version 2.0.1
-            </Typography>
-          </Stack>
-        </Paper>
+          Logout
+        </Button>
       </Box>
+      
     </Box>
   );
 

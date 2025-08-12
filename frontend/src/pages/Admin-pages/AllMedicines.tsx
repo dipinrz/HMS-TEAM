@@ -271,17 +271,18 @@ export const AllMedicines: React.FC = () => {
               <TableHead>
                 <TableRow
                   sx={{
-                    backgroundColor: "rgba(25, 118, 210, 0.08)",
-                    "& .MuiTableCell-head": {
-                      borderBottom: "2px solid rgba(25, 118, 210, 0.1)",
-                    },
-                  }}
+                        "& .MuiTableCell-head": {
+                        backgroundColor: "rgba(25, 118, 210, 0.08)",
+                        borderBottom: "2px solid rgba(25, 118, 210, 0.1)",
+                        }
+                    }}
                 >
                   {headCells.map((headCell) => (
                     <TableCell
                       key={headCell.id}
                       align={headCell.numeric ? "right" : "left"}
                       sx={{
+                        backgroundColor: "#f5f5f5",
                         fontWeight: "bold",
                         fontSize: "0.95rem",
                         color: "#1565c0",

@@ -33,37 +33,11 @@ const headCells = [
   { id: "name", numeric: false, label: "Department Name" },
   { id: "description", numeric: false, label: "Description" },
   { id: "consultationFee", numeric: true, label: "Consultation Fee" },
-  { id: "numDoctors", numeric: true, label: "No. of Doctors" },
   { id: "headDoctor", numeric: false, label: "Head Doctor" },
   { id: "actions", numeric: false, label: "Actions" },
 ];
 
-const dummyDepartments = [
-  {
-    id: 1,
-    name: "Cardiology",
-    description: "Heart-related treatments and surgeries",
-    consultationFee: 500,
-    numDoctors: 8,
-    headDoctor: "Dr. John Smith",
-  },
-  {
-    id: 2,
-    name: "Neurology",
-    description: "Brain and nervous system",
-    consultationFee: 600,
-    numDoctors: 5,
-    headDoctor: "Dr. Alice Brown",
-  },
-  {
-    id: 3,
-    name: "Orthopedics",
-    description: "Bone and muscle treatments",
-    consultationFee: 450,
-    numDoctors: 6,
-    headDoctor: "Dr. Mark Wilson",
-  },
-];
+
 
 const AdminDepartmentsPage = () => {
   const [departments, setDepartments] = useState([]);
@@ -185,7 +159,7 @@ const AdminDepartmentsPage = () => {
                 <TableBody>
                   {departments?.map((dept:any, index) => (
                     <TableRow
-                      key={dept.department_id}
+                      key={dept?.department_id}
                       sx={{
                         "&:hover": {
                           backgroundColor: "rgba(25, 118, 210, 0.04)",
@@ -202,7 +176,7 @@ const AdminDepartmentsPage = () => {
                         </Badge>
                       </TableCell>
 
-                      <TableCell>{dept.name}</TableCell>
+                      <TableCell>{dept?.name}</TableCell>
 
                       <TableCell>
                         <Typography
@@ -211,15 +185,14 @@ const AdminDepartmentsPage = () => {
                           noWrap
                           sx={{ maxWidth: 250 }}
                         >
-                          {dept.description}
+                          {dept?.description}
                         </Typography>
                       </TableCell>
 
-                      <TableCell>₹{dept.consultation_fee}</TableCell>
+                      <TableCell>₹{dept?.consultation_fee}</TableCell>
 
-                      <TableCell>10</TableCell>
 
-                      <TableCell>{dept.head_doctor.user.name}</TableCell>
+                      <TableCell>{dept?.head_doctor?.user.first_name}</TableCell>
 
                       <TableCell>
                         <Box display="flex" gap={1}>
