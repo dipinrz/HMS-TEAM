@@ -16,6 +16,7 @@ import Navbar from './components/NavBar';
 import AllPatients from './pages/Admin-pages/AllPatients';
 import AllDoctors from './pages/Admin-pages/AllDoctors';
 import { AllMedicines } from './pages/Admin-pages/AllMedicines';
+import DoctorAppointments from './pages/Doctor-pages/DoctorAppointments';
 
 const theme = createTheme({
   palette: {
@@ -160,7 +161,7 @@ function App() {
               path="/doctor/appointments"
               element={
                 <ProtectedRoute allowedRoles={['doctor']}>
-                  <div>Doctor Appointments Page</div>
+                  <DoctorAppointments />
                 </ProtectedRoute>
               }
             />
