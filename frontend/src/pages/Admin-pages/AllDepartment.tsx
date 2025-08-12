@@ -23,6 +23,7 @@ import {
   Modal,
   Stack,
 } from "@mui/material";
+
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import CustomButton from "../../components/ui/CustomButton";
@@ -34,6 +35,9 @@ import {
   getAllDoctors,
 } from "../../services/adminAPi";
 import { SearchIcon } from "lucide-react";
+
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const headCells = [
   { id: "id", numeric: true, label: "Sl.No" },
@@ -63,6 +67,11 @@ const AdminDepartmentsPage = () => {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
+  useEffect(() => {
+    loadDepartments();
+    fetchAllDoctors();
+  }, []);
+
   const [formData, setFormData] = useState<dept_data>({
     name: "",
     description: "",
@@ -70,10 +79,38 @@ const AdminDepartmentsPage = () => {
     head_doctor: 0,
   });
 
-  useEffect(() => {
-    loadDepartments();
-    fetchAllDoctors();
-  }, []);
+  const downloadDepartmentsPDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text("Department List", 14, 20);
+
+    const tableColumn = [
+      "Sl.No",
+      "Department Name",
+      "Description",
+      "Consultation Fee",
+      "Head Doctor",
+    ];
+
+    const tableRows = departments.map((dept: any, index: number) => [
+      index + 1,
+      dept.name,
+      dept.description,
+      `₹${dept.consultation_fee}`,
+      dept?.head_doctor?.user
+        ? `${dept.head_doctor.user.first_name} ${dept.head_doctor.user.last_name}`
+        : "N/A",
+    ]);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 30,
+    });
+
+    doc.save("departments.pdf");
+  };
 
   const loadDepartments = async () => {
     try {
@@ -556,7 +593,7 @@ const AdminDepartmentsPage = () => {
                 size="small"
                 label="Download PDF"
                 sx={{ mr: 1, borderRadius: 2 }}
-                onClick={() => toast.info("Download PDF not implemented yet")}
+                onClick={downloadDepartmentsPDF}
               />
             </Box>
           </Box>
