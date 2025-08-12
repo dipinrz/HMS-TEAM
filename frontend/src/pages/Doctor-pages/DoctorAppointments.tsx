@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import { useDoctorStore } from "../../store/doctorStore";
 import { useAuthStore } from "../../store/useAuthStore";
 import CustomButton from "../../components/ui/CustomButton";
-import Navbar from "../../components/NavBar";
 import { Card } from "../../components/ui/CustomCards";
 import { getInitials, getStatusColor } from "../../utility/DoctorUtility";
 import CustomModal from "../../components/ui/CustomModal";
@@ -66,7 +65,7 @@ const DoctorAppointments = () => {
 
     return (
         <Box p={2}>
-            <Navbar />
+            
             <Typography variant="h4" fontWeight={600} mb={4}>
                 All Appointments
             </Typography>
