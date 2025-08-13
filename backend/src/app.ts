@@ -1,4 +1,4 @@
-:import express from "express";
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { errorHandler } from "./middlewares/errorHandler";
@@ -43,7 +43,7 @@ app.use('/api/v1/records',medicalRecordRoutes)
 app.use(errorHandler)
 
 app.get('/health',(req:any,resp:any)=>{
-    res.status(200).json({
+    resp.status(200).json({
     status: 'ok',
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
