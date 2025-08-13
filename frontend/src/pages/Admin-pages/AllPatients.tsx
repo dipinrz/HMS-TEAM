@@ -126,6 +126,7 @@ const AdminPatientsPage = () => {
     try {
       setIsLoading(true);
       const response = await getAllPatients();
+      console.log(response)
       setAllPatients(response.data.patients);
     } catch (error) {
       toast.error("Could fetch patients");
