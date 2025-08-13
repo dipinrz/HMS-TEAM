@@ -4,10 +4,11 @@ import { Appointment } from "../entities/appointment.entity";
 import { Doctor } from "../entities/doctor.entity";
 import { User } from "../entities/user.entity";
 import { instanceToPlain } from "class-transformer";
+import { Department } from "../entities/department.entity";
 
 const doctorRepo = AppDataSource.getRepository(Doctor)
-const appointmentRepo = AppDataSource.getRepository(Appointment)
-
+const appointmentRepo = AppDataSource.getRepository(Appointment);
+const departmentRepo = AppDataSource.getRepository(Department);
 
 
 export const createDoctor = async (doctor: Partial<Doctor>) => {
@@ -92,4 +93,9 @@ export const getPatientsByDoctorId = async (doctorId: number) => {
 export const fetchAllDoctors = async()=>{
     const response = await doctorRepo.find({relations:['department','user']})
     return instanceToPlain(response)
+}
+
+export const findHeadDoctorDepartment = async (head_doctor_id: number) => {
+
+    return await departmentRepo.findOne({ where: {head_doctor: {doctor_id: head_doctor_id} }});
 }
