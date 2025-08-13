@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import {
   fetchAllDoctors,
+  findHeadDoctorDepartment,
   getDoctorAppointments,
   getDoctorById,
   getPatientsByDoctorId,
@@ -15,6 +16,7 @@ import timezone from "dayjs/plugin/timezone";
 import { AppointmentStatus } from "../entities/appointment.entity";
 import { getPrescriptionsByAppoinment } from "../services/medicalReport.services";
 import { getPrescriptionByIds } from "../services/prescription.services";
+import { getDoctorsByDepartmentId } from "../services/department.services";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -296,4 +298,34 @@ export const getDoctorPrescriptionHandler = async (req: AuthRequest, res: Respon
   } catch(error){
     next(error);
   }
+}
+
+export const isHeadDoctorHandler = async (req: AuthRequest, res: Response, next: NextFunction) => {
+
+  try{
+    const head_doctor_id = Number(req.user.userId);
+    let department = await findHeadDoctorDepartment(head_doctor_id);
+    
+    if(department === null){
+      res.json({
+      success: true,
+      message: "No Department found as head doctor",
+      is_head_doctor: false,
+    })
+    }
+
+    const doctors = await getDoctorsByDepartmentId(department.department_id);
+
+    res.json({
+      success: true,
+      message: "Department fetched successfully",
+      is_head_doctor: true,
+      department,
+      doctors
+    })
+  } catch(error){
+    next(error);
+  }
+
+
 }

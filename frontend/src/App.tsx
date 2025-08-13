@@ -21,6 +21,7 @@ import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
 import DoctorPriscriptions from './pages/Doctor-pages/DoctorPriscriptions';
 import AddPrescription from "./pages/Doctor-pages/AddPrescription";
 import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
+import AdminAppointment from "./components/ADMIN/AdminAppointments";
 
 const theme = createTheme({
   palette: {
@@ -151,6 +152,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
                   <AllMedicines />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="admin/appointments"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminAppointment />
                 </ProtectedRoute>
               }
             />
