@@ -728,7 +728,15 @@ const AdminDoctorsPage = () => {
                           </TableCell>
                           <TableCell>
                             <Typography variant="body2" color="text.secondary">
-                              {doctor?.department?.name}
+                              {doctor?.department?.name ? (
+                                doctor.department.name
+                              ) : (
+                                <div
+                                  style={{ color: "red", fontWeight: "bold" }}
+                                >
+                                  N/A
+                                </div>
+                              )}
                             </Typography>
                           </TableCell>
 
