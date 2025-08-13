@@ -22,6 +22,8 @@ import DoctorPriscriptions from './pages/Doctor-pages/DoctorPriscriptions';
 import AddPrescription from "./pages/Doctor-pages/AddPrescription";
 import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
 import AdminAppointment from "./components/ADMIN/AdminAppointments";
+import ForgotPass from "./pages/Auth/ForgotPass";
+import ResetPass from "./pages/Auth/ResetPass";
 
 const theme = createTheme({
   palette: {
@@ -73,7 +75,7 @@ function App() {
     setMobileOpen(!mobileOpen);
   };
 
-  const noSidebarRoutes = ["/", "/signup", "/unauthorized"];
+  const noSidebarRoutes = ["/", "/signup", "/unauthorized", "/forgot-pass", "/reset-pass"];
 
   const shouldShowSidebar =
     user && !noSidebarRoutes.includes(location.pathname);
@@ -113,6 +115,10 @@ function App() {
             <Route path="/" element={<LoginPage />} />
             <Route path="/unauthorized" element={<p>Unauthorized Access</p>} />
             <Route path="/signup" element={<RegisterPage />} />
+            <Route path="/forgot-pass" element={<ForgotPass />} />
+            <Route path="/reset-password/:token" element={<ResetPass />} />
+
+
 
             {/* Admin Routes */}
             <Route
@@ -143,7 +149,7 @@ function App() {
               path="/admin/departments"
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
-                  <AdminDepartmentsPage/>
+                  <AdminDepartmentsPage />
                 </ProtectedRoute>
               }
             />
@@ -185,7 +191,7 @@ function App() {
               path="/doctor/prescriptions"
               element={
                 <ProtectedRoute allowedRoles={['doctor']}>
-                  <DoctorPriscriptions/>
+                  <DoctorPriscriptions />
                 </ProtectedRoute>
               }
             />
@@ -193,7 +199,7 @@ function App() {
               path="doctor/prescription/:id"
               element={
                 <ProtectedRoute allowedRoles={['doctor']}>
-                  <AddPrescription/>
+                  <AddPrescription />
                 </ProtectedRoute>
               }
             />
