@@ -142,7 +142,66 @@ export const updateDoctorProfile = async (
 ) => {
   try {
     const doctor_id = req.user.userId;
-    console.log(doctor_id);
+    const response = await getDoctorById(Number(doctor_id));
+    if (!response) {
+      throw new ApiError("Doctor not found", 404);
+    }
+    const {
+      first_name,
+      last_name,
+      email,
+      phone_number,
+      address,
+      gender,
+      date_of_birth,
+      specialization,
+      qualification,
+      license_number,
+      years_of_experience,
+      department_id,
+    } = req.body;
+
+    const updatedUserFields = {
+      first_name,
+      last_name,
+      email,
+      phone_number,
+      address,
+      gender,
+      date_of_birth,
+    };
+
+    const updatedDoctorFields = {
+      specialization,
+      qualification,
+      license_number,
+      years_of_experience,
+      department_id,
+    };
+
+    await updateUser(doctor_id, updatedUserFields);
+
+    const updatedDoctor = await updateDoctorById(
+      doctor_id,
+      updatedDoctorFields
+    );
+
+    res.status(200).json({
+      success: true,
+      updatedDoctor: instanceToPlain(updatedDoctor),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateDoctorProfileById = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const doctor_id = Number(req.params.id);
     const response = await getDoctorById(Number(doctor_id));
     if (!response) {
       throw new ApiError("Doctor not found", 404);
