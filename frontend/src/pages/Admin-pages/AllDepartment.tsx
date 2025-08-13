@@ -33,6 +33,7 @@ import {
   deleteDept,
   fetchAllDepartments,
   getAllDoctors,
+  updateDepartmentById,
 } from "../../services/adminAPi";
 import { SearchIcon } from "lucide-react";
 
@@ -66,6 +67,8 @@ const AdminDepartmentsPage = () => {
   const handleCloseModal = () => setIsOpen(false);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editDeptId, setEditDeptId] = useState<number | null>(null);
 
   useEffect(() => {
     loadDepartments();
@@ -78,6 +81,18 @@ const AdminDepartmentsPage = () => {
     consultation_fee: 0,
     head_doctor: 0,
   });
+
+  const handleEditClick = (dept: any) => {
+    setIsEditMode(true);
+    setEditDeptId(dept.department_id);
+    setFormData({
+      name: dept.name,
+      description: dept.description,
+      consultation_fee: dept.consultation_fee,
+      head_doctor: dept.head_doctor?.doctor_id || 0,
+    });
+    setIsOpen(true);
+  };
 
   const downloadDepartmentsPDF = () => {
     const doc = new jsPDF();
@@ -117,10 +132,7 @@ const AdminDepartmentsPage = () => {
       setIsLoading(true);
       const response = await fetchAllDepartments();
       setDepartments(response.data.data.departments);
-      console.log(
-        "DEPARTMENTS PAGE=================",
-        response.data.data.departments
-      );
+      
     } catch (error) {
       toast.error("Couldn't fetch all departments");
       console.error("Error fetching departments:", error);
@@ -132,7 +144,6 @@ const AdminDepartmentsPage = () => {
   const fetchAllDoctors = async () => {
     try {
       const response = await getAllDoctors();
-      console.log("All doctors for admin dept page", response.data.data);
       setAllDoctors(response.data.data);
     } catch (error) {
       toast.error("Couldn't fetch all doctors");
@@ -178,23 +189,37 @@ const AdminDepartmentsPage = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      await addDept(formData);
-      toast.success("Department added successfully");
-      loadDepartments;
+
+      if (isEditMode && editDeptId) {
+        await updateDepartmentById(editDeptId, formData);
+        toast.success("Department updated successfully");
+      } else {
+        await addDept(formData);
+        toast.success("Department added successfully");
+      }
+
+      loadDepartments();
       setIsOpen(false);
-      setFormData({
-        name: "",
-        description: "",
-        consultation_fee: 0,
-        head_doctor: 0,
-      });
-      loadDepartments(); // Refresh table
+      resetForm();
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add department");
+      toast.error(
+        isEditMode ? "Failed to update department" : "Failed to add department"
+      );
     } finally {
       setLoading(false);
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      description: "",
+      consultation_fee: 0,
+      head_doctor: 0,
+    });
+    setIsEditMode(false);
+    setEditDeptId(null);
   };
 
   return (
@@ -243,7 +268,7 @@ const AdminDepartmentsPage = () => {
               fontSize: "1.2rem",
             }}
           >
-            ADD NEW DEPARTMENT
+            {isEditMode ? "EDIT DEPARTMENT" : "ADD NEW DEPARTMENT"}
           </Box>
 
           {/* Body */}
@@ -351,7 +376,13 @@ const AdminDepartmentsPage = () => {
                 },
               }}
             >
-              {loading ? "Submitting..." : "Submit"}
+              {loading
+                ? isEditMode
+                  ? "Updating..."
+                  : "Submitting..."
+                : isEditMode
+                ? "Update"
+                : "Submit"}
             </Button>
           </Box>
         </Box>
@@ -540,10 +571,12 @@ const AdminDepartmentsPage = () => {
                                   },
                                   transition: "all 0.2s ease",
                                 }}
+                                onClick={() => handleEditClick(dept)}
                               >
                                 <EditIcon fontSize="small" />
                               </IconButton>
                             </Tooltip>
+
                             <Tooltip title="Delete Department" arrow>
                               <IconButton
                                 size="small"
@@ -585,7 +618,7 @@ const AdminDepartmentsPage = () => {
             }}
           >
             <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              Total Departments: 10
+              Total Departments: {departments.length}
             </Typography>
             <Box>
               <CustomButton

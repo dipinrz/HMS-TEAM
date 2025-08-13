@@ -31,6 +31,10 @@ import { AddMedicineModal } from "../../components/ui/AddMedicineModal";
 import { toast } from "react-toastify";
 import { EditMedicineModal } from "../../components/ui/EditMedicineModal";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
+
 const headCells = [
   { id: "medicine_id", numeric: true, label: "ID" },
   { id: "name", numeric: false, label: "Medicine" },
@@ -72,6 +76,34 @@ export const AllMedicines: React.FC = () => {
       console.log("Failed to fetch medicines", error);
     }
   };
+
+  const downloadPDF = () => {
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("Medicine List", 14, 15);
+
+  const tableColumn = ["ID", "Name", "Description", "Cost", "Expiry Date"];
+
+  const tableRows = filteredMedicines.map((medicine) => [
+    medicine.medicine_id,
+    medicine.medicine_name,
+    medicine.description || "No description",
+    `₹${medicine.cost}`,
+    medicine.expiry_date
+      ? new Date(medicine.expiry_date).toLocaleDateString()
+      : "N/A",
+  ]);
+
+  autoTable(doc, {
+    head: [tableColumn],
+    body: tableRows,
+    startY: 25,
+  });
+
+  doc.save("medicines.pdf");
+};
+
 
   const handleSubmit = async (
     data: Omit<MedicineFormData, "cost"> & { cost: number }
@@ -464,7 +496,7 @@ export const AllMedicines: React.FC = () => {
                 )}
               </TableBody>
             </Table>
-          </TableContainer>\
+          </TableContainer>
 
           <EditMedicineModal
             open={editModalOpen}
@@ -493,17 +525,18 @@ export const AllMedicines: React.FC = () => {
             </Typography>
             <Box>
               <CustomButton
-                variant="outlined"
+                variant="contained"
                 size="small"
                 label="Download PDF"
+                onClick={downloadPDF}
                 sx={{
                   mr: 1,
                   borderRadius: 2,
-                  color: "#1976d2",
+                  color: "#eaedf7ff",
                   borderColor: "rgba(25, 118, 210, 0.5)",
                   "&:hover": {
                     borderColor: "#1976d2",
-                    backgroundColor: "rgba(25, 118, 210, 0.04)",
+                    backgroundColor: "rgba(1, 1, 139, 0.88)",
                   },
                 }}
               />

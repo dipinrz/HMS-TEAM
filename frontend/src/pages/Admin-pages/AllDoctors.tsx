@@ -1,8 +1,33 @@
-import { Box,Button,IconButton,Paper,Table,TableBody,TableCell,TableContainer,TableHead,
-  TableRow,Typography,TextField,InputAdornment,Avatar,TableSortLabel,Chip,Tooltip,Divider,
-  Badge,CircularProgress,Dialog,DialogTitle,DialogContent,DialogActions,Modal,Stack,
-  MenuItem,} from "@mui/material";
-  
+import {
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  TextField,
+  InputAdornment,
+  Avatar,
+  TableSortLabel,
+  Chip,
+  Tooltip,
+  Divider,
+  Badge,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Modal,
+  Stack,
+  MenuItem,
+} from "@mui/material";
+
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -16,7 +41,11 @@ import {
   fetchAllDepartments,
   getAllDoctors,
   registerDoctor,
+  updateDoctorById,
 } from "../../services/adminAPi";
+
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const headCells = [
   { id: "id", numeric: true, label: "ID" },
@@ -50,9 +79,26 @@ const AdminDoctorsPage = () => {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState<any>(null);
 
   const handleOpenModal = () => setOpen(true);
-  const handleCloseModal = () => setOpen(false);
+  const handleCloseModal = () => {
+    setOpen(false);
+    setIsEditMode(false);
+    setSelectedDoctor(null);
+    setFormData({
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+      specialization: "",
+      qualification: "",
+      license_number: "",
+      years_of_experience: 0,
+      department_id: 0,
+    });
+  };
 
   const [formData, setFormData] = useState<DoctorForm>({
     first_name: "",
@@ -74,23 +120,84 @@ const AdminDoctorsPage = () => {
     }));
   };
 
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+
+    // Title
+    doc.setFontSize(16);
+    doc.text("Doctors List", 14, 15);
+
+    // Table headers
+    const tableColumn = [
+      "No.",
+      "Name",
+      "Email",
+      "Specialization",
+      "License No.",
+      "Department",
+      "Created Date",
+    ];
+
+    const tableRows = allDoctors.map((doctor: any, index) => [
+      index + 1,
+      doctor?.user?.first_name || "",
+      doctor?.user?.email || "",
+      doctor?.specialization || "",
+      doctor?.license_number || "",
+      doctor?.department?.name || "",
+      doctor?.user?.created_at
+        ? new Date(doctor.user.created_at).toLocaleDateString()
+        : "",
+    ]);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 25,
+      styles: {
+        fontSize: 10,
+        cellPadding: 3,
+      },
+      headStyles: {
+        fillColor: [25, 118, 210],
+        textColor: 255,
+        fontStyle: "bold",
+      },
+      alternateRowStyles: {
+        fillColor: [240, 240, 240],
+      },
+    });
+
+    doc.save("doctors.pdf");
+  };
+
+  console.log("ALL Doctors==========", allDoctors);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       setLoading(true);
-      await registerDoctor(formData);
-      toast.success("Doctor registered successfully!");
-      fetchAllDoctors();
 
+      if (isEditMode && selectedDoctor) {
+        // update existing doctor
+        await updateDoctorById(selectedDoctor.doctor_id, formData);
+        toast.success("Doctor updated successfully!");
+      } else {
+        // create new doctor
+        await registerDoctor(formData);
+        toast.success("Doctor registered successfully!");
+      }
+
+      fetchAllDoctors();
       handleCloseModal();
     } catch (error: any) {
       if (error.response) {
-        toast.error(error.response.data.message || "Failed to register doctor");
+        toast.error(error.response.data.message || "Failed to save doctor");
       } else {
         toast.error("Something went wrong");
       }
       console.error(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -132,6 +239,25 @@ const AdminDoctorsPage = () => {
       toast.error("Couldn't delete doctor");
       console.log("Error in deleting doctor", error);
     }
+  };
+
+  const handleEditDoctor = (doctor: any) => {
+    setIsEditMode(true);
+    setSelectedDoctor(doctor);
+
+    setFormData({
+      first_name: doctor.user?.first_name || "",
+      last_name: doctor.user?.last_name || "",
+      email: doctor.user?.email || "",
+      password: "", // leave empty for update unless changing password
+      specialization: doctor.specialization || "",
+      qualification: doctor.qualification || "",
+      license_number: doctor.license_number || "",
+      years_of_experience: doctor.years_of_experience || 0,
+      department_id: doctor.department?.department_id || 0,
+    });
+
+    setOpen(true);
   };
 
   const fetchAllDoctors = async () => {
@@ -192,7 +318,7 @@ const AdminDoctorsPage = () => {
               fontSize: "1.2rem",
             }}
           >
-            Register New Doctor
+            {isEditMode ? "Edit Doctor" : "Register New Doctor"}
           </Box>
 
           {/* Body */}
@@ -364,7 +490,7 @@ const AdminDoctorsPage = () => {
                 },
               }}
             >
-              {loading ? "Submitting..." : "Submit"}
+              {loading ? "Submitting..." : isEditMode ? "Update" : "Submit"}
             </Button>
           </Box>
         </Box>
@@ -630,6 +756,7 @@ const AdminDoctorsPage = () => {
                                     },
                                     transition: "all 0.2s ease",
                                   }}
+                                  onClick={() => handleEditDoctor(doctor)}
                                 >
                                   <EditIcon fontSize="small" />
                                 </IconButton>
@@ -682,6 +809,7 @@ const AdminDoctorsPage = () => {
             <Box>
               <CustomButton
                 variant="contained"
+                onClick={downloadPDF}
                 size="small"
                 sx={{ mr: 1, borderRadius: 2 }}
                 label=" Download PDF"

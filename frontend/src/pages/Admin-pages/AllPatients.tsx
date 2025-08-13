@@ -1,14 +1,18 @@
-import { Box,Button,IconButton,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Typography,
-  TextField,InputAdornment,Avatar,TableSortLabel,Chip,Tooltip,Divider,Badge,CircularProgress,
-  Dialog,DialogTitle,DialogContent,DialogActions,} from "@mui/material";
+import { Box,Button,IconButton,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,
+ Typography,TextField,InputAdornment,Avatar,TableSortLabel,Chip,Tooltip,Divider,Badge,
+  CircularProgress,Dialog,DialogTitle,DialogContent,DialogActions,
+} from "@mui/material";
 
-import {Delete as DeleteIcon,Search as SearchIcon,
+import {
+  Delete as DeleteIcon,
+  Search as SearchIcon,
 } from "@mui/icons-material";
-import { FilterIcon } from "lucide-react";
 import CustomButton from "../../components/ui/CustomButton";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { deletePatient, getAllPatients } from "../../services/adminAPi";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const headCells = [
   { id: "userId", numeric: true, label: "Sl.No" },
@@ -31,6 +35,60 @@ const AdminPatientsPage = () => {
   useEffect(() => {
     fetchAllPatients();
   }, []);
+
+  const downloadPatientsPDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.setTextColor(40);
+    doc.text("Patient List", 14, 15);
+
+    const tableColumn = [
+      "#",
+      "Patient Name",
+      "Email",
+      "Blood Group",
+      "Phone",
+      "Joined Date",
+    ];
+
+    const tableRows = allPatients.map((patient: any, index: number) => [
+      index + 1,
+      `${patient.user.first_name} ${patient.user.last_name}`,
+      patient.user.email,
+      patient.blood_group,
+      patient.user.phone_number || "N/A",
+      new Date(patient.user.created_at).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }),
+    ]);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 25,
+      theme: "striped",
+      styles: { fontSize: 10, cellPadding: 3 },
+      headStyles: {
+        fillColor: [25, 118, 210],
+        textColor: 255,
+        fontSize: 11,
+      },
+      alternateRowStyles: { fillColor: [240, 240, 240] },
+      columnStyles: {
+        0: { cellWidth: 15, halign: "center" },
+        1: { cellWidth: 40 },
+        2: { cellWidth: 45 },
+        3: { cellWidth: 20, halign: "center" },
+        4: { cellWidth: 30 },
+        5: { cellWidth: 30 },
+      },
+    });
+
+    doc.save("patients.pdf");
+  };
 
   const handleOpenDeleteDialog = (id: number) => {
     setSelectedPatientId(id);
@@ -61,9 +119,9 @@ const AdminPatientsPage = () => {
     try {
       await deletePatient(selectedPatientId);
       toast.success("Patient deleted successfully");
-      fetchAllPatients()
+      fetchAllPatients();
       handleCloseDeleteDialog();
-    } catch (error:any) {
+    } catch (error: any) {
       toast.error("Couldn't delete patient");
       console.log("Error in deleting patient", error);
     }
@@ -257,7 +315,13 @@ const AdminPatientsPage = () => {
 
                       <TableCell>
                         <Typography variant="body2" color="text.secondary">
-                          {patient.user.phone_number?patient.user.phone_number:<div style={{color:'red',fontWeight:"bold"}}>N/A</div>}
+                          {patient.user.phone_number ? (
+                            patient.user.phone_number
+                          ) : (
+                            <div style={{ color: "red", fontWeight: "bold" }}>
+                              N/A
+                            </div>
+                          )}
                         </Typography>
                       </TableCell>
 
@@ -276,7 +340,6 @@ const AdminPatientsPage = () => {
 
                       <TableCell>
                         <Box display="flex" gap={1}>
-                          
                           <Tooltip title="Delete Patient" arrow>
                             <IconButton
                               size="small"
@@ -326,6 +389,7 @@ const AdminPatientsPage = () => {
                 size="small"
                 label="Download PDF"
                 sx={{ mr: 1, borderRadius: 2 }}
+                onClick={downloadPatientsPDF}
               />
             </Box>
           </Box>
