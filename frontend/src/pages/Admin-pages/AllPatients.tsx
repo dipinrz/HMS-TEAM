@@ -1,6 +1,28 @@
-import { Box,Button,IconButton,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,
- Typography,TextField,InputAdornment,Avatar,TableSortLabel,Chip,Tooltip,Divider,Badge,
-  CircularProgress,Dialog,DialogTitle,DialogContent,DialogActions,
+import {
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  TextField,
+  InputAdornment,
+  Avatar,
+  TableSortLabel,
+  Chip,
+  Tooltip,
+  Divider,
+  Badge,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 
 import {
@@ -302,7 +324,15 @@ const AdminPatientsPage = () => {
 
                       <TableCell>
                         <Chip
-                          label={patient.blood_group}
+                          label={
+                            patient.blood_group ? (
+                              patient.blood_group
+                            ) : (
+                              <div style={{ color: "red", fontWeight: "bold" }}>
+                                N/A
+                              </div>
+                            )
+                          }
                           size="medium"
                           sx={{
                             fontWeight: "bold",
