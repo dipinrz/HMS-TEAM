@@ -106,7 +106,7 @@ const statsData: TodayStats[] = [
   }
 ];
   return (
-    <Box sx={{ mt: 10 }}>
+    <Box sx={{p:2}}>
       
       <Box mb={4} display={"flex"} justifyContent="space-between" alignItems={"center"}>
         <Box>

@@ -1,8 +1,8 @@
 
 import { create } from 'zustand';
-import { getDoctorAppointment, getDoctorPatients,getRecentPatientFromAllAppointment } from '../services/doctorAPI';
+import { getAllMedicens, getDoctorAppointment, getDoctorPatients,getDoctorPriscriptions,getRecentPatientFromAllAppointment } from '../services/doctorAPI';
 import { getRecentUniquePatientAppointments } from '../utility/DoctorUtility';
-import type { Appointment, Patient } from '../types/doctorType';
+import type { Appointment, Medicine, Patient, Prescription } from '../types/doctorType';
 
 interface DoctorStore {
   appointments: Appointment[];
@@ -10,6 +10,8 @@ interface DoctorStore {
   recentPatients: Appointment[];
   todayAppointments: Appointment[];
   patients: Patient[];
+  prescriptons:Prescription[];
+  medicines: Medicine[];
   patientsCount: number;
   completedCount: number;
   remainingCount: number;
@@ -19,6 +21,8 @@ interface DoctorStore {
   fetchAppointments: () => Promise<void>;
   fetchPatients: (doctor_id: number) => Promise<void>;
   fetchRecentPatients: () => Promise<void>;
+  fetchPrescriptions:()=>Promise<void>;
+  fetchMedicines: () => Promise<void>;
 }
 
 export const useDoctorStore = create<DoctorStore>((set, get) => ({
@@ -27,6 +31,8 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
   recentPatients: [],
   todayAppointments: [],
   patients: [],
+  medicines:[],
+  prescriptons:[],
   patientsCount: 0,
   completedCount: 0,
   remainingCount: 0,
@@ -71,8 +77,8 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
   },
 
   fetchRecentPatients: async () => {
-    try {
-        set({ loading: true, error: null });   
+    set({ loading: true, error: null }); 
+    try {  
       const response = await getRecentPatientFromAllAppointment();
       const data = response.data.appointments;
 
@@ -88,4 +94,25 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
       set({ loading: false, error: "Failed to fetch appointments" });
     }
   },
+  fetchPrescriptions:async()=>{
+    set({ loading: true, error: null }); 
+    try{
+      const response=await getDoctorPriscriptions();
+      const data=response.data.prescriptions;
+      set({prescriptons:data,loading:false})
+    }catch(err:any){
+      console.log("Faild to load prescription",err);
+      set({error:err,loading:false})
+    }
+  },
+  fetchMedicines:async()=>{
+    set({loading:true,error:null});
+    try{
+      const response=await getAllMedicens();
+      set({medicines:response.data.data,loading:false})
+    }catch(err:any){
+      console.log("Faild to load Medice",err);
+      set({error:err,loading:false})
+    }
+  }
 }));

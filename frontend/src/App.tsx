@@ -18,6 +18,8 @@ import TestBookAppointment from "./pages/PatientUtility/Appointment";
 import { AllMedicines } from './pages/Admin-pages/AllMedicines';
 import DoctorAppointments from './pages/Doctor-pages/DoctorAppointments';
 import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
+import DoctorPriscriptions from './pages/Doctor-pages/DoctorPriscriptions';
+import AddPrescription from "./pages/Doctor-pages/AddPrescription";
 import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
 
 const theme = createTheme({
@@ -173,8 +175,16 @@ function App() {
             <Route
               path="/doctor/prescriptions"
               element={
-                <ProtectedRoute allowedRoles={["doctor"]}>
-                  <div>Doctor Prescriptions Page</div>
+                <ProtectedRoute allowedRoles={['doctor']}>
+                  <DoctorPriscriptions/>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="doctor/prescription/:id"
+              element={
+                <ProtectedRoute allowedRoles={['doctor']}>
+                  <AddPrescription/>
                 </ProtectedRoute>
               }
             />
