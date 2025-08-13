@@ -19,6 +19,7 @@ import CustomModal from "../../components/ui/CustomModal";
 import type { Appointment } from "../../types/doctorType";
 import { getDoctorAppointmentById } from "../../services/doctorAPI";
 import AppointmentDetailsModal from "./AppointmentDetailsModal";
+import { useNavigate } from "react-router-dom";
 
 
 const DoctorAppointments = () => {
@@ -27,7 +28,7 @@ const DoctorAppointments = () => {
     const [openModal, setOpenModal] = useState(false);
     const [selectedAppointmentId, setSelectedAppointmentId] = useState<number | null>(null);
     const [appointmentDetails, setAppointmentDetails] = useState<Appointment | null>(null);
-
+    const navigate=useNavigate();
     const formattedDateOfBirth = appointmentDetails?.patient.date_of_birth ? new Date(appointmentDetails.patient.date_of_birth).toLocaleDateString() : "N/A";
 
     const handleOpenModal = (id: number) => {
@@ -46,7 +47,9 @@ const DoctorAppointments = () => {
         }
     }, [user?.user_id]);
 
-
+    const handleAddPrescription=(id:number)=>{
+        navigate(`/doctor/prescription/${id}`)    
+    }
 
     useEffect(() => {
         const fetchAppointment = async () => {
@@ -76,16 +79,16 @@ const DoctorAppointments = () => {
             ):error?(
                  <Typography color="error">{error}</Typography>
             ):(
-            <Grid container spacing={3}>
+            <Grid container spacing={3}  >
                 {allAppointments.length === 0 ? (
                     <Typography variant="body1" color="text.secondary">
                         No appointments found.
                     </Typography>
                 ) : (
-                    allAppointments.map((appointment) => (
+                    [...allAppointments].sort((a,b)=>new Date(b.appointment_date).getTime()-new Date(a.appointment_date).getDate()).map((appointment) => (
                         <Grid size={{ xs: 12, md: 4 }} key={appointment.appointment_id}>
-                            <Card elevation={3} onClick={() => handleOpenModal(appointment.appointment_id)} sx={{ p: 2, borderLeft: `5px solid`, width: "100%", borderColor: `${getStatusColor(appointment.status)}.main` }}>
-                                <Box display="flex" alignItems="center" justifyContent="space-between" gap={2}>
+                            <Card elevation={3}  sx={{ p: 2, borderLeft: `5px solid`, width: "100%", borderColor: `${getStatusColor(appointment.status)}.main` }}>
+                                <Box display="flex" alignItems="center" onClick={()=>handleOpenModal(appointment.appointment_id)} justifyContent="space-between" gap={2}>
                                     <Box display="flex" alignItems="center" gap={2}>
                                         <Avatar>
                                             {getInitials(
@@ -116,7 +119,7 @@ const DoctorAppointments = () => {
                                         size="small"
                                     />
                                     {appointment.status === "scheduled" && (
-                                        <CustomButton size="small" label="Start" />
+                                        <CustomButton size="small" onClick={()=>handleAddPrescription(appointment.appointment_id)} label="Start" />
                                     )}
                                 </Box>
                             </Card>

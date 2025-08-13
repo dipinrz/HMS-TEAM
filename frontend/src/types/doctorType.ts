@@ -20,3 +20,19 @@ export interface Appointment {
   notes: string | null;
   patient: Patient;
 }
+
+export interface Prescription{
+  prescription_id: number;
+  diagnosis: string;
+  prescribed_date: string;
+  appointment: Appointment;  
+}
+
+export interface Medicine {
+  medicine_id: number;
+  medicine_name: string;
+  description: string;
+  cost: string; // if cost is always a string like "30.00"
+  expiry_date: string; // ISO date string format: "YYYY-MM-DD"
+}
+

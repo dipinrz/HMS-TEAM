@@ -7,7 +7,7 @@ const medicineRoutes = express.Router()
 medicineRoutes.use(authenticate);
 
 medicineRoutes.post('/create',authorize(UserRole.ADMIN),createMedicine)
-medicineRoutes.get('/fetchAll',authorize(UserRole.ADMIN),fetchAllMedicines)
+medicineRoutes.get('/fetchAll',authorize(UserRole.ADMIN, UserRole.DOCTOR),fetchAllMedicines)
 medicineRoutes.delete('/delete/:id',authorize(UserRole.ADMIN),deleteMedicine);
 medicineRoutes.post('/update/:medicineId', authorize(UserRole.ADMIN), updateMedicineHandler);
 
