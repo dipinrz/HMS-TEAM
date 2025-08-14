@@ -23,7 +23,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Bell, Stethoscope } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 type NavBarPropsType = {
   handleDrawerToggle: () => void;
