@@ -60,7 +60,7 @@ const RegisterPage: React.FC = () => {
     try {
       await register(formData);
       toast.success("Account created successfully!");
-      navigate("/patient");
+      navigate("/");
     } catch (err: any) {
       toast.error(err?.message || "Registration failed");
       console.error(err);

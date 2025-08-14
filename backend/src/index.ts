@@ -1,4 +1,4 @@
-import app from "./app";
+    import app from "./app";
 import { AppDataSource } from "./config/data-source";
 import { scheduleAutoCancelAppointments } from "./cron/autoCancelAppointments";
 

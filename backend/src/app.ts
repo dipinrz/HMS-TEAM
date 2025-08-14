@@ -42,7 +42,13 @@ app.use('/api/v1/records',medicalRecordRoutes)
 
 app.use(errorHandler)
 
-
+app.get('/health',(req:any,resp:any)=>{
+    resp.status(200).json({
+    status: 'ok',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+})
 
 
 export default app;

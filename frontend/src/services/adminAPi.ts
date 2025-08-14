@@ -43,13 +43,29 @@ export const fetchAllDepartments = async () => {
 };
 
 export const registerDoctor = async (data:doctor_data) => {
-  return commonAPI('POST',`${baseURL}/users/register-doctor`,data)
+  return await commonAPI('POST',`${baseURL}/users/register-doctor`,data)
 };
 
 export const deleteDept = async(id:number)=>{
-  return commonAPI('DELETE',`${baseURL}/department/${id}`)
+  return await commonAPI('DELETE',`${baseURL}/department/${id}`)
 } 
 
 export const addDept = async(data:dept_data)=>{
-  return commonAPI('POST',`${baseURL}/department`,data)
+  return await commonAPI('POST',`${baseURL}/department`,data)
+}
+
+export const updateDepartmentById = async (id: number, data: any) => { 
+  return await commonAPI('POST', `${baseURL}/department/update/${id}`, data);
+};
+
+export const updateDoctorById = async (id: number, data: any) => { 
+  return await commonAPI('POST', `${baseURL}/doctor/update/${id}`, data);
+};
+
+export const fetchAllAppointmentsAPI = async () => {
+  return await commonAPI('GET', `${baseURL}/appointment`);
+}
+
+export const fetchDepartmentwiseAppointmentAPI = async () => {
+  return await commonAPI('GET', `${baseURL}/department/appointment-count`);
 }

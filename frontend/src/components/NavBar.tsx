@@ -23,12 +23,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Bell, Stethoscope } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type NavBarPropsType = {
   handleDrawerToggle: () => void;
 };
 
-export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
+export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const userRole = "admin";
   const theme = useTheme();
@@ -41,7 +42,10 @@ export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
   };
 
   const handleClose = () => {
+    const id = user?.user_id
+    navigate(`/patient/profile/${id}`);
     setAnchorEl(null);
+
   };
 
   const handleGetProfile=()=>{
@@ -204,14 +208,14 @@ export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
               }}
             >
               <IconButton
-                  size="large"
-                  aria-label="show notifications"
-                  color="inherit"
-                >
-                  <Badge badgeContent={4} color="error">
-                    <Bell size={20} />
-                  </Badge>
-                </IconButton>
+                size="large"
+                aria-label="show notifications"
+                color="inherit"
+              >
+                <Badge badgeContent={4} color="error">
+                  <Bell size={20} />
+                </Badge>
+              </IconButton>
 
               <Box
                 sx={{
@@ -281,8 +285,8 @@ export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
                         userRole === "admin"
                           ? "error.main"
                           : userRole === "doctor"
-                          ? "success.main"
-                          : "primary.main",
+                            ? "success.main"
+                            : "primary.main",
                       color: "white",
                       borderRadius: "12px",
                       boxShadow: "0 2px 4px rgba(0,0,0,0.1)",

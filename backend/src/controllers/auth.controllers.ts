@@ -145,7 +145,12 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
 
     try {
 
-        const { email } = req.body
+        console.log(req.body);
+
+        const { email } = req.body;
+        console.log(email);
+
+
 
         const user = await getUserByEmail(email)
 
@@ -160,6 +165,8 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
         const token = generatePassordResetToken(payload, user.password)
 
         const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+        console.log('Frontend URL:', process.env.FRONTEND_URL);
+
 
         const html = generateResetPasswordEmail(`${user.first_name + " " + user.last_name}`, resetLink)
 
@@ -186,14 +193,16 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
     try {
 
         const { token, password } = req.body
+        
 
-        const decoded = jwt.decode(token)
+        const decoded = jwt.decode(token);
+        
 
-        if (!decoded || typeof decoded === "string" || !decoded.userId) {
+        if (!decoded || typeof decoded === "string" || !decoded.user_id) {
             throw new ApiError("Invalid or expired invite token", 401);
         }
 
-        const user = await getUserById(decoded.userId)
+        const user = await getUserById(decoded.user_id)
 
         if (!user) {
             throw new ApiError("User not found", 400)

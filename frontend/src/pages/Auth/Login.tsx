@@ -322,7 +322,14 @@ const LoginPage: React.FC = () => {
               <Typography variant="body2" textAlign="center" mt={3}>
                 Need access to the system?{" "}
                 <MuiLink component={Link} to="/signup">
-                  Request Account
+                  Create Account
+                </MuiLink>
+              </Typography>
+              <Typography variant="body2" textAlign="center" mt={3}>
+                Forgot Password?{" "}
+
+                <MuiLink component={Link} to="/forgot-pass">
+                 Send Email
                 </MuiLink>
               </Typography>
 
@@ -337,7 +344,7 @@ const LoginPage: React.FC = () => {
                   <Typography
                     variant="caption"
                     fontWeight={500}
-                    color="error"
+                    color="success"
                     textAlign={"center"}
                   >
                     Your data is protected with enterprise-grade security

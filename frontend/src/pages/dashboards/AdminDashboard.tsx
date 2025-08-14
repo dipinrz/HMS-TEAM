@@ -28,6 +28,7 @@ interface DoctorForm {
   years_of_experience: number;
   department_id: 0;
 }
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [open, setOpen] = useState(false);
@@ -36,6 +37,7 @@ const AdminDashboard = () => {
 
   const handleOpenModal = () => setOpen(true);
   const handleCloseModal = () => setOpen(false);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState<DoctorForm>({
     first_name: "",
@@ -62,7 +64,7 @@ const AdminDashboard = () => {
 
     try {
       setLoading(true);
-      const response = await registerDoctor(formData);
+      await registerDoctor(formData);
       toast.success("Doctor registered successfully!");
 
       handleCloseModal();
@@ -378,6 +380,9 @@ const AdminDashboard = () => {
             variant="contained"
             color="primary"
             startIcon={<CalendarCheck fontSize="small" />}
+            onClick={() => {
+              navigate('/admin/appointments')
+            }}
           />
         </Stack>
       </Box>

@@ -24,6 +24,6 @@ router.route("/prescriptions")
     .get(authenticate, getMyPrescriptions)
 
 router.route("/:patientId")
-    .get(authenticate, authorize(UserRole.ADMIN, UserRole.DOCTOR), getPatientByIdHandler)
+    .get(authenticate, authorize(UserRole.ADMIN, UserRole.DOCTOR,UserRole.PATIENT), getPatientByIdHandler)
 
 export default router
