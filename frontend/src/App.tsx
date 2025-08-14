@@ -24,6 +24,7 @@ import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
 import AdminAppointment from "./components/ADMIN/AdminAppointments";
 import ForgotPass from "./pages/Auth/ForgotPass";
 import ResetPass from "./pages/Auth/ResetPass";
+import ProfilePage from "./pages/ProfilePage";
 
 const theme = createTheme({
   palette: {
@@ -226,6 +227,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["patient"]}>
                   <div>Patient Doctors Page</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/patient/profile/:id"
+              element={
+                <ProtectedRoute allowedRoles={["patient"]}>
+                  <ProfilePage />
                 </ProtectedRoute>
               }
             />
