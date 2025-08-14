@@ -21,6 +21,7 @@ import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
 import DoctorPriscriptions from './pages/Doctor-pages/DoctorPriscriptions';
 import AddPrescription from "./pages/Doctor-pages/AddPrescription";
 import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
+import DoctorProfileUpdate from "./pages/Doctor-pages/DoctorProfileUpdate";
 import AdminAppointment from "./components/ADMIN/AdminAppointments";
 import ForgotPass from "./pages/Auth/ForgotPass";
 import ResetPass from "./pages/Auth/ResetPass";
@@ -193,6 +194,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['doctor']}>
                   <DoctorPriscriptions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor/getProfile"
+              element={
+                <ProtectedRoute allowedRoles={['doctor']}>
+                  <DoctorProfileUpdate/>
                 </ProtectedRoute>
               }
             />

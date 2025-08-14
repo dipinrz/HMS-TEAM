@@ -1,3 +1,4 @@
+import type { UpdateDoctorPayload } from "../types/doctorType";
 import { baseURL } from "./allAPI";
 import commonAPI from "./commonAPI";
 
@@ -32,4 +33,14 @@ export const getAllMedicens=async()=>{
 
 export const createPrescription =async(data:any)=>{
     await commonAPI('POST',`${baseURL}/prescription`,data);
+}
+
+export const getDoctorProfile=async()=>{
+    const response=await commonAPI('GET',`${baseURL}/doctor/getProfile`);
+    return response;
+}
+
+export const updateDoctorProfile=async(data:UpdateDoctorPayload)=>{
+    const response=await commonAPI('PATCH',`${baseURL}/doctor/update`,data)
+    return response;
 }

@@ -33,8 +33,8 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
   const userRole = "admin";
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const { user } = useAuthStore();
-  const navigate = useNavigate();
+  const {user}=useAuthStore();
+  const navigate=useNavigate()
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -46,6 +46,12 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
     setAnchorEl(null);
 
   };
+
+  const handleGetProfile=()=>{
+    if(user?.role==='doctor'){
+      navigate('/doctor/getProfile')
+    }
+  }
 
   const drawer = (
     <Box sx={{ width: 250 }}>
@@ -317,7 +323,7 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
               zIndex: theme.zIndex.modal + 1,
             }}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
+            <MenuItem onClick={()=>handleGetProfile()}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>Settings</MenuItem>
           </Menu>
         </Toolbar>
