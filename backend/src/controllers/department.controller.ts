@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction} from "express";
-import { createDepartment, deleteDepartmentById, getAllDepartments, getDepartmentById, getDeptByName, getDoctorsByDepartmentId, updateDepartment } from "../services/department.services";
+import { createDepartment, deleteDepartmentById, getAllDepartments, getDepartmentById, getDepartmentsWithAppointmentCountService, getDeptByName, getDoctorsByDepartmentId, updateDepartment } from "../services/department.services";
 import { ApiError } from "../utils/apiError";
 import { getDoctorById } from "../services/doctor.services";
 
@@ -154,6 +154,22 @@ export const getDoctorsByDepartmentHandler = async (req: Request, res: Response,
         })
 
     } catch(error) {
+        next(error);
+    }
+}
+
+export const getDepartmentAndAppointmentCount = async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        const data = await getDepartmentsWithAppointmentCountService();
+
+        res.status(200).json({
+            success: true,
+            message: 'Departments with appointment count fetched successfully',
+            data
+        });
+
+    } catch (error) {
         next(error);
     }
 }
