@@ -60,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     const roleSpecificLinks = {
       admin: [
-        { path: "/admin/users", name: "Users", icon: <PeopleIcon /> },
+        { path: "/admin/users", name: "Patients", icon: <PeopleIcon /> },
         {
           path: "/admin/departments",
           name: "Departments",

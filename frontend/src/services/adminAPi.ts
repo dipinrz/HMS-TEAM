@@ -63,5 +63,9 @@ export const updateDoctorById = async (id: number, data: any) => {
 };
 
 export const fetchAllAppointmentsAPI = async () => {
-    return await commonAPI('GET', `${baseURL}/appointment`);
+  return await commonAPI('GET', `${baseURL}/appointment`);
+}
+
+export const fetchDepartmentwiseAppointmentAPI = async () => {
+  return await commonAPI('GET', `${baseURL}/department/appointment-count`);
 }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { addDepartmentHandler, fetchAllDepartmentHandler, getDoctorsByDepartmentHandler, removeDepartmentHandler, updateDepartmentHandler } from '../controllers/department.controller';
+import { addDepartmentHandler, fetchAllDepartmentHandler, getDepartmentAndAppointmentCount, getDoctorsByDepartmentHandler, removeDepartmentHandler, updateDepartmentHandler } from '../controllers/department.controller';
 import { authenticate, authorize } from '../middlewares/auth.middleware';
 import { validateBody } from '../middlewares/body.validator.middleware';
 import { departmentSchema, updateDepartmentSchema } from '../validations/department.validations';
@@ -13,5 +13,6 @@ departmentRoutes.post('/', authorize(UserRole.ADMIN), validateBody(departmentSch
 departmentRoutes.delete('/:departmentId', authorize(UserRole.ADMIN), removeDepartmentHandler);
 departmentRoutes.post('/update/:departmentId', authorize(UserRole.ADMIN), validateBody(updateDepartmentSchema), updateDepartmentHandler);
 departmentRoutes.get('/doctors/:departmentId', authorize(UserRole.ADMIN, UserRole.PATIENT), getDoctorsByDepartmentHandler);
+departmentRoutes.get('/appointment-count', authorize(UserRole.ADMIN), getDepartmentAndAppointmentCount);
 
 export default departmentRoutes;
