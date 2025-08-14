@@ -1,8 +1,8 @@
 
 import { create } from 'zustand';
-import { getAllMedicens, getDoctorAppointment, getDoctorPatients,getDoctorPriscriptions,getRecentPatientFromAllAppointment } from '../services/doctorAPI';
+import { getAllMedicens, getDoctorAppointment, getDoctorPatients,getDoctorPriscriptions,getDoctorProfile,getRecentPatientFromAllAppointment, updateDoctorProfile } from '../services/doctorAPI';
 import { getRecentUniquePatientAppointments } from '../utility/DoctorUtility';
-import type { Appointment, Medicine, Patient, Prescription } from '../types/doctorType';
+import type { Appointment, Medicine, Patient, Prescription, Doctor, UpdateDoctorPayload} from '../types/doctorType';
 
 interface DoctorStore {
   appointments: Appointment[];
@@ -12,6 +12,7 @@ interface DoctorStore {
   patients: Patient[];
   prescriptons:Prescription[];
   medicines: Medicine[];
+  doctor:Doctor|null;
   patientsCount: number;
   completedCount: number;
   remainingCount: number;
@@ -23,6 +24,8 @@ interface DoctorStore {
   fetchRecentPatients: () => Promise<void>;
   fetchPrescriptions:()=>Promise<void>;
   fetchMedicines: () => Promise<void>;
+  fetchDoctorProfile:()=>Promise<void>;
+  updateDoctorProfile:(data:UpdateDoctorPayload)=>Promise<void>;
 }
 
 export const useDoctorStore = create<DoctorStore>((set, get) => ({
@@ -33,6 +36,7 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
   patients: [],
   medicines:[],
   prescriptons:[],
+  doctor:null,
   patientsCount: 0,
   completedCount: 0,
   remainingCount: 0,
@@ -114,5 +118,27 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
       console.log("Faild to load Medice",err);
       set({error:err,loading:false})
     }
-  }
+  },
+  fetchDoctorProfile:async()=>{
+    set({loading:true,error:null});
+    try{
+      const response=await getDoctorProfile();
+      set({doctor:response.data.data,loading:false})
+    }catch(err:any){
+      console.log("Faild to load Profile",err);
+      set({error:err,loading:false})
+    }
+  },
+  updateDoctorProfile:async(data)=>{
+    set({loading:true,error:null})
+    try{
+      const response=await updateDoctorProfile(data);
+      const updated=Array.isArray(response.data.updatedDoctor)?response.data.updatedDoctor[0]:response.data.updatedDoctor;
+      set({doctor:updated as Doctor,loading:false})
+    }catch(err:any){
+      console.log('Faild to update the profile');
+      set({error:err,loading:false})
+    }
+  },
+
 }));

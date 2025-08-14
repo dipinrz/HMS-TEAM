@@ -1,5 +1,6 @@
 import app from "./app";
 import { AppDataSource } from "./config/data-source";
+import { scheduleAutoCancelAppointments } from "./cron/autoCancelAppointments";
 
 
 const PORT = process.env.PORT || 5000;
@@ -10,7 +11,7 @@ AppDataSource.initialize()
         app.listen(PORT, () => {
             console.log(`server running at ${PORT}`);
         })
-
+        scheduleAutoCancelAppointments();
 
     })
     .catch((err) => {

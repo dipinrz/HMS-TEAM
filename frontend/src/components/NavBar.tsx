@@ -22,6 +22,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Bell, Stethoscope } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 type NavBarPropsType = {
   handleDrawerToggle: () => void;
@@ -33,6 +34,7 @@ export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const {user}=useAuthStore();
+  const navigate=useNavigate()
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -41,6 +43,12 @@ export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleGetProfile=()=>{
+    if(user?.role==='doctor'){
+      navigate('/doctor/getProfile')
+    }
+  }
 
   const drawer = (
     <Box sx={{ width: 250 }}>
@@ -312,7 +320,7 @@ export const Navbar: React.FC<NavBarPropsType> = ({handleDrawerToggle}) => {
               zIndex: theme.zIndex.modal + 1,
             }}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
+            <MenuItem onClick={()=>handleGetProfile()}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>Settings</MenuItem>
           </Menu>
         </Toolbar>

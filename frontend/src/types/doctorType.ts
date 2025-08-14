@@ -36,3 +36,19 @@ export interface Medicine {
   expiry_date: string; // ISO date string format: "YYYY-MM-DD"
 }
 
+export interface Doctor {
+  doctor_id:number;
+  specialization: string;
+  qualification: string;
+  license_number: string;
+  years_of_experience: number;
+  user:Patient;
+}
+
+export interface UpdateDoctorPayload{
+  specialization?: string;
+  qualification?: string;
+  years_of_experience: number;
+  user?:Partial<Patient>
+}
+
