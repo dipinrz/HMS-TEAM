@@ -18,12 +18,16 @@ import TestBookAppointment from "./pages/PatientUtility/Appointment";
 import { AllMedicines } from './pages/Admin-pages/AllMedicines';
 import DoctorAppointments from './pages/Doctor-pages/DoctorAppointments';
 import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
+<<<<<<< Updated upstream
 import DoctorPriscriptions from './pages/Doctor-pages/DoctorPriscriptions';
 import AddPrescription from "./pages/Doctor-pages/AddPrescription";
 import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
 import AdminAppointment from "./components/ADMIN/AdminAppointments";
 import ForgotPass from "./pages/Auth/ForgotPass";
 import ResetPass from "./pages/Auth/ResetPass";
+=======
+import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
+>>>>>>> Stashed changes
 
 const theme = createTheme({
   palette: {
