@@ -25,6 +25,16 @@ export const getDepartmentById = async (id: number) => {
     return await deptRepo.findOneBy({ department_id: id })
 }
 
+export const getDepartmentByDoctorId = async (id: number) => {
+
+    const doctor =  await doctorRepo.findOne({
+      where: { doctor_id: id },
+      relations: ["department"],
+    });
+
+    return doctor.department;
+}
+
 export const getAllDepartments =  async () => {
 
     return await deptRepo.find({relations:['head_doctor','head_doctor.user']});

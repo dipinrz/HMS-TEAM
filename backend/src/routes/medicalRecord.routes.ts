@@ -6,6 +6,6 @@ import { fetchPatientMedicalRecordController } from '../controllers/medicalRecor
 const medicalRecordRoutes = express.Router();
 medicalRecordRoutes.use(authenticate)
 
-medicalRecordRoutes.get('/get-records',authorize(UserRole.PATIENT),fetchPatientMedicalRecordController)
+medicalRecordRoutes.get('/',authorize(UserRole.PATIENT),fetchPatientMedicalRecordController)
 
 export default medicalRecordRoutes
