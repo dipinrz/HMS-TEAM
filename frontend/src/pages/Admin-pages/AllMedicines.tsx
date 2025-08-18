@@ -26,14 +26,18 @@ import {
   Search as SearchIcon,
 } from "@mui/icons-material";
 import CustomButton from "../../components/ui/CustomButton";
-import { addMedicineAPI, deleteMedicineAPI, getMedicineAPI, updateMedicineAPI } from "../../services/medicineAPI";
+import {
+  addMedicineAPI,
+  deleteMedicineAPI,
+  getMedicineAPI,
+  updateMedicineAPI,
+} from "../../services/medicineAPI";
 import { AddMedicineModal } from "../../components/ui/AddMedicineModal";
 import { toast } from "react-toastify";
 import { EditMedicineModal } from "../../components/ui/EditMedicineModal";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-
 
 const headCells = [
   { id: "medicine_id", numeric: true, label: "ID" },
@@ -60,12 +64,16 @@ interface MedicineFormData {
 }
 
 export const AllMedicines: React.FC = () => {
-    const [medicines, setMedicines] = useState<medicineType[]>([]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [filteredMedicines, setFilteredMedicines] = useState<medicineType[]>([]);
-    const [isOpen, setIsOpen] = useState(false);
-    const [editModalOpen, setEditModalOpen] = useState(false);
-    const [currentMedicine, setCurrentMedicine] = useState<medicineType | null>(null);
+  const [medicines, setMedicines] = useState<medicineType[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredMedicines, setFilteredMedicines] = useState<medicineType[]>(
+    []
+  );
+  const [isOpen, setIsOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [currentMedicine, setCurrentMedicine] = useState<medicineType | null>(
+    null
+  );
 
   const fetchAllMedicine = async () => {
     try {
@@ -78,32 +86,31 @@ export const AllMedicines: React.FC = () => {
   };
 
   const downloadPDF = () => {
-  const doc = new jsPDF();
+    const doc = new jsPDF();
 
-  doc.setFontSize(16);
-  doc.text("Medicine List", 14, 15);
+    doc.setFontSize(16);
+    doc.text("Medicine List", 14, 15);
 
-  const tableColumn = ["ID", "Name", "Description", "Cost", "Expiry Date"];
+    const tableColumn = ["ID", "Name", "Description", "Cost", "Expiry Date"];
 
-  const tableRows = filteredMedicines.map((medicine) => [
-    medicine.medicine_id,
-    medicine.medicine_name,
-    medicine.description || "No description",
-    `₹${medicine.cost}`,
-    medicine.expiry_date
-      ? new Date(medicine.expiry_date).toLocaleDateString()
-      : "N/A",
-  ]);
+    const tableRows = filteredMedicines.map((medicine) => [
+      medicine.medicine_id,
+      medicine.medicine_name,
+      medicine.description || "No description",
+      `₹${medicine.cost}`,
+      medicine.expiry_date
+        ? new Date(medicine.expiry_date).toLocaleDateString()
+        : "N/A",
+    ]);
 
-  autoTable(doc, {
-    head: [tableColumn],
-    body: tableRows,
-    startY: 25,
-  });
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 25,
+    });
 
-  doc.save("medicines.pdf");
-};
-
+    doc.save("medicines.pdf");
+  };
 
   const handleSubmit = async (
     data: Omit<MedicineFormData, "cost"> & { cost: number }
@@ -112,10 +119,10 @@ export const AllMedicines: React.FC = () => {
       await addMedicineAPI(data);
       await fetchAllMedicine();
       setIsOpen(false);
-      toast.success('Medicine added')
+      toast.success("Medicine added");
     } catch (error) {
-        toast.error('something went wrong');
-        console.error("Failed to add medicine", error);
+      toast.error("something went wrong");
+      console.error("Failed to add medicine", error);
     }
   };
 
@@ -140,29 +147,29 @@ export const AllMedicines: React.FC = () => {
 
   const deleteMedicine = async (id: number) => {
     try {
-        await deleteMedicineAPI(id);
-        toast.success('Medicine deleted');
-        await fetchAllMedicine();
+      await deleteMedicineAPI(id);
+      toast.success("Medicine deleted");
+      await fetchAllMedicine();
     } catch (error) {
-        toast.error('Failed to delete');
-        console.log(error, 'Failed to delete medicine');
+      toast.error("Failed to delete");
+      console.log(error, "Failed to delete medicine");
     }
-  }
+  };
 
-    const handleEditClick = (medicine: medicineType) => {
-        setCurrentMedicine(medicine);
-        setEditModalOpen(true);
-    };
+  const handleEditClick = (medicine: medicineType) => {
+    setCurrentMedicine(medicine);
+    setEditModalOpen(true);
+  };
 
-    const handleEditSubmit = async (data: MedicineFormData) => {
+  const handleEditSubmit = async (data: MedicineFormData) => {
     try {
-        await updateMedicineAPI(currentMedicine!.medicine_id, data);
-        fetchAllMedicine();
-        setEditModalOpen(false);
+      await updateMedicineAPI(currentMedicine!.medicine_id, data);
+      fetchAllMedicine();
+      setEditModalOpen(false);
     } catch (error) {
-        console.error('Failed to update medicine', error);
+      console.error("Failed to update medicine", error);
     }
-    };
+  };
 
   return (
     <Box
@@ -185,19 +192,24 @@ export const AllMedicines: React.FC = () => {
         },
       }}
     >
-      <Box sx={{ position: "relative", zIndex: 1 }}>
-        <Typography
-          textAlign={"center"}
-          variant="h4"
-          fontWeight="bold"
-          sx={{
-            mb: 3,
-            color: "#1e293b",
-            textShadow: "0 1px 2px rgba(0,0,0,0.1)",
-          }}
-        >
-          Medicine Management
-        </Typography>
+      <Box
+  sx={{
+    position: "relative",
+    zIndex: 1,
+    backgroundColor: "#f8fafc", // page background
+    minHeight: "100vh",
+    pt: { xs: 10, sm: 8, md: 6 }, // responsive top padding under fixed navbar
+    px: 3, // horizontal padding
+  }}
+>
+  <Typography
+    variant="h4"
+    fontWeight="bold"
+    textAlign="center"
+    mb={3} // spacing below heading
+  >
+    Medicine Management
+  </Typography>
 
         <Box display="flex" gap={2} mb={3} alignItems="center">
           <TextField
@@ -247,7 +259,7 @@ export const AllMedicines: React.FC = () => {
             sx={{
               borderRadius: 3,
               textTransform: "none",
-              px: 4,
+              px: { xs: 2, sm: 4 },
               py: 1.5,
               backgroundColor: "#46923c",
               color: "#fff",
@@ -257,7 +269,8 @@ export const AllMedicines: React.FC = () => {
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
               },
               transition: "all 0.3s ease",
-              width: 300,
+              width: { xs: "100%", sm: 220, md: 300 },
+              maxWidth: "100%",
               fontWeight: 600,
               letterSpacing: 0.5,
             }}
@@ -303,11 +316,11 @@ export const AllMedicines: React.FC = () => {
               <TableHead>
                 <TableRow
                   sx={{
-                        "& .MuiTableCell-head": {
-                        backgroundColor: "rgba(25, 118, 210, 0.08)",
-                        borderBottom: "2px solid rgba(25, 118, 210, 0.1)",
-                        }
-                    }}
+                    "& .MuiTableCell-head": {
+                      backgroundColor: "rgba(25, 118, 210, 0.08)",
+                      borderBottom: "2px solid rgba(25, 118, 210, 0.1)",
+                    },
+                  }}
                 >
                   {headCells.map((headCell) => (
                     <TableCell
@@ -451,22 +464,26 @@ export const AllMedicines: React.FC = () => {
                       <TableCell>
                         <Box display="flex" gap={1}>
                           <Tooltip title="Edit Medicine" arrow>
-                                <IconButton
-                                    size="small"
-                                    onClick={() => handleEditClick(medicine)}
-                                    sx={{
-                                    color: "#1976d2",
-                                    backgroundColor: "rgba(25, 118, 210, 0.08)",
-                                    "&:hover": {
-                                        backgroundColor: "rgba(25, 118, 210, 0.15)",
-                                    },
-                                    transition: "all 0.2s ease",
-                                    }}
-                                >
-                                    <EditIcon fontSize="small" />
-                                </IconButton>
-                            </Tooltip>
-                          <Tooltip onClick={() => deleteMedicine(medicine.medicine_id)} title="Delete Medicine" arrow>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleEditClick(medicine)}
+                              sx={{
+                                color: "#1976d2",
+                                backgroundColor: "rgba(25, 118, 210, 0.08)",
+                                "&:hover": {
+                                  backgroundColor: "rgba(25, 118, 210, 0.15)",
+                                },
+                                transition: "all 0.2s ease",
+                              }}
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip
+                            onClick={() => deleteMedicine(medicine.medicine_id)}
+                            title="Delete Medicine"
+                            arrow
+                          >
                             <IconButton
                               size="small"
                               sx={{
@@ -503,7 +520,7 @@ export const AllMedicines: React.FC = () => {
             onClose={() => setEditModalOpen(false)}
             onSubmit={handleEditSubmit}
             medicineData={currentMedicine}
-            />
+          />
 
           <Divider sx={{ borderColor: "rgba(0, 0, 0, 0.05)" }} />
 

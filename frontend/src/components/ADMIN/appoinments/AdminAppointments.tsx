@@ -11,7 +11,7 @@ import {
   Chip,
   Box,
 } from "@mui/material";
-import { fetchAllAppointmentsAPI } from "../../services/adminAPi";
+import { fetchAllAppointmentsAPI } from "../../../services/adminAPi";
 
 interface Doctor {
   first_name: string;

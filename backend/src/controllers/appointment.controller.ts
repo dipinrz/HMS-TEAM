@@ -5,7 +5,7 @@ import { getUserById } from "../services/user.services";
 import { getDepartmentById } from "../services/department.services";
 import { getMedicalReportByPId } from "../services/medicalReport.services";
 import { ApiError } from "../utils/apiError";
-import { createAppointment, deleteAppointmentById, getAllAppointments, getAppointmentById, getScheduledAppointmentById, isAppointmentExistsSameDay } from "../services/appointment.services";
+import { createAppointment, deleteAppointmentById, getAllAppointments, getAppointmentById, getScheduledAppointmentById, getTodayAppoinmentService, isAppointmentExistsSameDay } from "../services/appointment.services";
 import { createBill, deleteBillById, getBillByAppointmentId } from "../services/bill.services";
 import { createBillItem } from "../services/billItem.services";
 import { FeeType } from "../entities/billItem.entity";
@@ -174,4 +174,30 @@ export const fetchAppointmentByIdHandler = async (req: Request, res: Response, n
         next(error);
     }
 
+}
+
+export const fetchTodaysAppoinments = async (req:Request,res:Response,next:NextFunction)=>{
+    try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+   const todaysAppointments = await getTodayAppoinmentService(startOfDay,endOfDay)
+
+    if (!todaysAppointments) {
+      throw new ApiError("No appointments found for today", 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Today's appointments fetched successfully",
+      data: {
+        appointments: todaysAppointments,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 }

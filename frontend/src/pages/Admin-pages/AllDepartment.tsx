@@ -144,10 +144,22 @@ const AdminDepartmentsPage = () => {
   };
 
   return (
-    <Box p={3}>
-      <Typography variant="h4" textAlign="center" fontWeight="bold" mb={3}>
-        Department Management
-      </Typography>
+   <Box
+  sx={{
+    p: 3,
+    backgroundColor: "#f8fafc", // page background
+    minHeight: "100vh",
+    pt: { xs: 10, sm: 8, md: 6 }, // responsive top padding
+  }}
+>
+  <Typography
+    variant="h4"
+    fontWeight="bold"
+    textAlign="center"
+    mb={3}
+  >
+    Department Management
+  </Typography>
 
       <DepartmentToolbar
         searchTerm={searchTerm}

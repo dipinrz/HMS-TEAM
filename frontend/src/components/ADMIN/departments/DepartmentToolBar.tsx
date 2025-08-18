@@ -7,7 +7,11 @@ interface Props {
   onAddClick: () => void;
 }
 
-export default function DepartmentToolbar({ searchTerm, onSearchChange, onAddClick }: Props) {
+export default function DepartmentToolbar({
+  searchTerm,
+  onSearchChange,
+  onAddClick,
+}: Props) {
   return (
     <Box display="flex" gap={2} mb={3}>
       <TextField
@@ -48,7 +52,7 @@ export default function DepartmentToolbar({ searchTerm, onSearchChange, onAddCli
         sx={{
           borderRadius: 3,
           textTransform: "none",
-          px: 4,
+          px: { xs: 2, sm: 4 },
           py: 1.5,
           backgroundColor: "#46923c",
           color: "#fff",
@@ -58,7 +62,8 @@ export default function DepartmentToolbar({ searchTerm, onSearchChange, onAddCli
             boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           },
           transition: "all 0.3s ease",
-          width: 300,
+          width: { xs: "100%", sm: 220, md: 300 },
+          maxWidth: "100%",
           fontWeight: 600,
           letterSpacing: 0.5,
         }}

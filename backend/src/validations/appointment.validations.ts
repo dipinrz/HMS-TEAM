@@ -50,3 +50,5 @@ export const appointmentQuerySchema = Joi.object({
             'string.base': 'Status must be a string',
         }),
 });
+
+

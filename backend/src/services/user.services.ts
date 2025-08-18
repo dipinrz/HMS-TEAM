@@ -1,13 +1,19 @@
 import { instanceToPlain } from "class-transformer";
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entities/user.entity";
+import { Doctor } from "../entities/doctor.entity";
 
 const userRepo = AppDataSource.getRepository(User)
-
+const doctorRepo = AppDataSource.getRepository(Doctor)
 
 export const getUserByEmail = async (email: string) => {
 
     return await userRepo.findOneBy({ email: email })
+}
+
+export const getUserbyLicense = async(license_number:string)=>{
+
+    return await doctorRepo.findOneBy({license_number:license_number})
 }
 
 export const getUserById = async (id: number) => {

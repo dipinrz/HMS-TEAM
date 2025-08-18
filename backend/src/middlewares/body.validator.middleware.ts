@@ -9,7 +9,6 @@ export const validateBody = (schema: ObjectSchema) => (req: Request, res: Respon
         throw new ApiError("Request body is missing",400)
     }
 
-
     const { error } = schema.validate(req.body, { abortEarly: false })
 
     if (error) {

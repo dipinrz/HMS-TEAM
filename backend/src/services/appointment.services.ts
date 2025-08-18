@@ -80,3 +80,12 @@ export const getAllAppointments = async (filter: any = {}) => {
 };
 
 
+export const getTodayAppoinmentService = async(startOfDay:Date,endOfDay:Date)=>{
+        const todaysAppointments = await appointmentRepo.find({
+          where: {
+            appointment_date: Between(startOfDay, endOfDay),
+          },
+          relations: ["doctor", "patient",'department', 'medical_report_id'], 
+        });
+        return todaysAppointments
+}

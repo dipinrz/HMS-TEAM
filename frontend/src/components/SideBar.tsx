@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   List,
@@ -40,7 +40,6 @@ type SidebarProps = {
 
 type UserRole = "admin" | "doctor" | "patient";
 
-
 const Sidebar: React.FC<SidebarProps> = ({
   mobileOpen,
   handleDrawerToggle,
@@ -50,12 +49,27 @@ const Sidebar: React.FC<SidebarProps> = ({
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("sm")
   );
+ const [currentTime, setCurrentTime] = useState(new Date());
+
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
 
   const getLinksForRole = (role: UserRole) => {
     const basePath = `/${role}`;
-    
+
     const commonLinks = [
-      { path: `${basePath}/dashboard`, name: "Dashboard", icon: <DashboardIcon /> },
+      {
+        path: `${basePath}/dashboard`,
+        name: "Dashboard",
+        icon: <DashboardIcon />,
+      },
     ];
 
     const roleSpecificLinks = {
@@ -66,7 +80,11 @@ const Sidebar: React.FC<SidebarProps> = ({
           name: "Departments",
           icon: <HospitalIcon />,
         },
-        { path: "/admin/medicines", name: "Medicines", icon: <MedicationIcon /> },
+        {
+          path: "/admin/medicines",
+          name: "Medicines",
+          icon: <MedicationIcon />,
+        },
         { path: "/admin/doctors", name: "Doctors", icon: <DoctorIcon /> },
       ],
       doctor: [
@@ -91,17 +109,14 @@ const Sidebar: React.FC<SidebarProps> = ({
       ],
     };
 
-    return [
-      ...commonLinks,
-      ...(roleSpecificLinks[role] || []),
-    ];
+    return [...commonLinks, ...(roleSpecificLinks[role] || [])];
   };
 
   const allLinks = getLinksForRole(user?.role as UserRole);
-  
+
   const handleLogout = () => {
-      logout();
-  }
+    logout();
+  };
 
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -117,10 +132,16 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const drawer = (
-    <Box sx={{ height: "100%", display: "flex", flexDirection: "column", mt: {xs: '10vh', lg:0} }}>
+    <Box
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        mt: { xs: "10vh", lg: 0 },
+      }}
+    >
       <Toolbar />
 
-      {/* User Profile Section */}
       <Box sx={{ p: 3, pb: 2, flexShrink: 0 }}>
         <Paper
           elevation={0}
@@ -162,29 +183,29 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       <Divider sx={{ mx: 2, mb: 1, flexShrink: 0 }} />
 
-      {/* Navigation Links with Custom Scrollbar */}
-      <Box sx={{ 
-        flex: 1, 
-        px: 2,
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column"
-      }}>
+      <Box
+        sx={{
+          flex: 1,
+          px: 2,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <Typography
-          variant="overline"
-          sx={{
-            px: 2,
-            py: 1,
-            display: "block",
-            fontWeight: 600,
-            color: "text.secondary",
-            fontSize: "0.75rem",
-            letterSpacing: 1,
-            flexShrink: 0,
-          }}
-        >
-          NAVIGATION
-        </Typography>
+        variant="body2"
+        color="text.secondary"
+        sx={{ mt: 0.5, fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
+      >
+        <div style={{textAlign:"center"}}>{currentTime.toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}</div>{" "}
+         <div style={{textAlign:"center"}}>{currentTime.toLocaleTimeString("en-US")}</div>
+      </Typography>
+      <br />
 
         <Box
           sx={{
@@ -230,7 +251,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         },
                       },
                       "&:hover": {
-                        bgcolor: isSelected 
+                        bgcolor: isSelected
                           ? getRoleColor(user?.role || "admin")
                           : "rgba(2, 10, 165, 0.8)",
                         transform: "translateX(2px)",
@@ -263,39 +284,38 @@ const Sidebar: React.FC<SidebarProps> = ({
         </Box>
       </Box>
 
-      <Box sx={{ px: 2, py: 1.5, mt: 'auto' }}>
+      <Box sx={{ px: 2, py: 1.5, mt: "auto" }}>
         <Button
           fullWidth
           startIcon={<LogOutIcon />}
           onClick={handleLogout}
           sx={{
-            justifyContent: 'flex-start',
-            color: '#ff6b6b',
-            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+            justifyContent: "flex-start",
+            color: "#ff6b6b",
+            backgroundColor: "rgba(255, 107, 107, 0.1)",
             borderRadius: 2,
             px: 3,
             py: 1.5,
-            textTransform: 'none',
+            textTransform: "none",
             fontWeight: 500,
-            transition: 'all 0.3s ease',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 107, 107, 0.2)',
-              transform: 'translateX(2px)',
-            }
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: "rgba(255, 107, 107, 0.2)",
+              transform: "translateX(2px)",
+            },
           }}
         >
           Logout
         </Button>
       </Box>
-      
     </Box>
   );
 
   return (
     <Box
       component="nav"
-      sx={{ 
-        width: { sm: drawerWidth }, 
+      sx={{
+        width: { sm: drawerWidth },
         flexShrink: { sm: 0 },
         zIndex: (theme) => theme.zIndex.drawer,
       }}
@@ -317,19 +337,21 @@ const Sidebar: React.FC<SidebarProps> = ({
             borderColor: "divider",
             backgroundImage: "none",
             zIndex: (theme) => theme.zIndex.drawer,
-            ...(isMobile ? {
-              // Mobile drawer
-              height: "100vh",
-              position: "fixed",
-              top: 0,
-              left: 0,
-            } : {
-              // Desktop drawer
-              position: "fixed",
-              height: "100vh",
-              top: 0,
-              left: 0,
-            }),
+            ...(isMobile
+              ? {
+                  // Mobile drawer
+                  height: "100vh",
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                }
+              : {
+                  // Desktop drawer
+                  position: "fixed",
+                  height: "100vh",
+                  top: 0,
+                  left: 0,
+                }),
           },
         }}
       >
