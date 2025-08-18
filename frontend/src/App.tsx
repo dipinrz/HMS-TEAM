@@ -223,6 +223,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+           
             <Route
               path="/patient/appointments"
               element={

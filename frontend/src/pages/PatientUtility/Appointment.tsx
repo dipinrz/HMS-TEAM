@@ -19,9 +19,9 @@ import {
   CardContent,
   useTheme,
   Backdrop,
+  Divider,
 } from "@mui/material";
 import {
-  CalendarMonth,
   Person,
   Business,
   AccessTime,
@@ -30,6 +30,7 @@ import {
   Refresh,
   Send,
   AttachMoney,
+  MedicalServices,
 } from "@mui/icons-material";
 import { fetchAllDepartments, getAllDoctors } from "../../services/adminAPi";
 import { addAppoinment } from "../../services/patientAPI";
@@ -82,7 +83,7 @@ const timeSlots = [
   { label: "10:00 - 10:30 AM", value: "10:00" },
   { label: "10:30 - 11:00 AM", value: "10:30" },
   { label: "11:00 - 11:30 AM", value: "11:00" },
-  { label: "11:30 - 12:00 PM", value: "11:30" },
+  { label: "11:30 - 12:00 AM", value: "11:30" },
   { label: "12:00 - 12:30 PM", value: "12:00" },
   { label: "12:30 - 01:00 PM", value: "12:30" },
   { label: "01:00 - 01:30 PM", value: "13:00" },
@@ -118,7 +119,7 @@ const TestBookAppointment: React.FC = () => {
 
   // Selected department details from formData.department
   const selectedDepartment = useMemo(() => {
-    if ( !Array.isArray(departments) || !formData.department_id ) return null;
+    if (!Array.isArray(departments) || !formData.department_id) return null;
     return (
       departments.find((d) => d.department_id === formData.department_id) ||
       null
@@ -266,7 +267,7 @@ const TestBookAppointment: React.FC = () => {
         setSelectedDate("");
         setSelectedTime("");
       } else {
-        setFeedback({type:"error",message:""})
+        setFeedback({ type: "error", message: "" });
       }
     } catch (err) {
       const apiError = err as ApiError;
@@ -310,9 +311,10 @@ const TestBookAppointment: React.FC = () => {
     <Box
       sx={{
         minHeight: "100vh",
-            // background: "linear-gradient(to bottom right, #4772e1ff, #1b1857ff)",
-        py: 4,
-        // pt: 8,
+        background: "linear-gradient(135deg, #f5f7fa 0%, #e4f0fd 100%)",
+        py: 6,
+        display: "flex",
+        alignItems: "center",
       }}
     >
       <Container maxWidth="lg">
@@ -321,15 +323,13 @@ const TestBookAppointment: React.FC = () => {
           sx={{
             borderRadius: 4,
             overflow: "hidden",
-            boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
+            boxShadow: theme.shadows[10],
           }}
         >
           {/* Header */}
           <Box
             sx={{
-            background: "linear-gradient(to bottom right, #4772e1ff, #1b1857ff)",
-
-              // background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+              background: "linear-gradient(135deg, #1976d2 0%, #0d47a1 100%)",
               color: "white",
               px: 4,
               py: 3,
@@ -340,22 +340,19 @@ const TestBookAppointment: React.FC = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Box display="flex" alignItems="center" gap={2}>
-                <CalendarMonth sx={{ fontSize: 32 }} />
+              <MedicalServices sx={{ fontSize: 32 }} />
+              <Box>
                 <Typography variant="h4" fontWeight="bold">
-                  Book an Appointment
+                  Book Your Appointment
+                </Typography>
+                <Typography variant="body1" sx={{ opacity: 0.9 }}>
+                  Schedule with our specialist doctors
                 </Typography>
               </Box>
             </Box>
           </Box>
 
-          <Box p={4}>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-              Fill out the form below to schedule your appointment. All fields
-              marked with * are required.
-            </Typography>
-
-            {/* Feedback Alert */}
+          <Box p={{ xs: 3, md: 4 }}>
             <Collapse in={!!feedback}>
               <Alert
                 severity={feedback?.type || "info"}
@@ -377,6 +374,12 @@ const TestBookAppointment: React.FC = () => {
               </Alert>
             </Collapse>
 
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+              Please fill out all required fields to book your appointment.
+            </Typography>
+
+            <Divider sx={{ my: 3 }} />
+
             <Box component="form" onSubmit={handleSubmit}>
               <Grid container spacing={3}>
                 {/* Department Selection */}
@@ -391,19 +394,21 @@ const TestBookAppointment: React.FC = () => {
                     }}
                     disabled={loading}
                     required
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Business color="action" />
-                        </InputAdornment>
-                      ),
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Business color="action" />
+                          </InputAdornment>
+                        ),
+                      },
                     }}
                     helperText={
                       departments.length === 0 ? "No departments available" : ""
                     }
                   >
                     <MenuItem value="">
-                      <em>Choose a department</em>
+                      <em>Select a department</em>
                     </MenuItem>
                     {departments.map((dept) => (
                       <MenuItem
@@ -428,12 +433,14 @@ const TestBookAppointment: React.FC = () => {
                     }
                     disabled={loading || !formData.department_id}
                     required
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Person color="action" />
-                        </InputAdornment>
-                      ),
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Person color="action" />
+                          </InputAdornment>
+                        ),
+                      },
                     }}
                     helperText={
                       !formData.department_id
@@ -483,12 +490,14 @@ const TestBookAppointment: React.FC = () => {
                       required
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ min: getMinDate() }}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <AccessTime color="action" />
-                          </InputAdornment>
-                        ),
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <AccessTime color="action" />
+                            </InputAdornment>
+                          ),
+                        },
                       }}
                       helperText="Select a future date"
                     />
@@ -517,12 +526,12 @@ const TestBookAppointment: React.FC = () => {
                         MenuProps: {
                           PaperProps: {
                             style: {
-                              maxHeight: 200, // Set max height (adjust as needed)
-                              overflowY: "auto", // Enable vertical scrolling
+                              maxHeight: 200,
+                              overflowY: "auto",
                             },
                           },
-                          TransitionProps: { timeout: 0 }, // Disable animation (optional)
-                          disableAutoFocusItem: true, // Prevent focus on hover
+                          TransitionProps: { timeout: 0 },
+                          disableAutoFocusItem: true,
                         },
                       }}
                     >
@@ -543,12 +552,13 @@ const TestBookAppointment: React.FC = () => {
                   <Grid size={{ xs: 12, md: 6 }}>
                     <Card
                       sx={{
-                        bgcolor: "primary.50",
-                        border: "1px solid",
-                        borderColor: "primary.200",
+                        borderColor: "primary.light",
+                        bgcolor: "primary.lighter",
                       }}
                     >
-                      <CardContent sx={{ py: 2 }}>
+                      <CardContent
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                      >
                         <Box display="flex" alignItems="center" gap={1} mb={1}>
                           <AttachMoney color="primary" />
                           <Typography variant="subtitle2" color="primary">
@@ -584,17 +594,19 @@ const TestBookAppointment: React.FC = () => {
                       formData.reason_for_visit.length > 0 &&
                       formData.reason_for_visit.length < 10
                     }
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment
-                          position="start"
-                          sx={{ alignSelf: "flex-start", mt: 1 }}
-                        >
-                          <Description color="action" />
-                        </InputAdornment>
-                      ),
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment
+                            position="start"
+                            sx={{ alignSelf: "flex-start", mt: 1 }}
+                          >
+                            <Description color="action" />
+                          </InputAdornment>
+                        ),
+                      },
                     }}
-                    FormHelperTextProps={{ component: "div" }} // ✅ Fix here
+                    FormHelperTextProps={{ component: "div" }}
                     helperText={
                       <Box display="flex" justifyContent="space-between">
                         <span>
@@ -642,39 +654,42 @@ const TestBookAppointment: React.FC = () => {
                     display="flex"
                     gap={2}
                     pt={2}
+                    justifyContent="flex-end"
                     flexDirection={{ xs: "column", sm: "row" }}
                   >
+                    <Button
+                      variant="outlined"
+                      size="large"
+                      onClick={handleReset}
+                      disabled={loading}
+                      startIcon={<Refresh />}
+                      sx={{ minWidth: 150 }}
+                    >
+                      Reset
+                    </Button>
                     <Button
                       type="submit"
                       variant="contained"
                       size="large"
                       disabled={loading}
                       startIcon={
-                        loading ? <CircularProgress size={20} /> : <Send />
+                        loading ? (
+                          <CircularProgress size={20} color="inherit" />
+                        ) : (
+                          <Send />
+                        )
                       }
                       sx={{
-                        flex: 1,
-                        py: 1.5,
+                        minWidth: 200,
                         background:
-                          "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                          "linear-gradient(135deg, #1976d2 0%, #0d47a1 100%)",
                         "&:hover": {
                           background:
-                            "linear-gradient(135deg, #1565c0 0%, #0d47a1 100%)",
+                            "linear-gradient(135deg, #1565c0 0%, #0b3d91 100%)",
                         },
                       }}
                     >
-                      {loading ? "Booking..." : "Book Appointment"}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outlined"
-                      size="large"
-                      onClick={handleReset}
-                      disabled={loading}
-                      startIcon={<Refresh />}
-                      sx={{ minWidth: { sm: "150px" } }}
-                    >
-                      Reset Form
+                      {loading ? "Processing..." : "Book Appointment"}
                     </Button>
                   </Box>
                 </Grid>
