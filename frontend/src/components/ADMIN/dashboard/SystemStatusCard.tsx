@@ -1,10 +1,10 @@
 import { Typography, Box, LinearProgress } from "@mui/material";
-import { Card, CardContent, CardHeader } from "../ui/CustomCards";
+import { Card, CardContent, CardHeader } from "../../ui/CustomCards";
 
 export default function SystemStatusCard() {
   return (
     <Box>
-      <Card sx={{ width: "100%" }} elevation={1}>
+      <Card sx={{ width: "100%" }} elevation={1} animated={false}>
         <CardHeader
           title="System Status"
           subheader="Real-time system health and performance metrics"

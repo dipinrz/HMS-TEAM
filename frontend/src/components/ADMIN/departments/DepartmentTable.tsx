@@ -1,5 +1,18 @@
-import { Box,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Tooltip,
-  Badge,Typography,IconButton,Button,Divider,
+import {
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Badge,
+  Typography,
+  IconButton,
+  Button,
+  Divider,
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 
@@ -77,10 +90,13 @@ export default function DepartmentTable({
                 </TableCell>
                 <TableCell>₹{dept.consultation_fee}</TableCell>
                 <TableCell>
-  {dept?.head_doctor?.user?.first_name && dept?.head_doctor?.user?.last_name
-    ? `${dept.head_doctor.user.first_name} ${dept.head_doctor.user.last_name}`
-    : <div style={{color:"red", fontWeight:"bold"}}>N/A</div>}
-</TableCell>
+                  {dept?.head_doctor?.user?.first_name &&
+                  dept?.head_doctor?.user?.last_name ? (
+                    `${dept.head_doctor.user.first_name} ${dept.head_doctor.user.last_name}`
+                  ) : (
+                    <div style={{ color: "red", fontWeight: "bold" }}>N/A</div>
+                  )}
+                </TableCell>
 
                 <TableCell>
                   <Box display="flex" gap={1}>
@@ -116,20 +132,18 @@ export default function DepartmentTable({
         </Table>
       </TableContainer>
 
-
       <Divider />
-      
 
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-evenly",
+          justifyContent: "space-between",
           p: 2,
           backgroundColor: "#f9f9f9",
           borderBottom: "1px solid #ddd",
         }}
       >
-        <Typography>Total Departments : {departments.length}</Typography>
+        <Typography variant="subtitle1" fontWeight="bold">Total Departments : {filtered.length}</Typography>
         <Button
           variant="contained"
           sx={{

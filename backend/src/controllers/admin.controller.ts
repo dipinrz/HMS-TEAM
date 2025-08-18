@@ -5,6 +5,7 @@ import {
   findAllUser,
   getUserByEmail,
   getUserById,
+  getUserbyLicense,
   updateUserById,
 } from "../services/user.services";
 import { UserRole } from "../entities/user.entity";
@@ -229,10 +230,14 @@ export const registerDoctor = async (
       department_id
     } = req.body;
 
-    
+    const existingLicense = await getUserbyLicense(license_number)
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
       throw new ApiError("Email already in use", 409);
+    }
+
+    if(existingLicense){
+      throw new ApiError("User with same license number exists",409)
     }
 
     const department = await getDepartmentById(department_id);

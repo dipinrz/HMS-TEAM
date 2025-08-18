@@ -41,6 +41,7 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
   completedCount: 0,
   remainingCount: 0,
 
+  
   loading: false,
   error: null,
   fetchAppointments: async () => {

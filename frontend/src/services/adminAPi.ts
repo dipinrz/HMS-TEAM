@@ -69,3 +69,7 @@ export const fetchAllAppointmentsAPI = async () => {
 export const fetchDepartmentwiseAppointmentAPI = async () => {
   return await commonAPI('GET', `${baseURL}/department/appointment-count`);
 }
+
+export const fetchTodaysAppoinments = async () =>{
+  return await commonAPI('GET',`${baseURL}/users/todayAppoinments`)
+}

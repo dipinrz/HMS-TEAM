@@ -22,7 +22,7 @@ import DoctorPriscriptions from './pages/Doctor-pages/DoctorPriscriptions';
 import AddPrescription from "./pages/Doctor-pages/AddPrescription";
 import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
 import DoctorProfileUpdate from "./pages/Doctor-pages/DoctorProfileUpdate";
-import AdminAppointment from "./components/ADMIN/AdminAppointments";
+import AdminAppointment from "./components/ADMIN/appoinments/AdminAppointments";
 import ForgotPass from "./pages/Auth/ForgotPass";
 import ResetPass from "./pages/Auth/ResetPass";
 import ProfilePage from "./pages/ProfilePage";

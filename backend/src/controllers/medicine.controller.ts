@@ -87,31 +87,39 @@ export const deleteMedicine = async (
 };
 
 export const updateMedicineHandler = async (req: Request, res: Response, next: NextFunction) => {
-
   try {
+
     const medicine_id = Number(req.params.medicineId);
     const medicine = await findMedicineById(medicine_id);
-    if(!medicine){
+
+    if (!medicine) {
       throw new ApiError('medicine not found', 404);
     }
-    const {medicine_name, description, cost, expiry_date } = req.body;
-    
+
+    const { medicine_name, description, cost, expiry_date } = req.body;
+
+    const medicineWithSameName = await findMedicineByName(medicine_name);
+    console.log("medicineWithSameName", medicineWithSameName);
+
+    if (medicineWithSameName) {
+      throw new ApiError('medicine name already exists', 409);
+    }
+
     const medicineData = {
       medicine_name,
       description,
       cost,
       expiry_date
-    }
+    };
 
     await updateMedicineById(medicine_id, medicineData);
-    
+
     res.json({
       success: true,
       message: 'medicine updated successfully'
-    })
+    });
 
   } catch (error) {
-    next(error)
+    next(error);
   }
-
-}
+};
