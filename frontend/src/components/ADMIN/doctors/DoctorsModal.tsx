@@ -53,8 +53,6 @@ export const DoctorsModal = ({
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.password && !isEditMode)
       newErrors.password = "Password is required";
-    if (!formData.department_id)
-      newErrors.department_id = "Department is required";
     if (!formData.specialization)
       newErrors.specialization = "Specialization is required";
     if (!formData.qualification)

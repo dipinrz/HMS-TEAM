@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction} from "express";
-import { createDepartment, deleteDepartmentById, getAllDepartments, getDepartmentById, getDepartmentsWithAppointmentCountService, getDeptByName, getDoctorsByDepartmentId, updateDepartment } from "../services/department.services";
+import { createDepartment, deleteDepartmentById, getAllDepartments, getDepartmentById, getDepartmentsWithAppointmentCountService, getDeptByName, getDoctorsByDepartmentId, saveDoctorDepartment, updateDepartment } from "../services/department.services";
 import { ApiError } from "../utils/apiError";
 import { getDoctorById } from "../services/doctor.services";
 
@@ -7,8 +7,7 @@ export const addDepartmentHandler = async (req: Request, res: Response, next: Ne
     
     try {
         
-        const { name, description, consultation_fee, head_doctor } = req.body;
-       
+        const { name, description, consultation_fee, head_doctor } = req.body;     
 
         const deptExisting = await getDeptByName(name);
 
@@ -17,7 +16,6 @@ export const addDepartmentHandler = async (req: Request, res: Response, next: Ne
         }
 
         const  headDoctor = await getDoctorById(head_doctor);
-        console.log("Head doctor==========",headDoctor)
 
         if (!headDoctor) {
             throw new ApiError("Head doctor not found", 404);
@@ -29,12 +27,14 @@ export const addDepartmentHandler = async (req: Request, res: Response, next: Ne
             consultation_fee,
             head_doctor
         });
+        const updateDoctorDepartment = await saveDoctorDepartment(head_doctor,name)
 
         res.status(200).json({
             success: true,
             message: "Department created successfully",
             data: {
-                department: departmentData
+                department: departmentData,
+                updateDoctorDepartment
             }
         })
     } catch (error) {
