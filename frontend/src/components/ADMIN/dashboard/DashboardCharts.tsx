@@ -42,6 +42,29 @@ interface Department {
   appointment_count: number;
 }
 
+const MemoizedBarChart = React.memo(() => (
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart data={revenueData}>
+      <defs>
+        <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#020aa5ff" />
+          <stop offset="100%" stopColor="#0a036bff" />
+        </linearGradient>
+      </defs>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="month" />
+      <YAxis />
+      <Tooltip />
+      <Bar
+        dataKey="revenue"
+        fill="url(#revenueGradient)"
+        radius={4}
+        barSize={50}
+      />
+    </BarChart>
+  </ResponsiveContainer>
+));
+
 const DashboardCharts: React.FC = () => {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [totalAppointments, setTotalAppointments] = useState<number>(0);
@@ -55,7 +78,7 @@ const DashboardCharts: React.FC = () => {
     total: number
   ) => {
     return departments
-      .filter((dept) => dept.appointment_count > 0) // 👈 only include departments with appointments
+      .filter((dept) => dept.appointment_count > 0)
       .map((dept, index) => ({
         name:
           dept.department_name.charAt(0).toUpperCase() +
@@ -71,7 +94,6 @@ const DashboardCharts: React.FC = () => {
     try {
       setLoading(true);
       const response = await fetchDepartmentwiseAppointmentAPI();
-      console.log(response);
       setDepartments(response.data.data.departments);
       setTotalAppointments(response.data.data.total_appointments);
     } catch (error) {
@@ -100,32 +122,7 @@ const DashboardCharts: React.FC = () => {
             subheader="Monthly revenue and patient statistics"
           />
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={revenueData}>
-                <defs>
-                  <linearGradient
-                    id="revenueGradient"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop offset="0%" stopColor="#020aa5ff" />
-                    <stop offset="100%" stopColor="#0a036bff" />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Bar
-                  dataKey="revenue"
-                  fill="url(#revenueGradient)"
-                  radius={4}
-                  barSize={50}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <MemoizedBarChart />
           </CardContent>
         </Card>
       </Grid>
@@ -141,18 +138,7 @@ const DashboardCharts: React.FC = () => {
             subheader={`Patient distribution across departments (Total: ${totalAppointments})`}
           />
           <CardContent>
-            {loading ? (
-              <div
-                style={{
-                  height: 300,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                Loading...
-              </div>
-            ) : chartData.length > 0 ? (
+            {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
@@ -161,7 +147,8 @@ const DashboardCharts: React.FC = () => {
                     cy="50%"
                     outerRadius={120}
                     dataKey="value"
-                    label={false} // hide labels
+                    label={false}
+                    isAnimationActive={false} 
                   >
                     {chartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -180,6 +167,17 @@ const DashboardCharts: React.FC = () => {
                   />
                 </PieChart>
               </ResponsiveContainer>
+            ) : loading ? (
+              <div
+                style={{
+                  height: 300,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                Loading...
+              </div>
             ) : (
               <div
                 style={{
