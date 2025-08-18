@@ -49,8 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("sm")
   );
- const [currentTime, setCurrentTime] = useState(new Date());
-
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -59,7 +58,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     return () => clearInterval(timer);
   }, []);
-
 
   const getLinksForRole = (role: UserRole) => {
     const basePath = `/${role}`;
@@ -102,7 +100,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       patient: [
         {
           path: "/patient/appointments",
-          name: "Appointments",
+          name: "Book Appointments",
           icon: <CalendarIcon />,
         },
         { path: "/patient/doctors", name: "Doctors", icon: <DoctorIcon /> },
