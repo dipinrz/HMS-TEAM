@@ -1,6 +1,6 @@
 
 import express from 'express'
-import { getAllDoctors, getDoctorAppointmentsHandler, getDoctorPatientsHandler, getDoctorPrescriptionHandler, getDoctorProfile, isHeadDoctorHandler, updateDoctorProfile, updateDoctorProfileById } from '../controllers/doctor.controllers'
+import { getAllDoctors, getDoctorAppointmentsHandler, getDoctorPatientsHandler, getDoctorPrescriptionHandler, getDoctorProfile, isHeadDoctorHandler, updateDoctorProfile, updateDoctorProfileById } from '../controllers/doctor.controller'
 import { authenticate } from '../middlewares/auth.middleware'
 import { validateBody } from '../middlewares/body.validator.middleware';
 import { doctorSchema } from '../validations/doctor.validations';
