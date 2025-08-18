@@ -41,8 +41,6 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
   };
 
   const handleClose = () => {
-    const id = user?.user_id
-    navigate(`/patient/profile/${id}`);
     setAnchorEl(null);
 
   };
@@ -50,7 +48,11 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
   const handleGetProfile=()=>{
     if(user?.role==='doctor'){
       navigate('/doctor/getProfile')
+    } else if(user?.role==='patient'){
+      const id = user?.user_id
+      navigate(`/patient/profile/${id}`);
     }
+    setAnchorEl(null);
   }
 
   const drawer = (
