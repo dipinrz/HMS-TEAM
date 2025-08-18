@@ -30,7 +30,7 @@ const DashboardMetrics: React.FC = () => {
       color: "#3B82F6",
     },
     {
-      title: "Today's Appointments",
+      title: "Total Appointments",
       value: appointments.length.toString(),
 
       trend: "up",

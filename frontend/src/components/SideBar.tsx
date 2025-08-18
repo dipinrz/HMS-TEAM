@@ -197,13 +197,13 @@ const Sidebar: React.FC<SidebarProps> = ({
         color="text.secondary"
         sx={{ mt: 0.5, fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
       >
-        <div style={{textAlign:"center"}}>{currentTime.toLocaleDateString("en-US", {
+        <span style={{textAlign:"center"}}>{currentTime.toLocaleDateString("en-US", {
           weekday: "long",
           year: "numeric",
           month: "long",
           day: "numeric",
-        })}</div>{" "}
-         <div style={{textAlign:"center"}}>{currentTime.toLocaleTimeString("en-US")}</div>
+        })}</span>{" "}
+         <span style={{textAlign:"center"}}>{currentTime.toLocaleTimeString("en-US")}</span>
       </Typography>
       <br />
 

@@ -7,6 +7,7 @@ const deptRepo = AppDataSource.getRepository(Department);
 const doctorRepo = AppDataSource.getRepository(Doctor);
 const appointmentRepo = AppDataSource.getRepository(Appointment);
 
+
 export const createDepartment = async (department: Partial<Department>) => {
     console.log("=====", department);
     
@@ -86,4 +87,15 @@ export const getDepartmentsWithAppointmentCountService = async () => {
     total_appointments: totalAppointments,
     departments: result
   };
+};
+
+
+export const saveDoctorDepartment = async (id: number, department_name: string) => {
+  const doctor = await doctorRepo.findOne({ where: { doctor_id: id } });
+  const Department = await deptRepo.findOne({where:{name:department_name}})
+
+  if (!doctor) throw new Error("Doctor not found");
+
+  doctor.department = Department; 
+  return await doctorRepo.save(doctor);
 };
