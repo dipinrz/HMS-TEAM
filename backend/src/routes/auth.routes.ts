@@ -1,6 +1,6 @@
 
 import express from 'express'
-import { forgotPassword, loginUser, refreshToken, registerPatient, resetPassword, } from '../controllers/auth.controllers'
+import { forgotPassword, loginUser, refreshToken, registerPatient, resetPassword, } from '../controllers/auth.controller'
 import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from '../validations/auth.validations'
 import { validateBody } from '../middlewares/body.validator.middleware'
 

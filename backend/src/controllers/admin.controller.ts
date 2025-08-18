@@ -13,7 +13,7 @@ import { ApiError } from "../utils/apiError";
 import bcrypt from "bcryptjs";
 import { createDoctor, updateDoctorById } from "../services/doctor.services";
 import { getDepartmentById } from "../services/department.services";
-import { AuthRequest } from "./doctor.controllers";
+import { AuthRequest } from "./doctor.controller";
 
 export const fetchAllUsers = async (
   req: Request,
