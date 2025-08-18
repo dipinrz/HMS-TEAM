@@ -3,11 +3,6 @@ import { AppointmentStatus } from '../entities/appointment.entity';
 
 export const appointmentSchema = Joi.object({
 
-    patient_id: Joi.number().required().messages({
-        'any.required': 'Patient ID is required',
-        'number.base': 'Patient ID must be a number',
-    }),
-
     doctor_id: Joi.number().required().messages({
         'any.required': 'Doctor ID is required',
         'number.base': 'Doctor ID must be a number',

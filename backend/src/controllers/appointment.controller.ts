@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { AppointmentStatus } from "../entities/appointment.entity";
 import { PaymentStatus } from "../entities/bill.entity";
 import { getUserById } from "../services/user.services";
-import { getDepartmentById } from "../services/department.services";
+import { getDepartmentByDoctorId, getDepartmentById } from "../services/department.services";
 import { getMedicalReportByPId } from "../services/medicalReport.services";
 import { ApiError } from "../utils/apiError";
 import { createAppointment, deleteAppointmentById, getAllAppointments, getAppointmentById, getScheduledAppointmentById, getTodayAppoinmentService, isAppointmentExistsSameDay } from "../services/appointment.services";
@@ -33,6 +33,15 @@ export const addAppointment = async (req: AuthRequest, res: Response, next: Next
         const doctor = await getUserById(doctor_id);
         const department = await getDepartmentById(department_id);
         const medicalReport = await getMedicalReportByPId(patient_id);
+
+        if(!doctor || !department){
+            throw new ApiError("Doctor and Department cannot be empty");
+        }
+
+        const departmentDoctor = await getDepartmentByDoctorId(doctor_id);
+        if(departmentDoctor.department_id !== department_id){
+            throw new ApiError('Doctor does not exist on this department');
+        }
 
         if (!patient) throw new ApiError("Patient not found", 404);
         if (!doctor) throw new ApiError("Doctor not found", 404);
