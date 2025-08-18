@@ -71,5 +71,5 @@ export const fetchDepartmentwiseAppointmentAPI = async () => {
 }
 
 export const fetchTodaysAppoinments = async () =>{
-  return await commonAPI('GET',`${baseURL}/users/todayAppoinments`)
+  return await commonAPI('GET',`${baseURL}/appointment/appoinments/today`)
 }

@@ -157,20 +157,6 @@ const AdminDashboard = () => {
       >
         Comprehensive healthcare system overview and management
       </Typography>
-
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{ mt: 0.5, fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
-      >
-        {currentTime.toLocaleDateString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}{" "}
-        —— {currentTime.toLocaleTimeString("en-US")}
-      </Typography>
     </Box>
 
         <Stack
