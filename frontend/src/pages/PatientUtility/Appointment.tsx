@@ -33,7 +33,7 @@ import {
   MedicalServices,
 } from "@mui/icons-material";
 import { fetchAllDepartments, getAllDoctors } from "../../services/adminAPi";
-import { addAppoinment } from "../../services/patientAPI";
+import { addAppoinment } from "../../services/patientApi";
 
 interface Doctor {
   doctor_id: string;
