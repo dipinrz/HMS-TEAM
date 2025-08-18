@@ -38,7 +38,7 @@ export const deleteDoctor = async (id: number) => {
   return await commonAPI("DELETE", `${baseURL}/users/delete/${id}`);
 };
 
-export const fetchAllDepartments = async () => {
+export const fetchAllDepartments = async() => {
   return await commonAPI("GET", `${baseURL}/department`);
 };
 

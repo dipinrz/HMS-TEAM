@@ -8,7 +8,7 @@ import { UserRole } from '../entities/user.entity';
 const departmentRoutes = express.Router();
 departmentRoutes.use(authenticate);
 
-departmentRoutes.get('/', authorize(UserRole.ADMIN), fetchAllDepartmentHandler);
+departmentRoutes.get('/', authorize(UserRole.ADMIN,UserRole.PATIENT), fetchAllDepartmentHandler);
 departmentRoutes.post('/', authorize(UserRole.ADMIN), validateBody(departmentSchema), addDepartmentHandler);
 departmentRoutes.delete('/:departmentId', authorize(UserRole.ADMIN), removeDepartmentHandler);
 departmentRoutes.post('/update/:departmentId', authorize(UserRole.ADMIN), validateBody(updateDepartmentSchema), updateDepartmentHandler);
