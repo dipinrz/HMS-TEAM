@@ -68,3 +68,13 @@ export const createPayment = async (paymentData: Partial<Payment>) => {
 
     return await paymentRepo.save(newPayment);
 }
+
+export const getMonthlyRevenue = async () => {
+    
+    return await paymentRepo.find(
+        {
+            where: { verified: true },
+            order: { payment_date: 'ASC' }
+        }
+    );
+}

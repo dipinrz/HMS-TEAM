@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { createOrder, verifySignature } from '../services/payment.services';
+import { createOrder, getMonthlyRevenue, verifySignature } from '../services/payment.services';
 import { razorpay } from '../config/razorpay';
 import { getBillById, markBillAsPaid } from '../services/bill.services';
 import { ApiError } from '../utils/apiError';
+import { Payment } from '../entities/payment.entity';
 
 export const createRazorpayOrder = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -70,5 +71,47 @@ export const verifyRazorpayPayment = async (req: Request, res: Response, next: N
         res.status(200).json({ success: true, message: 'Payment verified successfully' });
     } catch (err) {
         next(err);
+    }
+};
+
+export const getMonthWiseBilling = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const payments = await getMonthlyRevenue();
+
+        if (!payments.length) {
+        throw new ApiError("Payment data not found", 404);
+        }
+
+        const monthlyData = payments.reduce((acc, payment) => {
+        const date = new Date(payment.payment_date);
+        const monthKey = `${date.getFullYear()}-${String(
+            date.getMonth() + 1
+        ).padStart(2, "0")}`;
+
+        if (!acc[monthKey]) {
+            acc[monthKey] = {
+            month: monthKey,
+            total_amount: 0,
+            payments: [],
+            };
+        }
+
+        acc[monthKey].total_amount += Number(payment.amount_paid);
+        acc[monthKey].payments.push(payment);
+
+        return acc;
+        }, {} as Record<string, { month: string; total_amount: number; payments: Payment[] }>);
+
+        const result = Object.values(monthlyData).sort(
+        (a, b) => new Date(a.month).getTime() - new Date(b.month).getTime()
+        );
+
+        res.status(200).json({
+        success: true,
+        message: "Monthly revenue fetched successfully",
+        data: result,
+        });
+    } catch (error) {
+        next(error);
     }
 };
