@@ -3,12 +3,13 @@ import { createPrescription, getPrescriptionById, getPrescriptionsByPatientId } 
 import { ApiError } from "../utils/apiError"
 import { getPatientById } from "../services/patient.services"
 import { getMedicinesByIds } from "../services/medicine.services"
-import { createManyMedications } from "../services/medication.services"
+import { createManyMedications, getMedicinesOfPrescription } from "../services/medication.services"
 import { getAppointmentById, updateAppointmentStatus } from "../services/appointment.services"
 import { AppointmentStatus } from "../entities/appointment.entity"
 import { getBillByAppointmentId, getBillsByPatientId, updateBillById } from "../services/bill.services"
 import { createBillItem } from "../services/billItem.services"
 import { FeeType } from "../entities/billItem.entity"
+import { getPrescriptionsByAppoinment } from "../services/medicalReport.services"
 
 
 export const addPrescription = async (req: Request, res: Response, next: NextFunction) => {
@@ -146,6 +147,38 @@ export const getPatientPrescriptions = async (req: Request, res: Response, next:
             prescriptions
         })
 
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getPrescriptionByAppointmentIdHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        
+        const appointment_id = Number(req.params.appointmentId);
+
+        const prescriptions = await getPrescriptionsByAppoinment(appointment_id);
+
+        if(!prescriptions){
+            throw new ApiError("Prescription not found", 404);
+        }
+
+        const prescriptionsWithMedicines = await Promise.all(
+        prescriptions.map(async (prescription) => {
+            const medicines = await getMedicinesOfPrescription(prescription.prescription_id);
+            return {
+            ...prescription,
+            medicines,
+            };
+        })
+        );
+
+        res.json({
+            success: true,
+            message: 'Prescription fetched successfully',
+            prescriptions: prescriptionsWithMedicines
+        })
     } catch (error) {
         next(error)
     }
