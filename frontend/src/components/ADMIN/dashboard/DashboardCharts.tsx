@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Grid, useMediaQuery, useTheme } from "@mui/material";
 import {
   BarChart,
@@ -14,7 +14,11 @@ import {
   Legend,
 } from "recharts";
 import { Card, CardContent, CardHeader } from "../../ui/CustomCards";
-import { fetchDepartmentwiseAppointmentAPI } from "../../../services/adminAPi";
+import {
+  fetchDepartmentwiseAppointmentAPI,
+  getMonthlyRevenue,
+} from "../../../services/adminAPi";
+import { toast } from "react-toastify";
 
 const revenueData = [
   { month: "Jan", revenue: 35000, patients: 200 },
@@ -42,9 +46,22 @@ interface Department {
   appointment_count: number;
 }
 
-const MemoizedBarChart = React.memo(() => (
+const formatRevenueData = (data: any[]) => {
+  return data.map((item) => {
+    const date = new Date(item.month + "-01"); 
+    const monthName = date.toLocaleString("default", { month: "short" }); 
+    const year = date.getFullYear();
+
+    return {
+      month: `${monthName} ${year}`,
+      revenue: item.total_amount,
+    };
+  });
+};
+
+const MemoizedBarChart = React.memo(({ data }: { data: any[] }) => (
   <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={revenueData}>
+    <BarChart data={data}>
       <defs>
         <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#020aa5ff" />
@@ -53,8 +70,30 @@ const MemoizedBarChart = React.memo(() => (
       </defs>
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="month" />
-      <YAxis />
-      <Tooltip />
+<YAxis 
+        domain={[0, 20000]} 
+        ticks={[5000, 10000, 15000, 20000]} 
+        tickFormatter={(value) => `₹${value.toLocaleString()}`} 
+      />      <Tooltip 
+        cursor={{ fill: 'transparent' }} 
+        content={({ active, payload }) => {
+          if (active && payload && payload.length) {
+            return (
+              <div style={{
+                background: '#fff',
+                border: '1px solid #ddd',
+                padding: '10px',
+                borderRadius: '4px',
+                boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+              }}>
+                <p>{`${payload[0].payload.month}`}</p>
+                <p>{`Revenue: $${payload[0].value?.toLocaleString()}`}</p>
+              </div>
+            );
+          }
+          return null;
+        }}
+      />
       <Bar
         dataKey="revenue"
         fill="url(#revenueGradient)"
@@ -72,6 +111,16 @@ const DashboardCharts: React.FC = () => {
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+
+  useEffect(() => {
+  fetchMonthlyRevenue();
+}, []); 
+
+  const formattedRevenueData = useMemo(
+    () => formatRevenueData(monthlyRevenue),
+    [monthlyRevenue]
+  );
 
   const transformDepartmentData = (
     departments: Department[],
@@ -103,6 +152,17 @@ const DashboardCharts: React.FC = () => {
     }
   };
 
+  const fetchMonthlyRevenue = async () => {
+    try {
+      const response = await getMonthlyRevenue();
+      console.log("Monthly revenue------", response.data.data);
+      setMonthlyRevenue(response.data.data);
+    } catch (error) {
+      toast.error("Couldn't fetch monthly revenue");
+      console.log("Error in fetching revenue", error);
+    }
+  };
+
   useEffect(() => {
     fetchDepartmentwiseAppointment();
   }, []);
@@ -121,8 +181,21 @@ const DashboardCharts: React.FC = () => {
             title="Revenue & Patient Growth"
             subheader="Monthly revenue and patient statistics"
           />
-          <CardContent>
-            <MemoizedBarChart />
+           <CardContent>
+            {formattedRevenueData.length > 0 ? (
+              <MemoizedBarChart data={formattedRevenueData} />
+            ) : (
+              <div
+                style={{
+                  height: 300,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                No revenue data available
+              </div>
+            )}
           </CardContent>
         </Card>
       </Grid>
@@ -148,7 +221,7 @@ const DashboardCharts: React.FC = () => {
                     outerRadius={120}
                     dataKey="value"
                     label={false}
-                    isAnimationActive={false} 
+                    isAnimationActive={false}
                   >
                     {chartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />

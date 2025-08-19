@@ -25,8 +25,10 @@ export const fetchPatientMedicalRecordController = async (
       throw new ApiError("Medical record not found", 404);
     }
 
-    const appointments = await getAppoinmentsByPatientId(Number(userId));
+    console.log("Response from fetch records",response)
 
+    const appointments = await getAppoinmentsByPatientId(Number(userId));
+    console.log("Response from fetch records",appointments)
     res.status(201).json({
       success: true,
       message: "Medical record fetched successfully",
