@@ -107,7 +107,9 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
     set({ loading: true, error: null }); 
     try{
       const response=await getDoctorPriscriptions();
+      console.log("Response",response)
       const data=response.data.prescriptions;
+      console.log("Doctor store",data)
       set({prescriptons:data,loading:false})
     }catch(err:any){
       console.log("Faild to load prescription",err);

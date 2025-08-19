@@ -1,12 +1,14 @@
 import { AppDataSource } from "../config/data-source";
 import { Appointment } from "../entities/appointment.entity";
 import { MedicalReport } from "../entities/medicalReport.entity";
+import { Medication } from "../entities/medication.entity";
 import { Prescription } from "../entities/prescription.entity";
 
 
 const medicalReportRepo = AppDataSource.getRepository(MedicalReport)
 const appoinmentRepo = AppDataSource.getRepository(Appointment)
 const prescriptionRepo = AppDataSource.getRepository(Prescription)
+const medicationRepo = AppDataSource.getRepository(Medication)
 
 
 export const createMedicalReport = async (medicalReport: Partial<MedicalReport>) => {
@@ -29,6 +31,7 @@ export const getMedicalReportById = async (medicalReportId: number) => {
 
 export const getMedicalReportByPId = async (patientId: number) => {
 
+
     return await medicalReportRepo.findOne({
         where: {
             patient: { user_id: patientId }
@@ -37,22 +40,52 @@ export const getMedicalReportByPId = async (patientId: number) => {
     })
 }
 
-export const getAppoinmentsByPatientId = async (patientId: number) => {
+// export const getAppoinmentsByPatientId = async (patientId: number) => {
     
-    const appointments = await appoinmentRepo.find({
-        where: {
-        patient: { user_id: patientId }
-        },
-    });
+//     const appointments = await appoinmentRepo.find({
+//         where: {
+//         patient: { user_id: patientId }
+//         },relations:['doctor','department'],
+//     });
 
-    const results = await Promise.all(
-        appointments.map(async (appt) => {
-        const prescriptions = await getPrescriptionsByAppoinment(appt.appointment_id);
-        return { ...appt, prescriptions };
+//     const results = await Promise.all(
+//         appointments.map(async (appt) => {
+//         const prescriptions = await getPrescriptionsByAppoinment(appt.appointment_id);
+//         return { ...appt, prescriptions };
+//         })
+//     );
+
+//     return results;
+// };
+
+
+export const getAppoinmentsByPatientId = async (patientId: number) => {
+  const appointments = await appoinmentRepo.find({
+    where: {
+      patient: { user_id: patientId },
+    },
+    relations: ["doctor", "department"],
+  });
+
+  const results = await Promise.all(
+    appointments.map(async (appt) => {
+      const prescriptions = await getPrescriptionsByAppoinment(appt.appointment_id);
+      const prescriptionsWithMedications = await Promise.all(
+        prescriptions.map(async (presc) => {
+          const medications = await medicationRepo.find({
+            where: { prescription: { prescription_id: presc.prescription_id } },
+            relations: ["medicine"],
+          });
+
+          return { ...presc, medications };
         })
-    );
+      );
 
-    return results;
+      return { ...appt, prescriptions: prescriptionsWithMedications };
+    })
+  );
+
+  return results;
 };
 
 
