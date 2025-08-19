@@ -1,214 +1,60 @@
 import {
-  Avatar,
   Box,
   Chip,
   Grid,
   Typography,
-  useTheme,
-  Alert,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Badge,
-  Paper,
+  Stack,
+  Button,
 } from "@mui/material";
-import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import {
-  CalendarToday,
-  Description,
-  ReceiptLong,
-  MedicalServices,
   AccessTime,
-  Notifications,
-  FavoriteRounded,
-  TrendingUp,
-  Warning,
-  LocalPharmacy,
+  CalendarToday,
+  EventAvailable,
+  MedicalServices,
+  Person,
   Phone,
   VideoCall,
-  Message,
 } from "@mui/icons-material";
 import CustomButton from "../../components/ui/CustomButton";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
-import { useState } from "react";
+import DashboardMetrics from "../../components/PATIENT/DashboardMetrics";
+import { getPatientAppointments } from "../../services/patientApi";
 import { useAuthStore } from "../../store/useAuthStore";
-import { useNavigate } from "react-router-dom";
-
-interface ThemeColorKey {
-  primary: string;
-  secondary: string;
-  success: string;
-  warning: string;
-  error: string;
-  info: string;
-}
-
-interface PatientStats {
-  title: string;
-  value: string;
-  subtitle: string;
-  icon: React.ReactNode;
-  bgcolor: keyof ThemeColorKey;
-  trend?: string;
-  action?: string;
-}
-
-interface Appointment {
-  id: number;
-  time: string;
-  doctor: string;
-  type: string;
-  status: string;
-  duration: string;
-  location?: string;
-  appointmentType?: "in-person";
-}
-
-interface Medication {
-  id: number;
-  name: string;
-  dosage: string;
-  frequency: string;
-  remaining: number;
-  refillDate: string;
-}
-
-const statsData: PatientStats[] = [
-  {
-    title: "Upcoming Appointments",
-    value: "2",
-    subtitle: "Next: Today at 2:00 PM",
-    icon: <CalendarToday color="primary" />,
-    bgcolor: "primary",
-    trend: "+1 this week",
-    action: "View All",
-  },
-  {
-    title: "Health Score",
-    value: "87%",
-    subtitle: "Excellent condition",
-    icon: <FavoriteRounded color="success" />,
-    bgcolor: "success",
-    trend: "+5% vs last month",
-    action: "View Details",
-  },
-  {
-    title: "Pending Actions",
-    value: "3",
-    subtitle: "2 bills, 1 prescription",
-    icon: <Warning color="warning" />,
-    bgcolor: "warning",
-    action: "Take Action",
-  },
-  {
-    title: "Medical Records",
-    value: "15",
-    subtitle: "Lab results available",
-    icon: <Description color="info" />,
-    bgcolor: "info",
-    action: "Download",
-  },
-];
-
-const appointmentHistory: Appointment[] = [
-  {
-    id: 1,
-    time: "08 Aug 2025 - 2:00 PM",
-    doctor: "Dr. Sarah Wilson",
-    type: "Cardiology Follow-up",
-    status: "upcoming",
-    duration: "45 min",
-    location: "Room 302",
-  },
-  {
-    id: 2,
-    time: "10 Aug 2025 - 10:00 AM",
-    doctor: "Dr. Mike Chen",
-    type: "Telemedicine Consultation",
-    status: "upcoming",
-    duration: "30 min",
-  },
-  {
-    id: 3,
-    time: "02 Aug 2025 - 4:00 PM",
-    doctor: "Dr. John Smith",
-    type: "General Checkup",
-    status: "completed",
-    duration: "30 min",
-    location: "Room 105",
-  },
-  {
-    id: 4,
-    time: "20 Jul 2025 - 11:00 AM",
-    doctor: "Dr. Emily Johnson",
-    type: "Dermatology",
-    status: "completed",
-    duration: "45 min",
-  },
-  {
-    id: 5,
-    time: "15 Jul 2025 - 9:00 AM",
-    doctor: "Dr. Robert Brown",
-    type: "Orthopedic Consultation",
-    status: "completed",
-    duration: "60 min",
-  },
-  {
-    id: 6,
-    time: "05 Jul 2025 - 3:30 PM",
-    doctor: "Dr. Lisa Davis",
-    type: "Annual Physical",
-    status: "completed",
-    duration: "45 min",
-  },
-];
-
-const medications: Medication[] = [
-  {
-    id: 1,
-    name: "Lisinopril",
-    dosage: "10mg",
-    frequency: "Daily",
-    remaining: 15,
-    refillDate: "2025-08-20",
-  },
-  {
-    id: 2,
-    name: "Metformin",
-    dosage: "500mg",
-    frequency: "Twice daily",
-    remaining: 30,
-    refillDate: "2025-08-25",
-  },
-  {
-    id: 3,
-    name: "Vitamin D3",
-    dosage: "2000 IU",
-    frequency: "Daily",
-    remaining: 5,
-    refillDate: "2025-08-15",
-  },
-  {
-    id: 4,
-    name: "Aspirin",
-    dosage: "81mg",
-    frequency: "Daily",
-    remaining: 20,
-    refillDate: "2025-08-30",
-  },
-];
+import AppointmentModal from "../../components/PATIENT/AppointmentModal";
+import { Card, CardContent } from "../../components/ui/CustomCards";
 
 const PatientDashboard = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const theme = useTheme();
+  const [appointments, setAppointments] = useState<any[]>([]);
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const res = await getPatientAppointments();
+        const now = new Date();
+        const upcoming = res.data.appointments
+          .filter((appt: any) => new Date(appt.appointment_date) > now)
+          .sort(
+            (a: any, b: any) =>
+              new Date(a.appointment_date).getTime() -
+              new Date(b.appointment_date).getTime()
+          );
+        setAppointments(upcoming);
+      } catch (err) {
+        toast.error("Failed to fetch appointments");
+        console.error(err);
+      }
+    };
+    fetchAppointments();
+  }, []);
 
   const getStatusChipColor = (status: string) => {
-    switch (status) {
+    switch (status?.toLowerCase()) {
       case "completed":
         return "success";
       case "cancelled":
@@ -220,453 +66,253 @@ const PatientDashboard = () => {
     }
   };
 
-  const getAppointmentIcon = (type: string) => {
-    switch (type) {
+  const handleViewClick = (appointment: any) => {
+    setSelectedAppointment(appointment);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedAppointment(null);
+  };
+
+  const getAppointmentIcon = (mode: string) => {
+    switch (mode) {
       case "video":
-        return <VideoCall color="primary" />;
+        return <VideoCall />;
       case "phone":
-        return <Phone color="primary" />;
+        return <Phone />;
       default:
-        return <MedicalServices color="primary" />;
+        return <MedicalServices />;
     }
   };
 
-  const alerts = [
-    {
-      type: "info",
-      message: "Your appointment with Dr. Sarah Wilson is today at 2:00 PM.",
-      actionLabel: "View Details",
-      onAction: () => console.log("Viewing appointment details"),
-    },
-    {
-      type: "warning",
-      message: "Your Vitamin D3 is running low (5 pills remaining).",
-      actionLabel: "Request Refill",
-      onAction: () => console.log("Requesting refill"),
-    },
-  ];
-
   return (
-    <Box sx={{ mt: { lg: 5, xs: 15 }, maxWidth: "90%", mx: "auto" }}>
+    <Box sx={{ paddingX: "30px", backgroundColor: "#f8fafc" }}>
       <Box
-        // mb={4}
+        sx={{ marginTop: { xs: "20vh", md: "3vh" } }}
         display="flex"
         justifyContent="space-between"
+        flexDirection={{ xs: "column", md: "row" }}
         alignItems="center"
-        flexWrap="wrap"
-        gap={1}
+        mb={4}
       >
-        <Box>
-          <Typography variant="h4" fontWeight={600}>
-            Welcome back, {user?.first_name}
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Here's your health summary for{" "}
-            {new Date().toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
+        <Box sx={{ textAlign: { xs: "center", sm: "left" }, mb: 4 }}>
+          <Typography variant="h4" fontWeight={600} color="text.primary">
+            Welcome, {user?.first_name}
           </Typography>
         </Box>
-        <Box display="flex" gap={2} flexWrap="wrap">
-          <Badge badgeContent={3} color="error">
-            <CustomButton
-              variant="outlined"
-              startIcon={<Notifications />}
-              label="Notifications"
-            />
-          </Badge>
+
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={1.5}
+          flexWrap="wrap"
+        >
           <CustomButton
-            onClick={() => {
-              navigate("/patient/appointments");
-            }}
-            startIcon={<MedicalServices />}
-            label="Book Appointment"
+            label="BOOK APPOINTMENT"
+            variant="contained"
+            startIcon={<MedicalServices fontSize="small" />}
+            onClick={() => navigate("/patient/appointments")}
           />
-        </Box>
+        </Stack>
       </Box>
 
-      {/* Alerts */}
-      <Box mb={3}>
-        {alerts.length > 0 &&
-          alerts.map((alert, index) => (
-            <Alert
-              key={index}
-              severity={alert.type as "info" | "warning" | "error" | "success"}
-              sx={{ mb: 2 }}
+      <Box sx={{ width: "100%", mt: 5 }}>
+        <DashboardMetrics />
+      </Box>
+
+      <Grid container spacing={4} sx={{ mt: 1 }} >
+        <Grid size={{ xs: 12, lg: 4 }}>
+          <Box
+            sx={{
+              backgroundColor: "#fff",
+              borderRadius: "16px",
+              marginTop:"50px",
+              p: 3,
+              boxShadow: "0 6px 24px rgba(0, 0, 0, 0.05)",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              border: "1px solid",
+              borderColor: "divider",
+              // transition: "all 0.3s ease",
+              // "&:hover": {
+              //   boxShadow: "0 10px 32px rgba(0, 0, 0, 0.08)",
+              // },
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 3,
+                pb: 2,
+                borderBottom: "1px solid",
+                borderColor: "divider",
+              }}
             >
-              <Typography variant="body2">
-                <strong>
-                  {alert.type === "info" ? "Reminder:" : "Prescription Alert:"}
-                </strong>{" "}
-                {alert.message}
-                <CustomButton
-                  variant="text"
-                  size="small"
-                  label={alert.actionLabel}
-                  sx={{ ml: 1 }}
-                  onClick={alert.onAction}
-                />
+              <CalendarToday
+                sx={{ color: "primary.main", mr: 2, fontSize: "28px" }}
+              />
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 700, color: "text.primary" }}
+              >
+                Upcoming Appointments
               </Typography>
-            </Alert>
-          ))}
-      </Box>
+            </Box>
 
-      {/* Stats */}
-      <Grid container spacing={2}>
-        {statsData.map((stat, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index}>
-            <Card
-              elevation={2}
-              hoverVariant="rotate"
-              sx={{ height: "90%", width: "95%" }}
-            >
-              <CardContent>
-                <Box display="flex" justifyContent="space-between">
-                  <Box flex={1}>
-                    <Typography variant="body2" color="text.secondary">
-                      {stat.title}
-                    </Typography>
-                    <Typography variant="h4" fontWeight={700} sx={{ my: 1 }}>
-                      {stat.value}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {stat.subtitle}
-                    </Typography>
-                    {stat.trend && (
-                      <Typography
-                        variant="caption"
-                        color="success.main"
-                        display="flex"
-                        alignItems="center"
-                        mt={1}
-                      >
-                        <TrendingUp fontSize="small" sx={{ mr: 0.5 }} />{" "}
-                        {stat.trend}
-                      </Typography>
-                    )}
-                  </Box>
-                  <Box
-                    sx={{
-                      p: 1.5,
-                      borderRadius: "20px",
-                      backgroundColor: `${theme.palette[stat.bgcolor].main}1A`,
-                      height: "100%",
-                    }}
-                  >
-                    {stat.icon}
-                  </Box>
-                </Box>
-                {stat.action && (
-                  <Box mt={2}>
-                    <CustomButton
-                      variant="text"
-                      size="small"
-                      label={stat.action}
-                      sx={{ color: theme.palette[stat.bgcolor].main }}
-                    />
-                  </Box>
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-
-      {/* Main Content */}
-      <Grid container spacing={4} sx={{ mt: 1 }} alignItems="stretch">
-        {/* Left Column - Appointments */}
-        <Grid size={{ xs: 12, lg: 3.5 }}>
-          <Card sx={{ height: 600, width: "100%" }}>
-            <CardHeader title="Appointments" />
-            <CardContent sx={{ height: "calc(100% - 80px)", pb: 1 }}>
+            {appointments.length === 0 ? (
               <Box
                 sx={{
-                  height: "100%",
-                  overflowY: "auto",
-                  pr: 1,
-                  "&::-webkit-scrollbar": {
-                    width: "6px",
-                  },
-                  "&::-webkit-scrollbar-track": {
-                    background: "#f1f1f1",
-                    borderRadius: "10px",
-                  },
-                  "&::-webkit-scrollbar-thumb": {
-                    background: "#c1c1c1",
-                    borderRadius: "10px",
-                  },
-                  "&::-webkit-scrollbar-thumb:hover": {
-                    background: "#a8a8a8",
-                  },
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  py: 6,
+                  color: "text.secondary",
                 }}
+
               >
-                <Box display="flex" flexDirection="column" gap={2}>
-                  {appointmentHistory.map((appt) => (
-                    <Paper
-                      key={appt.id}
-                      sx={{
-                        p: 2,
-                        bgcolor: "#f8f9fa",
-                        border: "1px solid #e9ecef",
-                        borderRadius: 2,
-                      }}
-                    >
-                      <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="flex-start"
-                        gap={2}
-                      >
-                        {/* Left Section */}
-                        <Box display="flex" gap={2} flex={1} minWidth={0}>
-                          {getAppointmentIcon("in-person")}
-                          <Avatar sx={{ width: 32, height: 32 }}>
-                            {appt.doctor
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </Avatar>
-                          <Box flex={1} minWidth={0}>
+                <EventAvailable
+                  sx={{
+                    fontSize: "48px",
+                    color: "action.disabled",
+                    mb: 2,
+                  }}
+                />
+                <Typography variant="body1" color="text.disabled">
+                  No appointments scheduled
+                </Typography>
+              </Box>
+            ) : (
+              <Box sx={{ overflowY: "auto", flex: 1, pr: 1 }}>
+                {appointments.map((appt) => (
+                  <Card
+                    key={appt._id}
+                    animated={false}
+                    sx={{
+                      mb: 2,
+                      borderRadius: "12px",
+                      border: "1px solid",
+                      borderColor: "divider",
+                      backgroundColor: "#ffffff",
+                      // transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                      // "&:hover": {
+                      //   transform: "translateY(-4px)",
+                      //   borderColor: "primary.main",
+                      //   boxShadow: "0 6px 16px rgba(0, 0, 0, 0.08)",
+                      // },
+                    }}
+                  >
+                    <CardContent sx={{ p: 2.5 }}>
+                      <Box display="flex" justifyContent="space-between">
+                        <Box display="flex" gap={2}>
+                          <Box
+                            sx={{
+                              background: "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                              borderRadius: "10px",
+                              width: "48px",
+                              height: "48px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: "white",
+                              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.08)",
+                            }}
+                          >
+                            {getAppointmentIcon(appt.mode || "in-person")}
+                          </Box>
+                          <Box>
+                            <Typography
+                              variant="subtitle1"
+                              fontWeight={600}
+                              color="text.primary"
+                              sx={{ mb: 0.5 }}
+                            >
+                              {appt.reason_for_visit || "General Checkup"}
+                            </Typography>
                             <Typography
                               variant="body2"
-                              fontWeight={600}
-                              sx={{
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                              }}
+                              color="text.secondary"
+                              sx={{ display: "flex", alignItems: "center", gap: 1 }}
                             >
-                              {appt.type}
+                              <Person fontSize="small" />
+                              Dr. {appt.doctor?.first_name} {appt.doctor?.last_name}
                             </Typography>
                             <Typography
-                              variant="caption"
+                              variant="body2"
                               color="text.secondary"
                               sx={{
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                                display: "block",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                                mt: 1,
                               }}
                             >
-                              {appt.doctor}
-                            </Typography>
-                            <Typography
-                              variant="caption"
-                              color="text.secondary"
-                              display="flex"
-                              alignItems="center"
-                              sx={{ mt: 0.5 }}
-                            >
-                              <AccessTime fontSize="inherit" sx={{ mr: 0.5 }} />
-                              {appt.time.split(" - ")[1]} • {appt.duration}
+                              <AccessTime fontSize="small" />
+                              {new Date(appt.appointment_date).toLocaleString([], {
+                                weekday: "short",
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
                             </Typography>
                           </Box>
                         </Box>
 
-                        {/* Right Section - Status and Actions */}
                         <Box
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="flex-end"
-                          gap={1}
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            justifyContent: "space-between",
+                          }}
                         >
                           <Chip
-                            label={appt.status}
+                            label={appt.status || "Upcoming"}
+                            size="small"
                             color={getStatusChipColor(appt.status)}
+                            sx={{
+                              fontWeight: 600,
+                              fontSize: "0.65rem",
+                              height: "20px",
+                              textTransform: "capitalize",
+                            }}
+                          />
+                          <Button
                             size="small"
                             variant="outlined"
-                          />
-                          {appt.status === "upcoming" && (
-                            <CustomButton
-                              onClick={() => {
-                                console.log(`appointment id: ${appt.id}`);
-                                navigate(`/appointment/${appt.id}`);
-                              }}
-                              variant="outlined"
-                              size="small"
-                              label="View"
-                            />
-                          )}
-                          {appt.status === "completed" && (
-                            <CustomButton
-                              onClick={() => {
-                                console.log(`appointment id: ${appt.id}`);
-                                navigate(`/appointmentDetail/${appt.id}`);
-                              }}
-                              variant="outlined"
-                              size="small"
-                              label="View"
-                            />
-                          )}
+                            onClick={() => handleViewClick(appt)}
+                            sx={{
+                              textTransform: "none",
+                              fontSize: "0.75rem",
+                              borderRadius: "8px",
+                              px: 1.5,
+                              py: 0.5,
+                              mt: 1,
+                            }}
+                          >
+                            View Details
+                          </Button>
                         </Box>
                       </Box>
-                    </Paper>
-                  ))}
-                </Box>
+                    </CardContent>
+                  </Card>
+                ))}
               </Box>
-            </CardContent>
-          </Card>
+            )}
+            <AppointmentModal
+              open={isModalOpen}
+              onClose={handleCloseModal}
+              appointment={selectedAppointment}
+            />
+          </Box>
         </Grid>
 
-        {/* Middle Column */}
-        <Grid
-          size={{ xs: 12, lg: 4 }}
-          container
-          spacing={2}
-          sx={{ height: "fit-content" }}
-        >
-          <Grid
-            size={12}
-            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-          >
-            <Card sx={{ height: 290, width: "100%", flex: 1 }}>
-              <CardHeader title="Quick Actions" />
-              <CardContent>
-                <Box display="flex" flexDirection="column" gap={1.5}>
-                  <CustomButton
-                    variant="outlined"
-                    startIcon={<VideoCall />}
-                    label="Start Telemedicine"
-                    fullWidth
-                  />
-                  <CustomButton
-                    variant="outlined"
-                    startIcon={<Message />}
-                    label="Message Doctor"
-                    fullWidth
-                  />
-                  <CustomButton
-                    variant="outlined"
-                    startIcon={<LocalPharmacy />}
-                    label="Request Prescription Refill"
-                    fullWidth
-                  />
-                  <CustomButton
-                    variant="outlined"
-                    startIcon={<ReceiptLong />}
-                    label="View & Pay Bills"
-                    fullWidth
-                  />
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={12}>
-            <Card sx={{ height: 300, width: "100%", flex: 1 }}>
-              <CardHeader title="Current Medications" />
-              <CardContent sx={{ height: "calc(100% - 80px)", pb: 1 }}>
-                <Box
-                  sx={{
-                    height: "100%",
-                    overflowY: "auto",
-                    pr: 1,
-                    "&::-webkit-scrollbar": {
-                      width: "6px",
-                    },
-                    "&::-webkit-scrollbar-track": {
-                      background: "#f1f1f1",
-                      borderRadius: "10px",
-                    },
-                    "&::-webkit-scrollbar-thumb": {
-                      background: "#c1c1c1",
-                      borderRadius: "10px",
-                    },
-                    "&::-webkit-scrollbar-thumb:hover": {
-                      background: "#a8a8a8",
-                    },
-                  }}
-                >
-                  <List dense sx={{ pt: 0 }}>
-                    {medications.map((med) => (
-                      <ListItem key={med.id} sx={{ px: 0, pb: 1 }}>
-                        <ListItemIcon sx={{ minWidth: 40 }}>
-                          <LocalPharmacy color="primary" />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Box
-                              display="flex"
-                              justifyContent="space-between"
-                              alignItems="center"
-                            >
-                              <Typography variant="body2" fontWeight={600}>
-                                {med.name} {med.dosage}
-                              </Typography>
-                              <Chip
-                                label={`${med.remaining} left`}
-                                size="small"
-                                color={med.remaining <= 7 ? "error" : "default"}
-                                variant="outlined"
-                              />
-                            </Box>
-                          }
-                          secondary={
-                            <>
-                              <Typography variant="caption" display="block">
-                                {med.frequency} • Refill due:{" "}
-                                {new Date(med.refillDate).toLocaleDateString()}
-                              </Typography>
-                              {med.remaining <= 7 && (
-                                <LinearProgress
-                                  variant="determinate"
-                                  value={(med.remaining / 30) * 100}
-                                  color="error"
-                                  sx={{ height: 4, borderRadius: 2, mt: 1 }}
-                                />
-                              )}
-                            </>
-                          }
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-
-        {/* Right Column - Calendar */}
-        <Grid size={{ lg: 4.5, xs: 12 }}>
-          <Card
-            sx={{
-              height: {
-                lg: "100%",
-                xs: "auto",
-              },
-              width: "100%",
-            }}
-          >
-            <CardHeader title="Calendar" />
-            <CardContent
-              sx={{
-                height: "calc(100% - 80px)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "flex-start",
-                pt: 1,
-              }}
-            >
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <StaticDatePicker
-                  value={selectedDate}
-                  onChange={(date) => setSelectedDate(date)}
-                  sx={{
-                    "& .MuiPickersCalendarHeader-root": {
-                      paddingLeft: 1,
-                      paddingRight: 1,
-                    },
-                    "& .MuiDayCalendar-root": {
-                      width: "100%",
-                    },
-                  }}
-                />
-              </LocalizationProvider>
-            </CardContent>
-          </Card>
+        <Grid size={{ xs: 12, lg: 8 }}>
+          {/* Future section like calendar or history */}
         </Grid>
       </Grid>
     </Box>

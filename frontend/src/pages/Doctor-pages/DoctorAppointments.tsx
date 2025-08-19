@@ -125,7 +125,7 @@ const DoctorAppointments = () => {
                                 
                             </Card>
                         </Grid>
-                    ))
+                    ))  
                 )}
             </Grid>
             )}
