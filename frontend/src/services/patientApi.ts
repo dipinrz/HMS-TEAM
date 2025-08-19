@@ -5,8 +5,8 @@ export const baseURL = "http://localhost:5000/api/v1"
 
 
 
-export const addAppoinment=async(formData:FormData)=>{
-    return commonAPI('POST',`${baseURL}/appointment`,formData)
+export const addAppoinment = async (formData: FormData) => {
+    return commonAPI('POST', `${baseURL}/appointment`, formData)
 }
 
 export const getPatientById = async (id: number) => {
@@ -15,5 +15,13 @@ export const getPatientById = async (id: number) => {
 
 export const updatePatient = async (payload: any) => {
     return await commonAPI('PATCH', `${baseURL}/patients/update`, payload);
+
+}
+export const getPatientAppointments = async () => {
+    return await commonAPI('GET', `${baseURL}/patients/appointments`);
+
+}
+export const getPatientPrescriptions = async () => {
+    return await commonAPI('GET', `${baseURL}/patients/prescriptions`);
 
 }
