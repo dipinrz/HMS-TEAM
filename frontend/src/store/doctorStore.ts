@@ -1,8 +1,8 @@
 
 import { create } from 'zustand';
-import { getAllMedicens, getDoctorAppointment, getDoctorPatients,getDoctorPriscriptions,getDoctorProfile,getRecentPatientFromAllAppointment, updateDoctorProfile } from '../services/doctorAPI';
+import { getAllMedicens, getDoctorAppointment, getDoctorPatients,getDoctorPriscriptions,getDoctorProfile,getPatientRecord,getRecentPatientFromAllAppointment, updateDoctorProfile } from '../services/doctorAPI';
 import { getRecentUniquePatientAppointments } from '../utility/DoctorUtility';
-import type { Appointment, Medicine, Patient, Prescription, Doctor, UpdateDoctorPayload} from '../types/doctorType';
+import type { Appointment, Medicine, Patient, Prescription, Doctor, UpdateDoctorPayload, ReportData} from '../types/doctorType';
 
 interface DoctorStore {
   appointments: Appointment[];
@@ -12,6 +12,7 @@ interface DoctorStore {
   patients: Patient[];
   prescriptons:Prescription[];
   medicines: Medicine[];
+  report: ReportData | null;
   doctor:Doctor|null;
   patientsCount: number;
   completedCount: number;
@@ -26,6 +27,8 @@ interface DoctorStore {
   fetchMedicines: () => Promise<void>;
   fetchDoctorProfile:()=>Promise<void>;
   updateDoctorProfile:(data:UpdateDoctorPayload)=>Promise<void>;
+  fetchReport: (patientId: number) => Promise<void>;
+  clearReport: () => void;
 }
 
 export const useDoctorStore = create<DoctorStore>((set, get) => ({
@@ -37,6 +40,7 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
   medicines:[],
   prescriptons:[],
   doctor:null,
+  report:null,
   patientsCount: 0,
   completedCount: 0,
   remainingCount: 0,
@@ -141,5 +145,18 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
       set({error:err,loading:false})
     }
   },
-
+  fetchReport:async(patientId)=>{
+    set({loading:true,error:null})
+    try{
+      const response=await getPatientRecord(patientId);
+      const report=response.data;
+      set({report:report.data,loading:false})
+    }catch(err:any){
+      console.log('Faild to get the report');
+      set({error:err,loading:false})
+    }
+  },
+  clearReport:()=>{
+    set({report:null});
+  },
 }));

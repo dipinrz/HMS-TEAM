@@ -114,14 +114,15 @@ const DoctorAppointments = () => {
                                 <Divider sx={{ my: 1.5 }} />
                                 <Box display="flex" justifyContent="space-between" alignItems="center">
                                     <Chip
-                                        label={appointment.status}
+                                        label={appointment.appointment_id}//make it previkdjnfsjdfn  status
                                         color={getStatusColor(appointment.status)}
                                         size="small"
                                     />
                                     {appointment.status === "scheduled" && (
-                                        <CustomButton size="small" onClick={()=>handleAddPrescription(appointment.appointment_id)} label="Start" />
+                                        <CustomButton size="small" onClick={()=>handleAddPrescription(appointment.appointment_id) } label="Start" />
                                     )}
                                 </Box>
+                                
                             </Card>
                         </Grid>
                     ))
