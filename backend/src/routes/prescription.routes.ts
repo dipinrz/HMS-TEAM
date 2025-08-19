@@ -1,6 +1,6 @@
 
 import express from 'express'
-import { addPrescription, getPatientPrescription, getPatientPrescriptions, getPrescriptionByAppointmentIdHandler } from '../controllers/prescription.controller'
+import { addPrescription, getPatientPrescription, getPatientPrescriptions, getPrescriptionByAppointmentIdHandler, updateAppoinmentStatus } from '../controllers/prescription.controller'
 import { authenticate, authorize } from '../middlewares/auth.middleware'
 import { UserRole } from '../entities/user.entity'
 import { createPrescriptionSchema } from '../validations/prescription.validations'
@@ -11,6 +11,8 @@ const router = express.Router()
 
 router.route("/")
     .post(authenticate, authorize(UserRole.ADMIN, UserRole.DOCTOR), addPrescription)
+
+router.patch('/completed',authenticate, authorize(UserRole.DOCTOR),updateAppoinmentStatus)
 
 
 router.route('/patient/:patientId')
