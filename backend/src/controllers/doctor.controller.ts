@@ -14,7 +14,6 @@ import { instanceToPlain } from "class-transformer";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { AppointmentStatus } from "../entities/appointment.entity";
-import { getPrescriptionsByAppoinment } from "../services/medicalReport.services";
 import { getPrescriptionByIds } from "../services/prescription.services";
 import { getDoctorsByDepartmentId } from "../services/department.services";
 

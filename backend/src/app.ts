@@ -13,6 +13,7 @@ import appointmentRoutes from "./routes/appointment.routes";
 import paymentRoutes from "./routes/payment.routes";
 import medicineRoutes from "./routes/medicine.routes";
 import medicalRecordRoutes from "./routes/medicalRecord.routes";
+import billRoutes from "./routes/bill.routes";
 
 dotenv.config();
 
@@ -35,7 +36,8 @@ app.use('/api/v1/prescription', prescriptionRoutes);
 app.use('/api/v1/appointment', appointmentRoutes);
 app.use('/api/v1/payment', paymentRoutes);
 app.use('/api/v1/medicine', medicineRoutes);
-app.use('/api/v1/records',medicalRecordRoutes)
+app.use('/api/v1/records',medicalRecordRoutes);
+app.use('/api/v1/bill',billRoutes);
 
 
 

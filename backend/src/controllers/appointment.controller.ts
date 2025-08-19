@@ -90,7 +90,7 @@ export const addAppointment = async (req: AuthRequest, res: Response, next: Next
         res.status(201).json({
         success: true,
         message: "Appointment and bill created successfully",
-        data: { bill, bill_amount },
+        // data: { bill, bill_amount },
         });
     } catch (error) {
         next(error);
