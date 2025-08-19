@@ -10,7 +10,10 @@ import CustomInput from "../../components/ui/CustomInput";
 
 const AddPrescription = () => {
     const {medicines,fetchMedicines}=useDoctorStore()
+    const params = useParams();
+    console.log("useParams:", params);
     const { appointmentId } = useParams<{ appointmentId: string }>();
+    console.log("id++++",appointmentId)
     const [formData, setFormData] = useState({
         appointment_id:Number(appointmentId),
         diagnosis: "",
