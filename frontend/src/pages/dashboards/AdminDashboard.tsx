@@ -28,16 +28,7 @@ const AdminDashboard = () => {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+  
 
   const [formData, setFormData] = useState<DoctorForm>({
     first_name: "",

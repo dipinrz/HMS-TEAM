@@ -20,14 +20,6 @@ import {
 } from "../../../services/adminAPi";
 import { toast } from "react-toastify";
 
-const revenueData = [
-  { month: "Jan", revenue: 35000, patients: 200 },
-  { month: "Feb", revenue: 38000, patients: 220 },
-  { month: "Mar", revenue: 42000, patients: 250 },
-  { month: "Apr", revenue: 39000, patients: 230 },
-  { month: "May", revenue: 45000, patients: 280 },
-  { month: "Jun", revenue: 48000, patients: 300 },
-];
 
 const departmentColors = [
   "#2563eb",
@@ -228,7 +220,7 @@ const DashboardCharts: React.FC = () => {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value, name, props) => [
+                    formatter={(value,__,props) => [
                       `${props.payload.count} appointments (${value}%)`,
                       "Department",
                     ]}

@@ -50,3 +50,4 @@ export const getPatientRecord=async(id:number)=>{
     const response=await commonAPI('GET',`${baseURL}/records/${id}`);
     return response;
 }
+
