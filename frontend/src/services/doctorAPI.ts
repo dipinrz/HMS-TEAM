@@ -41,6 +41,11 @@ export const getDoctorProfile=async()=>{
 }
 
 export const updateDoctorProfile=async(data:UpdateDoctorPayload)=>{
-    const response=await commonAPI('PATCH',`${baseURL}/doctor/update`,data)
+    const response=await commonAPI('PATCH',`${baseURL}/doctor/update`,data);
+    return response;
+}
+
+export const getPatientRecord=async(id:number)=>{
+    const response=await commonAPI('GET',`${baseURL}/records/${id}`);
     return response;
 }

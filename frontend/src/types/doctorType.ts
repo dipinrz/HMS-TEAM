@@ -19,6 +19,7 @@ export interface Appointment {
   reason_for_visit: string | null;
   notes: string | null;
   patient: Patient;
+  prescriptions: Prescription[];
 }
 
 export interface Prescription{
@@ -50,5 +51,16 @@ export interface UpdateDoctorPayload{
   qualification?: string;
   years_of_experience: number;
   user?:Partial<Patient>
+}
+
+export interface MedicalReport {
+  record_id: number;
+  notes: string | null;
+  patient: Patient;
+}
+
+export interface ReportData {
+  medical_report: MedicalReport;
+  appointments: Appointment[];
 }
 

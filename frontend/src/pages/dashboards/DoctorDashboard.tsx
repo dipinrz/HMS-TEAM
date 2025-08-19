@@ -70,6 +70,8 @@ const DoctorDashboard = () => {
         return 'warning';
       case 'recovering':
         return 'info';
+      case 'cancelled':
+        return 'error';
       default:
         return 'default';
     }
