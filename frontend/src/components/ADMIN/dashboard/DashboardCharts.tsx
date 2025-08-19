@@ -79,7 +79,7 @@ const MemoizedBarChart = React.memo(({ data }: { data: any[] }) => (
                 boxShadow: '0 0 10px rgba(0,0,0,0.1)'
               }}>
                 <p>{`${payload[0].payload.month}`}</p>
-                <p>{`Revenue: $${payload[0].value?.toLocaleString()}`}</p>
+                <p>{`Revenue: ₹${payload[0].value?.toLocaleString()}`}</p>
               </div>
             );
           }

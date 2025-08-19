@@ -1,16 +1,29 @@
-import { Request, Response, NextFunction } from "express"
-import { createPrescription, getPrescriptionById, getPrescriptionsByPatientId } from "../services/prescription.services"
-import { ApiError } from "../utils/apiError"
-import { getPatientById } from "../services/patient.services"
-import { getMedicinesByIds } from "../services/medicine.services"
-import { createManyMedications, getMedicinesOfPrescription } from "../services/medication.services"
-import { getAppointmentById, updateAppointmentStatus } from "../services/appointment.services"
-import { AppointmentStatus } from "../entities/appointment.entity"
-import { getBillByAppointmentId, getBillsByPatientId, updateBillById } from "../services/bill.services"
-import { createBillItem } from "../services/billItem.services"
-import { FeeType } from "../entities/billItem.entity"
-import { getPrescriptionsByAppoinment } from "../services/medicalReport.services"
-
+import { Request, Response, NextFunction } from "express";
+import {
+  createPrescription,
+  getPrescriptionById,
+  getPrescriptionsByPatientId,
+} from "../services/prescription.services";
+import { ApiError } from "../utils/apiError";
+import { getPatientById } from "../services/patient.services";
+import { getMedicinesByIds } from "../services/medicine.services";
+import {
+  createManyMedications,
+  getMedicinesOfPrescription,
+} from "../services/medication.services";
+import {
+  getAppointmentById,
+  updateAppointmentStatus,
+} from "../services/appointment.services";
+import { AppointmentStatus } from "../entities/appointment.entity";
+import {
+  getBillByAppointmentId,
+  getBillsByPatientId,
+  updateBillById,
+} from "../services/bill.services";
+import { createBillItem } from "../services/billItem.services";
+import { FeeType } from "../entities/billItem.entity";
+import { getPrescriptionsByAppoinment } from "../services/medicalReport.services";
 
 export const addPrescription = async (
   req: Request,
@@ -19,7 +32,6 @@ export const addPrescription = async (
 ) => {
   try {
     const { appointment_id, medications, diagnosis } = req.body;
-    const { status } = req.query;
 
     const appointment = await getAppointmentById(appointment_id);
 
@@ -60,12 +72,6 @@ export const addPrescription = async (
 
     const newMedications = await createManyMedications(newMedicationsData);
 
-    if (status == "completed")
-    {
-      await updateAppointmentStatus(appointment_id,AppointmentStatus.COMPLETED);
-      appointment.status = AppointmentStatus.COMPLETED;
-    }
-
     prescription.appointment = appointment;
 
     const bill = await getBillByAppointmentId(appointment_id);
@@ -102,6 +108,28 @@ export const addPrescription = async (
     });
   } catch (error) {
     next(error);
+  }
+};
+
+export const updateAppoinmentStatus = async (req: Request, res: Response) => {
+  try {
+    const { appointment_id } = req.body;
+    const appointment = await getAppointmentById(appointment_id);
+
+    if (!appointment) {
+      throw new ApiError("Appointment ID doesn't exist", 404);
+    }
+
+    await updateAppointmentStatus(appointment_id, AppointmentStatus.COMPLETED);
+    appointment.status = AppointmentStatus.COMPLETED;
+    
+
+    res.status(201).json({
+        success:true,
+        message:"Appointment status updated to completed"
+    })
+  } catch (error) {
+    console.log("Error in updateAppoinmentStatus", error);
   }
 };
 
@@ -144,45 +172,48 @@ export const getPatientPrescriptions = async (
 
     const prescriptions = await getPrescriptionsByPatientId(Number(patientId));
 
-        res.status(200).json({
-            success: true,
-            message: 'Prescriptions fetched successfully',
-            prescriptions
-        })
+    res.status(200).json({
+      success: true,
+      message: "Prescriptions fetched successfully",
+      prescriptions,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-    } catch (error) {
-        next(error)
+export const getPrescriptionByAppointmentIdHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const appointment_id = Number(req.params.appointmentId);
+
+    const prescriptions = await getPrescriptionsByAppoinment(appointment_id);
+
+    if (!prescriptions) {
+      throw new ApiError("Prescription not found", 404);
     }
-}
 
-export const getPrescriptionByAppointmentIdHandler = async (req: Request, res: Response, next: NextFunction) => {
-
-    try {
-        
-        const appointment_id = Number(req.params.appointmentId);
-
-        const prescriptions = await getPrescriptionsByAppoinment(appointment_id);
-
-        if(!prescriptions){
-            throw new ApiError("Prescription not found", 404);
-        }
-
-        const prescriptionsWithMedicines = await Promise.all(
-        prescriptions.map(async (prescription) => {
-            const medicines = await getMedicinesOfPrescription(prescription.prescription_id);
-            return {
-            ...prescription,
-            medicines,
-            };
-        })
+    const prescriptionsWithMedicines = await Promise.all(
+      prescriptions.map(async (prescription) => {
+        const medicines = await getMedicinesOfPrescription(
+          prescription.prescription_id
         );
+        return {
+          ...prescription,
+          medicines,
+        };
+      })
+    );
 
-        res.json({
-            success: true,
-            message: 'Prescription fetched successfully',
-            prescriptions: prescriptionsWithMedicines
-        })
-    } catch (error) {
-        next(error)
-    }
-}
+    res.json({
+      success: true,
+      message: "Prescription fetched successfully",
+      prescriptions: prescriptionsWithMedicines,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
