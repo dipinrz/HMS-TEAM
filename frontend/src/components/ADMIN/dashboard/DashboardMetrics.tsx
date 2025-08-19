@@ -60,7 +60,6 @@ const DashboardMetrics: React.FC = () => {
       <Grid container spacing={5} sx={{ width: '100%' }}>
         {metrics.map((metric, index) => {
           const Icon = metric.icon;
-          const isUp = metric.trend === 'up';
 
           return (
             <Grid size={{xs:12,sm:6,md:4,lg:3}} key={index}>
