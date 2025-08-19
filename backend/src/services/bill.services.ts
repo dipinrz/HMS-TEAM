@@ -20,17 +20,27 @@ export const getBillById = async (billId: number) => {
 }
 
 
-export const getBillsByPatientId = async (patientId: number) => {
+export const getBillsByPatientId = async (patientId: number, isPaid?: boolean) => {
+    
+    const where: any = {
+        patient: { user_id: patientId }
+    };
+
+    if (isPaid === true) {
+        where.payment_status = 'paid';
+    } else if (isPaid === false) {
+        where.payment_status = 'unpaid';
+    }
+
     return await billRepo.find({
-        where: {
-            patient: { user_id: patientId }
-        },
+        where,
         relations: ['appointment'],
         order: {
-            billing_date: 'DESC'
-        }
-    })
-}
+        billing_date: 'DESC',
+        },
+    });
+};
+
 
 export const updateBillById = async (billId: number, updatedData: Partial<Bill>) => {
     

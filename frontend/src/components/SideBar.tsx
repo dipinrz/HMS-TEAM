@@ -193,6 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <Typography
         variant="body2"
         color="text.secondary"
+        component = 'div'
         sx={{ mt: 0.5, fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
       >
         <Box style={{textAlign:"center"}}>{currentTime.toLocaleDateString("en-US", {
