@@ -99,7 +99,7 @@ function ProfilePage() {
     };
 
     const handleOpenModal = () => {
-        setEditData(formData); // copy profile data into edit form
+        setEditData(formData); 
         setErrors({});
         setOpenEditModal(true);
     };
@@ -115,7 +115,7 @@ function ProfilePage() {
             try {
                 await updatePatient(formDataWithoutEmail);
                 toast.success("Patient profile updated successfully!");
-                setFormData(editData); // update displayed profile
+                setFormData(editData); 
                 setOpenEditModal(false);
             } catch (error) {
                 console.error("Error updating patient:", error);
@@ -179,7 +179,7 @@ function ProfilePage() {
 
 
     return (
-        <Box sx={{ padding: 3, maxWidth: 1200, margin: '0 auto', background: "linear-gradient(135deg, rgba(2,10,165,0.1) 0%, rgba(10,3,107,0.1) 100%)", minHeight: '100vh' }}>
+        <Box sx={{ padding: 3, maxWidth: 1200, margin: '0 auto', minHeight: '100vh' }}>
             <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, backgroundColor: 'white', boxShadow: '0 4px 20px 0 rgba(0,0,0,0.1)' }}>
                 {/* Header */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3, padding: 2, background: "linear-gradient(135deg, #020aa5 0%, #0a036b 100%)", color: 'white', borderRadius: 1 }}>
@@ -195,7 +195,7 @@ function ProfilePage() {
                             backgroundColor: 'white',
                             color: '#020aa5',
                             '&:hover': { backgroundColor: 'rgba(255,255,255,0.9)' }
-                        }}
+                        }}  
                     />
                 </Box>
 
