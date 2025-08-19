@@ -114,7 +114,7 @@ const DoctorAppointments = () => {
                                 <Divider sx={{ my: 1.5 }} />
                                 <Box display="flex" justifyContent="space-between" alignItems="center">
                                     <Chip
-                                        label={appointment.appointment_id}//make it previkdjnfsjdfn  status
+                                        label={appointment.status}
                                         color={getStatusColor(appointment.status)}
                                         size="small"
                                     />

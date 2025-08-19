@@ -29,7 +29,9 @@ import {
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { LogOutIcon } from "lucide-react";
+import { LogOutIcon, Stethoscope, User } from "lucide-react";
+import { useDoctorStore } from "../store/doctorStore";
+
 
 const drawerWidth = 280;
 
@@ -45,6 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   handleDrawerToggle,
 }) => {
   const { user, logout } = useAuthStore();
+  const {fetchHeadDoctor,isHeadDoctor}=useDoctorStore()
   const location = useLocation();
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("sm")
@@ -55,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-
+    fetchHeadDoctor();
     return () => clearInterval(timer);
   }, []);
 
@@ -96,6 +99,11 @@ const Sidebar: React.FC<SidebarProps> = ({
           name: "Prescriptions",
           icon: <PrescriptionIcon />,
         },
+        {
+          path: "/doctor/patients",
+          name: "Patients",
+          icon: <User/>
+        },
       ],
       patient: [
         {
@@ -107,9 +115,18 @@ const Sidebar: React.FC<SidebarProps> = ({
       ],
     };
 
+    if (isHeadDoctor) {
+      roleSpecificLinks.doctor.push({
+      path: "/doctor/doctors",
+      name: "Doctors",
+      icon: <Stethoscope/>, // Replace with actual icon
+      });
+    }
     return [...commonLinks, ...(roleSpecificLinks[role] || [])];
+
   };
 
+  
   const allLinks = getLinksForRole(user?.role as UserRole);
 
   const handleLogout = () => {

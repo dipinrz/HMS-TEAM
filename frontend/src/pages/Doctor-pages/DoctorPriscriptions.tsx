@@ -51,7 +51,7 @@ const DoctorPriscriptions = () => {
   }
   return (
     <Box p={3}>
-  <Typography variant="h4" fontWeight={600} mb={4} color="primary">
+  <Typography variant="h4" fontWeight={600} mb={4} >
     All Prescriptions
   </Typography>
 
@@ -75,6 +75,7 @@ const DoctorPriscriptions = () => {
               "&:hover": {
                 transform: "translateY(-4px)",
                 boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
+                width:"100%"
               },
             }}
           >
@@ -104,11 +105,10 @@ const DoctorPriscriptions = () => {
 
               {/* Body */}
               <Typography variant="body2" gutterBottom>
-                <strong>Reason:</strong> {prescription.appointment.reason_for_visit}
+                <strong>Appointment Id:</strong> {prescription.appointment.appointment_id}
               </Typography>
-
               <Typography variant="body2" gutterBottom>
-                <strong>id app:</strong> {prescription.appointment.appointment_id}
+                <strong>Reason:</strong> {prescription.appointment.reason_for_visit}
               </Typography>
 
               <Typography variant="body2">

@@ -11,8 +11,8 @@ export const getRecentPatientFromAllAppointment=async()=>{
     const response=await commonAPI('GET',`${baseURL}/doctor/appointments`);
     return response;
 }
-export const getDoctorPatients=async(doctor_id:number)=>{
-    const response=await commonAPI('GET',`${baseURL}/doctor/patients/${doctor_id}`)
+export const getDoctorPatients=async()=>{
+    const response=await commonAPI('GET',`${baseURL}/doctor/patients`)
     return response;
 }
 
@@ -36,6 +36,11 @@ export const createPrescription =async(data:any)=>{
     await commonAPI('POST',`${baseURL}/prescription`,data);
 }
 
+export const updatePrescritptionStatus =async(data:any)=>{
+    console.log(data)
+    await commonAPI('POST',`${baseURL}/prescription`,data);
+}
+
 export const getDoctorProfile=async()=>{
     const response=await commonAPI('GET',`${baseURL}/doctor/getProfile`);
     return response;
@@ -51,3 +56,7 @@ export const getPatientRecord=async(id:number)=>{
     return response;
 }
 
+export const getIsHeadDoctor=async()=>{
+    const response=await commonAPI('GET',`${baseURL}/doctor/head-doctor`);
+    return response;
+}
