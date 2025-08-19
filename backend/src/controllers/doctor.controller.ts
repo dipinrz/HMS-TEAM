@@ -90,11 +90,11 @@ export const getDoctorAppointmentsHandler = async (
 };
 
 export const getDoctorPatientsHandler = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const doctorId = Number(req.params.doctor_id);
+  const doctorId = Number(req.user.userId);
 
   try {
     const patients = await getPatientsByDoctorId(doctorId);

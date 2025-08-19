@@ -14,7 +14,7 @@ router.route("/appointments")
     
 router.get('/all',authenticate,getAllDoctors)
 
-router.route("/patients/:doctor_id")
+router.route("/patients")
     .get(authenticate, getDoctorPatientsHandler);
 
 router.get('/getProfile',authenticate,getDoctorProfile)

@@ -1,6 +1,6 @@
 
 import { create } from 'zustand';
-import { getAllMedicens, getDoctorAppointment, getDoctorPatients,getDoctorPriscriptions,getDoctorProfile,getPatientRecord,getRecentPatientFromAllAppointment, updateDoctorProfile } from '../services/doctorAPI';
+import { getAllMedicens, getDoctorAppointment, getDoctorPatients,getDoctorPriscriptions,getDoctorProfile,getIsHeadDoctor,getPatientRecord,getRecentPatientFromAllAppointment, updateDoctorProfile } from '../services/doctorAPI';
 import { getRecentUniquePatientAppointments } from '../utility/DoctorUtility';
 import type { Appointment, Medicine, Patient, Prescription, Doctor, UpdateDoctorPayload, ReportData} from '../types/doctorType';
 
@@ -18,16 +18,18 @@ interface DoctorStore {
   completedCount: number;
   remainingCount: number;
 
+  isHeadDoctor:false,
   loading:boolean;
   error:string | null;
   fetchAppointments: () => Promise<void>;
-  fetchPatients: (doctor_id: number) => Promise<void>;
+  fetchPatients: () => Promise<void>;
   fetchRecentPatients: () => Promise<void>;
   fetchPrescriptions:()=>Promise<void>;
   fetchMedicines: () => Promise<void>;
   fetchDoctorProfile:()=>Promise<void>;
   updateDoctorProfile:(data:UpdateDoctorPayload)=>Promise<void>;
   fetchReport: (patientId: number) => Promise<void>;
+  fetchHeadDoctor:()=>Promise<void>;
   clearReport: () => void;
 }
 
@@ -45,7 +47,7 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
   completedCount: 0,
   remainingCount: 0,
 
-  
+  isHeadDoctor:false,
   loading: false,
   error: null,
   fetchAppointments: async () => {
@@ -68,10 +70,10 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
     }
   },
 
-  fetchPatients: async (doctor_id) => {
+  fetchPatients: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await getDoctorPatients(doctor_id);
+      const response = await getDoctorPatients();
       const data = response.data.data;
 
       set({
@@ -161,4 +163,14 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
   clearReport:()=>{
     set({report:null});
   },
+  fetchHeadDoctor:async()=>{
+    try{
+      const response=await getIsHeadDoctor();
+      const res=response.data;
+      set({isHeadDoctor:res.is_head_doctor})
+      console.log(res.is_head_doctor)
+    }catch(err:any){
+      console.log("falid to get the isHeadDoctor")
+    }
+  }
 }));

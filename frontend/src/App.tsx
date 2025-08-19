@@ -27,6 +27,8 @@ import ForgotPass from "./pages/Auth/ForgotPass";
 import ResetPass from "./pages/Auth/ResetPass";
 import ProfilePage from "./pages/ProfilePage";
 import PatientReport from "./pages/Doctor-pages/PatientReport";
+import DoctorPatients from "./pages/Doctor-pages/DoctorPatients";
+import ListOfDoctors from "./pages/Doctor-pages/ListOfDoctors";
 
 const theme = createTheme({
   palette: {
@@ -219,6 +221,22 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['doctor']}>
                   <PatientReport />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="doctor/patients"
+              element={
+                <ProtectedRoute allowedRoles={['doctor']}>
+                  <DoctorPatients/>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="doctor/doctors"
+              element={
+                <ProtectedRoute allowedRoles={['doctor']}>
+                  <ListOfDoctors/>
                 </ProtectedRoute>
               }
             />

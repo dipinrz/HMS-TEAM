@@ -1,7 +1,7 @@
 
 import { Avatar, Box, Chip, Divider, Grid, Typography, useTheme } from "@mui/material";
-import { AccessTime, CalendarToday, Description, ErrorOutline, Group } from "@mui/icons-material";
-import { Stethoscope, User } from "lucide-react";
+import { AccessTime, CalendarToday, Description, EventBusy, Group } from "@mui/icons-material";
+import { Stethoscope } from "lucide-react";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
 import { useEffect, useState } from "react";
@@ -33,14 +33,15 @@ const DoctorDashboard = () => {
   const {
   appointments,
   todayAppointments,
-  patients,
   patientsCount,
   remainingCount,
   completedCount,
   recentPatients,
   fetchAppointments,
   fetchPatients,
-  fetchRecentPatients
+  fetchRecentPatients,
+  isHeadDoctor,
+  fetchHeadDoctor
 } = useDoctorStore();
 
   const theme = useTheme();
@@ -51,8 +52,9 @@ const DoctorDashboard = () => {
   useEffect(()=>{
     if(user?.user_id){
       fetchAppointments();
-      fetchPatients(user.user_id);
+      fetchPatients();
       fetchRecentPatients();
+      fetchHeadDoctor();
     }    
   },[])
 
@@ -163,9 +165,9 @@ const statsData: TodayStats[] = [
         <Grid container size={{ xs: 12, md: 8 }} width={'100%'}>
           <Card sx={{ width: '100%' }}>
             <CardHeader title="Today's Schedule" subheader={new Date().toLocaleDateString()} />
-            <CardContent>
-              
-              {todayAppointments.map((appointent) => (
+            <CardContent sx={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+              {todayAppointments.length>0 ?(
+              todayAppointments.map((appointent) => (
                 <Box
                   key={appointent.appointment_id}
                   borderLeft={4}
@@ -192,7 +194,14 @@ const statsData: TodayStats[] = [
                     </Grid>
                   </Grid>
                 </Box>
-              ))}
+              ))):(
+                <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={4} mb={4}>
+                  <EventBusy sx={{ fontSize: 48, color: 'text.disabled' }} />
+                  <Typography variant="h6" color="text.secondary" mt={2}>
+                    No appointments scheduled for today
+                  </Typography>
+                </Box>
+              )}
             </CardContent>
           </Card>
         </Grid>
