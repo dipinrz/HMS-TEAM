@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import { getPatientMedicalReport } from "../../services/patientApi";
 import AppointmentDetail from "./AppointmentDetail";
 import { CalendarToday, LocalHospital, Person } from "@mui/icons-material";
-import { sk } from "date-fns/locale";
 
 export interface Patient {
   user_id: number;
