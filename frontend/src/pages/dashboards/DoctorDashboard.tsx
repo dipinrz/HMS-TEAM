@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
 import { useAuthStore } from "../../store/useAuthStore"; 
 import { useDoctorStore } from "../../store/doctorStore";
 import { getInitials } from "../../utility/DoctorUtility";
+import { useNavigate } from "react-router-dom";
 
 
 type ThemeColorKey =
@@ -40,13 +41,12 @@ const DoctorDashboard = () => {
   fetchAppointments,
   fetchPatients,
   fetchRecentPatients,
-  isHeadDoctor,
-  fetchHeadDoctor
 } = useDoctorStore();
 
   const theme = useTheme();
   const {user}=useAuthStore()
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const navigate =useNavigate()
   
  
   useEffect(()=>{
@@ -54,7 +54,6 @@ const DoctorDashboard = () => {
       fetchAppointments();
       fetchPatients();
       fetchRecentPatients();
-      fetchHeadDoctor();
     }    
   },[])
 
@@ -109,6 +108,9 @@ const statsData: TodayStats[] = [
     bgcolor: "secondary"
   }
 ];
+const handleAddPrescription=(id:number)=>{
+        navigate(`/doctor/prescription/${id}`)    
+    }
   return (
     <Box sx={{p:2}}>
       
@@ -165,14 +167,14 @@ const statsData: TodayStats[] = [
         <Grid container size={{ xs: 12, md: 8 }} width={'100%'}>
           <Card sx={{ width: '100%' }}>
             <CardHeader title="Today's Schedule" subheader={new Date().toLocaleDateString()} />
-            <CardContent sx={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <CardContent>
               {todayAppointments.length>0 ?(
               todayAppointments.map((appointent) => (
                 <Box
                   key={appointent.appointment_id}
                   borderLeft={4}
                   borderColor={appointent.status=== 'scheduled' ? 'primary.main':appointent.status==='completed'?'success.main' :'error.main' }
-                  bgcolor="#f9f9f9"
+                  bgcolor="#eef3fc"
                   p={2}
                   mb={2}
                   borderRadius={2}
@@ -189,7 +191,7 @@ const statsData: TodayStats[] = [
                       {/* {appointent.urgency === 'high' && <ErrorOutline color="error" />} */}
                       <Chip label={appointent.status} size="small" color={getStatusChipColor(appointent.status)} />
                       {appointent.status === 'scheduled' && (
-                        <CustomButton variant="contained" size="small" label="Start"></CustomButton>
+                        <CustomButton variant="contained" onClick={()=>handleAddPrescription(appointent.appointment_id) } size="small" label="Start"></CustomButton>
                       )}
                     </Grid>
                   </Grid>

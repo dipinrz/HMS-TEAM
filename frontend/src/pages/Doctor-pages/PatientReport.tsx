@@ -19,6 +19,7 @@ import { getStatusColor } from "../../utility/DoctorUtility";
 import { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import { CancelPresentation } from "@mui/icons-material";
 
 
 const PatientReport = () => {
@@ -147,7 +148,7 @@ const PatientReport = () => {
                 animated={false}
                   elevation={0}
                   sx={{
-                    display: "flex", alignItems: 'center', width: '100%',
+                    display: "flex", width: '100%',height:'100%'
                   }}
                 >
                   <CardContent sx={{ width: "100%" }}>
@@ -261,13 +262,16 @@ const PatientReport = () => {
                         )}
                       </Box>
                     ) : (
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ fontStyle: "italic", mt: 2 }}
-                      >
-                        No prescriptions for this appointment.
-                      </Typography>
+                      <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ fontStyle: "italic", }}
+                        >
+                          No prescriptions for this appointment.
+                        </Typography>
+                        <CancelPresentation sx={{ color: 'text.secondary', fontSize: 50 }} />
+                      </Box>
                     )}
                   </CardContent>
                 </Card>

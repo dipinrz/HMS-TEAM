@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import { useDoctorStore } from "../../store/doctorStore"
-import { createPrescription } from "../../services/doctorAPI";
+import { createPrescription, updatePrescritptionStatus } from "../../services/doctorAPI";
 
 import { Box, Button, Grid, IconButton, MenuItem, Paper, TextField, Typography } from "@mui/material";
 import { DeleteIcon } from "lucide-react";
 import { AddCircleOutline } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 import CustomInput from "../../components/ui/CustomInput";
+import { toast } from "react-toastify";
 
 const AddPrescription = () => {
     const {medicines,fetchMedicines}=useDoctorStore()
@@ -52,7 +53,7 @@ const AddPrescription = () => {
   const handleSubmit = async () => {
     try {
       await createPrescription(formData);
-      alert("Prescription created successfully!");
+      toast.success('Prescription created')
       setFormData({
         appointment_id: Number(appointmentId),
         diagnosis: "",
@@ -62,8 +63,18 @@ const AddPrescription = () => {
       });
     } catch (error) {
       console.error("Error creating prescription", error);
+      toast.error('Faild Add prescription')
     }
   };
+  const handleStatusCompleted=async()=>{
+    try{
+      await updatePrescritptionStatus({appointment_id:Number(appointmentId)})
+      toast.success('Completed');
+    }catch(error:any){
+      console.log(error);
+      toast.error("Faild to completed");
+    }
+  }
   return (
      <Box p={2}>
       
@@ -165,9 +176,12 @@ const AddPrescription = () => {
           </Grid>
 
           {/* Submit */}
-          <Grid size={{xs:12}} >
+          <Grid size={{xs:12 }} >
             <Button variant="contained" onClick={handleSubmit}>
               Save Prescription
+            </Button>
+            <Button variant="contained" onClick={handleStatusCompleted}>
+              Completed
             </Button>
           </Grid>
         </Grid>

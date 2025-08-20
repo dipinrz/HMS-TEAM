@@ -27,7 +27,7 @@ const DoctorPatients = () => {
   };
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Box sx={{ mt: 4,p:5 }}>
       <Typography variant="h4" fontWeight={600} gutterBottom>
         My Patients
       </Typography>
@@ -103,7 +103,7 @@ const DoctorPatients = () => {
           ))}
         </Grid>
       )}
-    </Container>
+    </Box>
   );
 };
 
