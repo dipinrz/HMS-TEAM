@@ -1,181 +1,64 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import {
   Box,
   Typography,
   Paper,
   Chip,
   Divider,
-  List,
-  ListItem,
-  ListItemText,
-  CircularProgress,
-  Alert,
+  IconButton,
+  Stack,
+  Card,
+  Grid,
+  CardContent,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { CalendarToday, Person, MedicalServices } from "@mui/icons-material";
+import {
+  ArrowBack,
+  CalendarToday,
+  Person,
+  MedicalServices,
+  LocalHospital,
+  Healing,
+} from "@mui/icons-material";
+import {
+  DetailRow,
+  type AppointmentType,
+  type Medication,
+  type Prescription,
+} from "./MedicalRecord";
 
-// Mock data types based on your entity
-interface User {
-  user_id: number;
-  name: string;
-  email: string;
-}
+const medicalColors = {
+  primaryBlue: "#1976d2",
+  deepBlue: "#1565c0",
+  teal: "#00897b",
+  forestGreen: "#2e7d32",
+  slateGray: "#455a64",
+  charcoal: "#37474f",
+  lightBlue: "#e3f2fd",
+  lightTeal: "#e0f2f1",
+  lightGreen: "#e8f5e8",
+  borderGray: "#cfd8dc",
+  backgroundGray: "#fafafa",
+};
 
-interface Department {
-  department_id: number;
-  name: string;
-}
-
-interface MedicalReport {
-  medical_report_id: number;
-  diagnosis: string;
-  treatment: string;
-}
-
-interface Appointment {
-  appointment_id: number;
-  patient: User;
-  doctor: User;
-  department: Department;
-  appointment_date: string;
-  medical_report_id: MedicalReport;
-  status: "scheduled" | "completed" | "cancelled";
-  reason_for_visit: string;
-  notes: string;
-}
-
-// Mock data - replace with API call in real implementation
-const mockAppointments: Appointment[] = [
-  {
-    appointment_id: 1,
-    patient: {
-      user_id: 101,
-      name: "1.John Doe",
-      email: "john@example.com",
-    },
-    doctor: {
-      user_id: 201,
-      name: "Dr. Sarah Smith",
-      email: "sarah.smith@hospital.com",
-    },
-    department: {
-      department_id: 301,
-      name: "Cardiology",
-    },
-    appointment_date: "2023-06-15T14:30:00",
-    medical_report_id: {
-      medical_report_id: 401,
-      diagnosis: "Hypertension",
-      treatment: "Prescribed medication and lifestyle changes",
-    },
-    status: "completed",
-    reason_for_visit: "Routine checkup for high blood pressure",
-    notes: "Patient advised to reduce salt intake and exercise regularly",
-  },
-  {
-    appointment_id: 2,
-    patient: {
-      user_id: 102,
-      name: "2.Jane Smith",
-      email: "jane@example.com",
-    },
-    doctor: {
-      user_id: 202,
-      name: "Dr. Michael Johnson",
-      email: "michael.johnson@hospital.com",
-    },
-    department: {
-      department_id: 302,
-      name: "Neurology",
-    },
-    appointment_date: "2023-06-20T10:15:00",
-    medical_report_id: {
-      medical_report_id: 402,
-      diagnosis: "Migraine",
-      treatment: "Prescribed pain relief medication",
-    },
-    status: "scheduled",
-    reason_for_visit: "Persistent headaches",
-    notes: "Patient to keep a headache diary for next visit",
-  },
-];
-
-const DetailItem = styled(ListItem)(({ theme }) => ({
-  paddingLeft: 0,
-  paddingRight: 0,
-  "& .MuiListItemText-primary": {
-    fontWeight: 500,
-    color: theme.palette.text.secondary,
-  },
-  "& .MuiListItemText-secondary": {
-    fontWeight: 400,
-    color: theme.palette.text.primary,
-  },
+const StyledCard = styled(Card)(() => ({
+  transition: "all 0.3s ease-in-out",
+  background: `linear-gradient(135deg, ${medicalColors.lightBlue} 0%, #ffffff 100%)`,
+  borderRadius: "12px",
 }));
 
-const AppointmentDetail: React.FC = () => {
-  const { id } = useParams();
-  const { appointmentId } = useParams<{ appointmentId: string }>();
-  const [appointment, setAppointment] = useState<Appointment | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+const PrescriptionCard = styled(Card)(({ theme }) => ({
+  background: `linear-gradient(135deg, ${medicalColors.lightGreen} 0%, #ffffff 100%)`,
+  border: `1px solid ${medicalColors.borderGray}`,
+  borderRadius: "10px",
+  marginBottom: theme.spacing(2),
+}));
 
-  useEffect(() => {
-    const fetchAppointment = () => {
-      try {
-        // Simulate API call
+type Props = {
+  appointment: AppointmentType;
+  goback: () => void;
+};
 
-        setTimeout(() => {
-          const foundAppointment = mockAppointments.find(
-            (appt) => appt.appointment_id === Number(id)
-          );
-
-          if (foundAppointment) {
-            setAppointment(foundAppointment);
-          } else {
-            setError("Appointment not found");
-          }
-          setLoading(false);
-        }, 800); // Simulate network delay
-      } catch (err) {
-        setError(`Failed to fetch appointment details, Error: ${err}`);
-        setLoading(false);
-      }
-    };
-
-    fetchAppointment();
-  }, [appointmentId, id]);
-
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="200px"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box mt={3}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    );
-  }
-
-  if (!appointment) {
-    return (
-      <Box mt={3}>
-        <Alert severity="warning">No appointment data available</Alert>
-      </Box>
-    );
-  }
-
+const AppointmentDetail = ({ appointment, goback }: Props) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
@@ -205,149 +88,259 @@ const AppointmentDetail: React.FC = () => {
       elevation={3}
       sx={{
         p: 3,
-        mt: {
-          lg: 0,
-          sm: 0,
-          xs: 14,
-        },
-
-        height: {
-          lg: "100%",
-          xs: "100%",
-        },
+        mt: { xs: 2, sm: 0 },
+        height: "100%",
+        background: medicalColors.backgroundGray,
+        borderRadius: "16px",
+        border: `1px solid ${medicalColors.borderGray}`,
       }}
     >
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        mb={2}
+        mb={3}
+        sx={{
+          background: `linear-gradient(135deg, ${medicalColors.primaryBlue} 0%, ${medicalColors.deepBlue} 100%)`,
+          p: 2,
+          borderRadius: "12px",
+          color: "white",
+        }}
       >
-        <Typography variant="h4" component="h1">
+        <IconButton onClick={goback} sx={{ color: "white" }}>
+          <ArrowBack />
+        </IconButton>
+        <Typography
+          variant="h4"
+          component="h1"
+          sx={{ flexGrow: 1, fontWeight: 600, pl: 4 }}
+        >
           Appointment Details
         </Typography>
         <Chip
           label={appointment.status.toUpperCase()}
           color={getStatusColor(appointment.status)}
-          variant="outlined"
+          variant="filled"
           size="medium"
+          sx={{
+            fontWeight: "bold",
+            fontSize: "0.8rem",
+            color: "white",
+          }}
         />
       </Box>
+      <Divider sx={{ mb: 3, borderColor: medicalColors.borderGray }} />
+      <StyledCard
+        key={appointment.appointment_id}
+        sx={{
+          mb: 4,
+        }}
+      >
+        <CardContent sx={{ p: 3 }}>
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Stack spacing={2}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <CalendarToday
+                    sx={{ color: medicalColors.deepBlue, fontSize: "28px" }}
+                  />
+                  <Typography
+                    variant="h6"
+                    sx={{ color: medicalColors.charcoal, fontWeight: 600 }}
+                  >
+                    Appointment
+                  </Typography>
+                </Box>
 
-      <Divider sx={{ my: 2 }} />
+                <DetailRow
+                  label="Date & Time"
+                  value={formatDate(appointment.appointment_date)}
+                />
+                <DetailRow
+                  label="Reason"
+                  value={appointment.reason_for_visit}
+                />
+              </Stack>
+            </Grid>
 
-      <Box display="flex" flexDirection={{ xs: "column", md: "row" }} gap={4}>
-        <Box flex={1}>
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ display: "flex", alignItems: "center", gap: 1 }}
-          >
-            <CalendarToday fontSize="small" /> Appointment Information
-          </Typography>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Stack spacing={2}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Person
+                    sx={{ color: medicalColors.teal, fontSize: "28px" }}
+                    fontSize="small"
+                  />
+                  <Typography
+                    variant="h5"
+                    sx={{ color: medicalColors.charcoal, fontWeight: 600 }}
+                  >
+                    Medical Professional
+                  </Typography>
+                </Box>
+                <DetailRow
+                  label="Doctor"
+                  value={`${appointment.doctor.first_name} ${appointment.doctor.last_name}`}
+                />
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <LocalHospital
+                    sx={{ color: medicalColors.forestGreen, fontSize: "28px" }}
+                  />
+                  <Typography
+                    variant="h6"
+                    sx={{ color: medicalColors.charcoal, fontWeight: 600 }}
+                  >
+                    Department
+                  </Typography>
+                </Box>
+                <DetailRow
+                  label="Department"
+                  value={appointment.department.name}
+                />
+                <DetailRow
+                  label="Consultation Fee"
+                  value={`$${appointment.department.consultation_fee}`}
+                />
+              </Stack>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </StyledCard>
 
-          <List>
-            <DetailItem>
-              <ListItemText
-                primary="Date & Time"
-                secondary={formatDate(appointment.appointment_date)}
-              />
-            </DetailItem>
-            <DetailItem>
-              <ListItemText
-                primary="Department"
-                secondary={appointment.department.name}
-              />
-            </DetailItem>
-            <DetailItem>
-              <ListItemText
-                primary="Reason for Visit"
-                secondary={appointment.reason_for_visit || "Not specified"}
-              />
-            </DetailItem>
-            <DetailItem>
-              <ListItemText
-                primary="Notes"
-                secondary={appointment.notes || "No additional notes"}
-              />
-            </DetailItem>
-          </List>
+      <Divider sx={{ my: 2, borderColor: medicalColors.borderGray }} />
+      {/* Prescription */}
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            mb: 1,
+            p: 3,
+            background: `linear-gradient(135deg, ${medicalColors.lightTeal} 0%, #ffffff 100%)`,
+            borderRadius: "10px",
+            border: `1px solid ${medicalColors.borderGray}`,
+          }}
+        >
+          <MedicalServices
+            sx={{ color: medicalColors.teal, fontSize: "32px" }}
+            fontSize="small"
+          />
+          <Typography variant="h5">Prescriptions</Typography>
         </Box>
 
-        <Box flex={1}>
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ display: "flex", alignItems: "center", gap: 1 }}
-          >
-            <Person fontSize="small" /> Patient Information
-          </Typography>
+        {appointment.prescriptions && appointment.prescriptions.length > 0 ? (
+          <Stack sx={{ mt: 2 }}>
+            {appointment.prescriptions.map((presc: Prescription) => (
+              <PrescriptionCard key={presc.prescription_id}>
+                <CardContent>
+                  {/* Prescription Header */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mb: 1,
+                      pb: 1,
+                      borderBottom: `2px solid ${medicalColors.borderGray}`,
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Healing
+                        sx={{
+                          color: medicalColors.forestGreen,
+                          fontSize: "28px",
+                        }}
+                      />
+                      <Box>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            color: medicalColors.charcoal,
+                            fontWeight: 600,
+                          }}
+                        >
+                          {presc.diagnosis}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: medicalColors.slateGray }}
+                        >
+                          Diagnosis
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Box textAlign="right">
 
-          <List>
-            <DetailItem>
-              <ListItemText
-                primary="Patient Name"
-                secondary={appointment.patient.name}
-              />
-            </DetailItem>
-            <DetailItem>
-              <ListItemText
-                primary="Email"
-                secondary={appointment.patient.email}
-              />
-            </DetailItem>
-          </List>
+                    </Box>
+                    <Typography variant="caption"  sx={{ color: medicalColors.slateGray }}>
+                      Prescribed:{" "}
+                      {new Date(presc.prescribed_date).toLocaleDateString()}
+                    </Typography>
+                  </Box>
 
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ mt: 3, display: "flex", alignItems: "center", gap: 1 }}
-          >
-            <MedicalServices fontSize="small" /> Medical Information
-          </Typography>
-
-          <List>
-            <DetailItem>
-              <ListItemText
-                primary="Diagnosis"
-                secondary={
-                  appointment.medical_report_id.diagnosis || "Not specified"
-                }
-              />
-            </DetailItem>
-            <DetailItem>
-              <ListItemText
-                primary="Treatment"
-                secondary={
-                  appointment.medical_report_id.treatment || "Not specified"
-                }
-              />
-            </DetailItem>
-          </List>
-
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ mt: 3, display: "flex", alignItems: "center", gap: 1 }}
-          >
-            <Person fontSize="small" /> Doctor Information
-          </Typography>
-
-          <List>
-            <DetailItem>
-              <ListItemText
-                primary="Doctor Name"
-                secondary={appointment.doctor.name}
-              />
-            </DetailItem>
-            <DetailItem>
-              <ListItemText
-                primary="Email"
-                secondary={appointment.doctor.email}
-              />
-            </DetailItem>
-          </List>
-        </Box>
+                  {/* Medications List */}
+                  <Stack spacing={2}>
+                    {presc.medications.map((medicat: Medication) => (
+                      <Box
+                        key={medicat.medication_id}
+                        sx={{
+                          p: 2,
+                          backgroundColor: medicalColors.lightBlue,
+                          borderRadius: "8px",
+                          border:`1px solid ${medicalColors.borderGray}`
+                        }}
+                      >
+                        <Grid container spacing={2}>
+                          <Grid size={{ xs: 12, sm: 6 }}>
+                            <DetailRow
+                              label="Medicine"
+                              value={medicat.medicine.medicine_name}
+                            />
+                          </Grid>
+                          <Grid size={{ xs: 12, sm: 6 }}>
+                            <DetailRow
+                              label="Expires"
+                              value={new Date(
+                                medicat.medicine.expiry_date
+                              ).toLocaleDateString()}
+                            />
+                          </Grid>
+                          <Grid size={{ xs: 4 }}>
+                            <DetailRow label="Dose" value={medicat.dosage} />
+                          </Grid>
+                          <Grid size={{ xs: 4 }}>
+                            <DetailRow
+                              label="Frequency"
+                              value={`${medicat.frequency}`}
+                            />
+                          </Grid>
+                          <Grid size={{ xs: 4 }}>
+                            <DetailRow
+                              label="Duration"
+                              value={`${medicat.duration}`}
+                            />
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    ))}
+                  </Stack>
+                </CardContent>
+              </PrescriptionCard>
+            ))}
+          </Stack>
+        ) : (
+           <Paper sx={{ 
+            p: 3, 
+            textAlign: "center", 
+            background: medicalColors.lightBlue,
+            borderRadius: "10px",
+            border: `1px solid ${medicalColors.borderGray}`
+          }}>
+            <Typography variant="body1" sx={{ color: medicalColors.slateGray }}>
+              No prescriptions found for this appointment
+            </Typography>
+          </Paper>
+        )}
       </Box>
     </Paper>
   );

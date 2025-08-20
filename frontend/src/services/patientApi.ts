@@ -25,3 +25,7 @@ export const getPatientPrescriptions = async () => {
     return await commonAPI('GET', `${baseURL}/patients/prescriptions`);
 
 }
+
+export const getPatientMedicalReport=async()=>{
+    return await commonAPI('GET',`${baseURL}/records`)
+}
