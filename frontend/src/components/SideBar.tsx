@@ -16,6 +16,7 @@ import {
   Paper,
   Chip,
   Button,
+  
 } from "@mui/material";
 import {
   Dashboard as DashboardIcon,
@@ -26,6 +27,7 @@ import {
   Description as PrescriptionIcon,
   MedicalServices as DoctorIcon,
   Person as PersonIcon,
+   Description   as MedicalReportIcon,     
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
@@ -112,6 +114,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           icon: <CalendarIcon />,
         },
         { path: "/patient/doctors", name: "Doctors", icon: <DoctorIcon /> },
+        { path: "/patient/medical-record", name: "Medical Records", icon: <MedicalReportIcon/> },
       ],
     };
 

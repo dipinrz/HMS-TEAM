@@ -20,7 +20,6 @@ import DoctorAppointments from './pages/Doctor-pages/DoctorAppointments';
 import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
 import DoctorPriscriptions from './pages/Doctor-pages/DoctorPriscriptions';
 import AddPrescription from "./pages/Doctor-pages/AddPrescription";
-import AppointmentDetail from "./pages/PatientUtility/AppointmentDetail";
 import DoctorProfileUpdate from "./pages/Doctor-pages/DoctorProfileUpdate";
 import AdminAppointment from "./components/ADMIN/appoinments/AdminAppointments";
 import ForgotPass from "./pages/Auth/ForgotPass";
@@ -29,6 +28,7 @@ import ProfilePage from "./pages/ProfilePage";
 import PatientReport from "./pages/Doctor-pages/PatientReport";
 import DoctorPatients from "./pages/Doctor-pages/DoctorPatients";
 import ListOfDoctors from "./pages/Doctor-pages/ListOfDoctors";
+import MedicalRecord from "./pages/PatientUtility/MedicalRecord";
 
 const theme = createTheme({
   palette: {
@@ -260,6 +260,14 @@ function App() {
               }
             />
             <Route
+              path="/patient/medical-record"
+              element={
+                <ProtectedRoute allowedRoles={['patient']}>
+                  <MedicalRecord />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/patient/doctors"
               element={
                 <ProtectedRoute allowedRoles={["patient"]}>
@@ -276,7 +284,6 @@ function App() {
               }
             />
 
-            <Route path="/appointment/:id" element={<AppointmentDetail />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
