@@ -165,39 +165,6 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
             )}
           </Box>
 
-          <Box
-            sx={{
-              width: isSmallScreen ? "80%" : "40%",
-              order: isSmallScreen ? 2 : 0,
-              display: "flex",
-              alignItems: "center",
-              backgroundColor: "#ffffff",
-              borderRadius: 3,
-              px: 2,
-              py: 0.5,
-              border: "1px solid #e0e0e0",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-              mx: isSmallScreen ? 0 : "auto",
-            }}
-          >
-            <SearchIcon
-              sx={{
-                color: "action.active",
-                mr: 1,
-                fontSize: isSmallScreen ? "1rem" : "1.25rem",
-              }}
-            />
-            <InputBase
-              placeholder="Search patients, doctors, reports..."
-              sx={{
-                width: "100%",
-                fontFamily:
-                  '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-                fontSize: isSmallScreen ? "0.875rem" : "1rem",
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Box>
 
           {!isSmallScreen && (
             <Box

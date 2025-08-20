@@ -7,11 +7,13 @@ import {
   Typography,
   Grid,
   Chip,
+  Skeleton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getPatientMedicalReport } from "../../services/patientApi";
 import AppointmentDetail from "./AppointmentDetail";
 import { CalendarToday, LocalHospital, Person } from "@mui/icons-material";
+import { sk } from "date-fns/locale";
 
 export interface Patient {
   user_id: number;
@@ -77,25 +79,44 @@ interface MedicalReport {
 }
 export type Appointments = AppointmentType[];
 
-export const DetailRow = ({ 
-  label, 
-  value, 
-  labelColor = '#616161', 
-  valueColor = '#000', 
-  fontWeight = 'normal' 
-}:{label:string,value?:string,labelColor?:string,valueColor?:string,fontWeight?:string}) => (
-  <Typography variant="body2" sx={{ mb: 1.5 }}>
-    <span style={{ 
-      marginRight: 8, 
-      color: labelColor,
-      fontWeight: '500'
-    }}>
+export const DetailRow = ({
+  label,
+  value,
+  labelColor = "#616161",
+  valueColor = "#000",
+  fontWeight = "normal",
+}: {
+  label: string;
+  value?: string;
+  labelColor?: string;
+  valueColor?: string;
+  fontWeight?: string;
+}) => (
+  <Typography
+    variant="body2"
+    sx={{
+      mb: 1.5,
+      display: "flex",
+      alignItems: "center",
+      flexWrap: "wrap",
+      wordBreak: "break-word",
+    }}
+  >
+    <span
+      style={{
+        marginRight: 8,
+        color: labelColor,
+        fontWeight: "600",
+      }}
+    >
       {label}:
     </span>
-    <span style={{ 
-      color: valueColor,
-      fontWeight: fontWeight
-    }}>
+    <span
+      style={{
+        color: valueColor,
+        fontWeight: fontWeight,
+      }}
+    >
       {value}
     </span>
   </Typography>
@@ -126,13 +147,6 @@ const MedicalRecord = () => {
   useEffect(() => {
     fetching();
   }, []);
-  if (loading) {
-    return (
-      <>
-        <h1>Laoding...</h1>
-      </>
-    );
-  }
   if (selectedAppointment) {
     return (
       <AppointmentDetail
@@ -187,6 +201,7 @@ const MedicalRecord = () => {
                   sx={{
                     fontWeight: "600",
                     fontSize: "1.25rem",
+                    lineBreak: "break",
                   }}
                 >
                   Patient Details
@@ -207,13 +222,17 @@ const MedicalRecord = () => {
                       height: "100%",
                     }}
                   >
-                    <DetailRow
-                      label="Name"
-                      value={`${medical_report?.patient.first_name} ${medical_report?.patient.last_name}`}
-                      labelColor="#374151"
-                      valueColor="#1f2937"
-                      fontWeight="600"
-                    />
+                    {loading ? (
+                      <Skeleton variant="text" width={200} height={30} />
+                    ) : (
+                      <DetailRow
+                        label="Name"
+                        value={`${medical_report?.patient.first_name} ${medical_report?.patient.last_name}`}
+                        labelColor="#374151"
+                        valueColor="#1f2937"
+                        fontWeight="600"
+                      />
+                    )}
                   </Box>
                 </Grid>
                 <Grid size={{ xs: 6 }}>
@@ -226,13 +245,17 @@ const MedicalRecord = () => {
                       height: "100%",
                     }}
                   >
-                    <DetailRow
-                      label="Email"
-                      value={medical_report?.patient.email}
-                      labelColor="#374151"
-                     valueColor="#1f2937"
-                     fontWeight="600"
-                    />
+                    {loading ? (
+                      <Skeleton variant="text" width={200} height={30} />
+                    ) : (
+                      <DetailRow
+                        label="Email"
+                        value={medical_report?.patient.email}
+                        labelColor="#374151"
+                        valueColor="#1f2937"
+                        fontWeight="600"
+                      />
+                    )}
                   </Box>
                 </Grid>
                 <Grid size={{ xs: 6 }}>
@@ -245,12 +268,16 @@ const MedicalRecord = () => {
                       height: "100%",
                     }}
                   >
-                    <DetailRow
-                      label="Phone"
-                      value={medical_report?.patient.phone_number}
-                      valueColor="#1f2937"
-                     fontWeight="600"
-                    />
+                    {loading ? (
+                      <Skeleton variant="text" width={200} height={30} />
+                    ) : (
+                      <DetailRow
+                        label="Phone"
+                        value={medical_report?.patient.phone_number}
+                        valueColor="#1f2937"
+                        fontWeight="600"
+                      />
+                    )}
                   </Box>
                 </Grid>
                 <Grid size={{ xs: 6 }}>
@@ -263,12 +290,16 @@ const MedicalRecord = () => {
                       height: "100%",
                     }}
                   >
-                    <DetailRow
-                      label="Date of Birth"
-                      value={medical_report?.patient.date_of_birth}
-                      valueColor="#1f2937"
-                     fontWeight="600"
-                    />
+                    {loading ? (
+                      <Skeleton variant="text" width={200} height={30} />
+                    ) : (
+                      <DetailRow
+                        label="Date of Birth"
+                        value={medical_report?.patient.date_of_birth}
+                        valueColor="#1f2937"
+                        fontWeight="600"
+                      />
+                    )}
                   </Box>
                 </Grid>
                 <Grid size={{ xs: 6 }}>
@@ -281,12 +312,16 @@ const MedicalRecord = () => {
                       height: "100%",
                     }}
                   >
-                    <DetailRow
-                      label="Gender"
-                      value={medical_report?.patient.gender.toUpperCase()}
-                      labelColor="#374151"
-                      valueColor="#dc2626"
-                    />
+                    {loading ? (
+                      <Skeleton variant="text" width={200} height={30} />
+                    ) : (
+                      <DetailRow
+                        label="Gender"
+                        value={medical_report?.patient.gender.toUpperCase()}
+                        labelColor="#374151"
+                        valueColor="#dc2626"
+                      />
+                    )}
                   </Box>
                 </Grid>
                 <Grid size={{ xs: 6 }}>
@@ -299,12 +334,16 @@ const MedicalRecord = () => {
                       height: "100%",
                     }}
                   >
-                    <DetailRow
-                      label="Address"
-                      value={medical_report?.patient.address}
-                     valueColor="#1f2937"
-                     fontWeight="600"
-                    />
+                    {loading ? (
+                      <Skeleton variant="text" width={200} height={30} />
+                    ) : (
+                      <DetailRow
+                        label="Address"
+                        value={medical_report?.patient.address}
+                        valueColor="#1f2937"
+                        fontWeight="600"
+                      />
+                    )}
                   </Box>
                 </Grid>
               </Grid>
