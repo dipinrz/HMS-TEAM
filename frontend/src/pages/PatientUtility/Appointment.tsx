@@ -219,12 +219,9 @@ const TestBookAppointment: React.FC = () => {
     // Check if date is tomorrow or later
     const selectedDateTime = new Date(formData.appointment_date);
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // today at 00:00
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1); // tomorrow at 00:00
-
-    if (selectedDateTime < tomorrow)
-      return "Please select a date starting from tomorrow.";
+    
+    if (selectedDateTime <= today)
+      return "Please select a date starting from today and current time slot .";
 
     // Check if time is between 09:00 and 18:00
     const selectedHour = selectedDateTime.getHours();
@@ -267,7 +264,7 @@ const TestBookAppointment: React.FC = () => {
         setSelectedDate("");
         setSelectedTime("");
       } else {
-        setFeedback({ type: "error", message: "" });
+        setFeedback({ type: "error", message: data.message });
       }
     } catch (err) {
       const apiError = err as ApiError;
@@ -310,14 +307,14 @@ const TestBookAppointment: React.FC = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        minHeight: "92dvh",
         background: "linear-gradient(135deg, #f5f7fa 0%, #e4f0fd 100%)",
-        py: 6,
         display: "flex",
         alignItems: "center",
+        mt:{xs: 2, md:0}
       }}
     >
-      <Container maxWidth="lg">
+      <Box sx={{ p: 3 }}>
         <Paper
           elevation={8}
           sx={{
@@ -697,7 +694,7 @@ const TestBookAppointment: React.FC = () => {
             </Box>
           </Box>
         </Paper>
-      </Container>
+      </Box>
     </Box>
   );
 };

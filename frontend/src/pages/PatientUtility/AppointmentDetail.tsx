@@ -91,25 +91,24 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
         mt: { xs: 2, sm: 0 },
         height: "100%",
         background: medicalColors.backgroundGray,
-        borderRadius: "16px",
         border: `1px solid ${medicalColors.borderGray}`,
       }}
     >
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={3}
         sx={{
           background: `linear-gradient(135deg, ${medicalColors.primaryBlue} 0%, ${medicalColors.deepBlue} 100%)`,
           p: 2,
           borderRadius: "12px",
           color: "white",
+          display: "flex",
+          alignItems: "center",
+          mb: 3,
         }}
       >
         <IconButton onClick={goback} sx={{ color: "white" }}>
           <ArrowBack />
         </IconButton>
+        <Box sx={{display:"flex",gap:1,flexWrap:{xs:"wrap"}}}>
         <Typography
           variant="h4"
           component="h1"
@@ -124,10 +123,15 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
           size="medium"
           sx={{
             fontWeight: "bold",
-            fontSize: "0.8rem",
             color: "white",
+            wordBreak: "break-word",
+            mt: 1,
+            ml:{xs:4},
+             height: { xs: 20, sm: 28 },
+             fontSize:{xs:15,sm:12}
           }}
         />
+        </Box>
       </Box>
       <Divider sx={{ mb: 3, borderColor: medicalColors.borderGray }} />
       <StyledCard
@@ -263,16 +267,17 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: medicalColors.slateGray }}
+                          sx={{ color: medicalColors.slateGray,fontWeight:"600" }}
                         >
                           Diagnosis
                         </Typography>
                       </Box>
                     </Box>
-                    <Box textAlign="right">
-
-                    </Box>
-                    <Typography variant="caption"  sx={{ color: medicalColors.slateGray }}>
+                    <Box textAlign="right"></Box>
+                    <Typography
+                      variant="caption"
+                      sx={{ color: medicalColors.slateGray,fontWeight:"600" }}
+                    >
                       Prescribed:{" "}
                       {new Date(presc.prescribed_date).toLocaleDateString()}
                     </Typography>
@@ -287,7 +292,7 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
                           p: 2,
                           backgroundColor: medicalColors.lightBlue,
                           borderRadius: "8px",
-                          border:`1px solid ${medicalColors.borderGray}`
+                          border: `1px solid ${medicalColors.borderGray}`,
                         }}
                       >
                         <Grid container spacing={2}>
@@ -295,6 +300,7 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
                             <DetailRow
                               label="Medicine"
                               value={medicat.medicine.medicine_name}
+                              fontWeight="600"
                             />
                           </Grid>
                           <Grid size={{ xs: 12, sm: 6 }}>
@@ -305,19 +311,21 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
                               ).toLocaleDateString()}
                             />
                           </Grid>
-                          <Grid size={{ xs: 4 }}>
-                            <DetailRow label="Dose" value={medicat.dosage} />
+                          <Grid size={{ xs: 4 ,sm:4}}>
+                            <DetailRow label="Dose" value={medicat.dosage} fontWeight="600"/>
                           </Grid>
-                          <Grid size={{ xs: 4 }}>
+                          <Grid size={{ xs: 5,sm:4 }}>
                             <DetailRow
                               label="Frequency"
                               value={`${medicat.frequency}`}
+                              fontWeight="600"
                             />
                           </Grid>
-                          <Grid size={{ xs: 4 }}>
+                          <Grid size={{ xs: 4 ,sm:4}}>
                             <DetailRow
                               label="Duration"
                               value={`${medicat.duration}`}
+                              fontWeight="600"
                             />
                           </Grid>
                         </Grid>
@@ -329,13 +337,15 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
             ))}
           </Stack>
         ) : (
-           <Paper sx={{ 
-            p: 3, 
-            textAlign: "center", 
-            background: medicalColors.lightBlue,
-            borderRadius: "10px",
-            border: `1px solid ${medicalColors.borderGray}`
-          }}>
+          <Paper
+            sx={{
+              p: 3,
+              textAlign: "center",
+              background: medicalColors.lightBlue,
+              borderRadius: "10px",
+              border: `1px solid ${medicalColors.borderGray}`,
+            }}
+          >
             <Typography variant="body1" sx={{ color: medicalColors.slateGray }}>
               No prescriptions found for this appointment
             </Typography>
