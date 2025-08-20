@@ -32,7 +32,7 @@ interface DoctorsModalProps {
   departments: any[];
 }
 
-export const DoctorsModal = ({
+const DoctorsModal = ({
   handleCloseModal,
   isEditMode,
   formData,
@@ -153,20 +153,24 @@ export const DoctorsModal = ({
                 size="small"
                 value={formData.email}
                 onChange={handleChange}
+                disabled={isEditMode}
                 error={!!errors.email}
                 helperText={errors.email}
               />
-              <TextField
-                name="password"
-                label="Password"
-                type="password"
-                fullWidth
-                size="small"
-                value={formData.password}
-                onChange={handleChange}
-                error={!!errors.password}
-                helperText={errors.password}
-              />
+
+              {!isEditMode && (
+                <TextField
+                  name="password"
+                  label="Password"
+                  type="password"
+                  fullWidth
+                  size="small"
+                  value={formData.password}
+                  onChange={handleChange}
+                  error={!!errors.password}
+                  helperText={errors.password}
+                />
+              )}
             </Stack>
 
             {/* Professional Info */}
@@ -182,38 +186,40 @@ export const DoctorsModal = ({
               >
                 Professional Information
               </Typography>
-              <Stack direction="row" spacing={2}>
-                <TextField
-                  select
-                  name="department_id"
-                  label="Department"
-                  fullWidth
-                  size="small"
-                  value={formData.department_id}
-                  onChange={handleChange}
-                  error={!!errors.department_id}
-                  helperText={errors.department_id}
-                >
-                  {departments.map((dept: any) => (
-                    <MenuItem
-                      key={dept.department_id}
-                      value={dept.department_id}
-                    >
-                      {dept.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField
-                  name="specialization"
-                  label="Specialization"
-                  fullWidth
-                  size="small"
-                  value={formData.specialization}
-                  onChange={handleChange}
-                  error={!!errors.specialization}
-                  helperText={errors.specialization}
-                />
-              </Stack>
+              {isEditMode && (
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    select
+                    name="department_id"
+                    label="Department"
+                    fullWidth
+                    size="small"
+                    value={formData.department_id}
+                    onChange={handleChange}
+                    error={!!errors.department_id}
+                    helperText={errors.department_id}
+                  >
+                    {departments.map((dept: any) => (
+                      <MenuItem
+                        key={dept.department_id}
+                        value={dept.department_id}
+                      >
+                        {dept.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    name="specialization"
+                    label="Specialization"
+                    fullWidth
+                    size="small"
+                    value={formData.specialization}
+                    onChange={handleChange}
+                    error={!!errors.specialization}
+                    helperText={errors.specialization}
+                  />
+                </Stack>
+              )}
               <Stack direction="row" spacing={2}>
                 <TextField
                   name="qualification"
@@ -297,3 +303,5 @@ export const DoctorsModal = ({
     </Box>
   );
 };
+
+export default DoctorsModal;

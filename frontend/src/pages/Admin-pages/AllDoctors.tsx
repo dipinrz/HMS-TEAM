@@ -12,7 +12,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { DoctorsToolbar } from "../../components/ADMIN/doctors/DoctorsToolbar";
 import { DoctorsTable } from "../../components/ADMIN/doctors/DoctorsTable";
-import { DoctorsModal } from "../../components/ADMIN/doctors/DoctorsModal";
+import  DoctorsModal from "../../components/ADMIN/doctors/DoctorsModal";
 import { DeleteDialog } from "../../components/ADMIN/doctors/DeleteDialog";
 
 interface DoctorForm {
