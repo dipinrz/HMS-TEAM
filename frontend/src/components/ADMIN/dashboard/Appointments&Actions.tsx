@@ -1,33 +1,56 @@
-import React, { useEffect, useState } from "react";
-import { Box,Grid,Avatar,Typography,Stack,Divider,Chip,} from "@mui/material";
-import {UserPlus,Stethoscope,Building2,CreditCard,Activity,} from "lucide-react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
+import {
+  Box,
+  Grid,
+  Avatar,
+  Typography,
+  Stack,
+  Divider,
+  Chip,
+} from "@mui/material";
 import CustomButton from "../../ui/CustomButton";
 import { Card, CardContent, CardHeader } from "../../ui/CustomCards";
 import { toast } from "react-toastify";
 import { fetchTodaysAppoinments } from "../../../services/adminAPi";
 import { useNavigate } from "react-router-dom";
 
+const UserPlus = lazy(() =>
+  import("lucide-react").then((m) => ({ default: m.UserPlus }))
+);
+const Stethoscope = lazy(() =>
+  import("lucide-react").then((m) => ({ default: m.Stethoscope }))
+);
+const Building2 = lazy(() =>
+  import("lucide-react").then((m) => ({ default: m.Building2 }))
+);
+const CreditCard = lazy(() =>
+  import("lucide-react").then((m) => ({ default: m.CreditCard }))
+);
+const Activity = lazy(() =>
+  import("lucide-react").then((m) => ({ default: m.Activity }))
+);
+
 const getStatusStyle = (status: string) => {
   switch (status.toLowerCase()) {
     case "scheduled":
       return {
-        bgcolor: "#e3f2fd", 
-        color: "#1565c0", 
+        bgcolor: "#e3f2fd",
+        color: "#1565c0",
       };
     case "cancelled":
       return {
         bgcolor: "#ffebee",
-        color: "#c62828", 
+        color: "#c62828",
       };
     case "completed":
       return {
-        bgcolor: "#ede7f6", 
-        color: "#6a1b9a", 
+        bgcolor: "#ede7f6",
+        color: "#6a1b9a",
       };
     default:
       return {
         bgcolor: "#eceff1",
-        color: "#37474f", 
+        color: "#37474f",
       };
   }
 };
@@ -68,10 +91,10 @@ const AppointmentsAndActions: React.FC = () => {
 
   return (
     <Box sx={{ width: "100%", mt: 5 }}>
-      <Grid  container spacing={3} alignItems="stretch">
+      <Grid container spacing={3} alignItems="stretch">
         <Grid size={{ xs: 12, lg: 8 }}>
           <Card
-          animated={false}
+            animated={false}
             sx={{
               border: "none",
               boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.08)",
@@ -212,13 +235,13 @@ const AppointmentsAndActions: React.FC = () => {
 
         <Grid size={{ xs: 12, lg: 4 }}>
           <Card
-          animated={false}
+            animated={false}
             sx={{
               border: "none",
               boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
               borderRadius: "2rem",
               width: "100%",
-               height: "100%",
+              height: "100%",
             }}
           >
             <CardHeader
@@ -230,7 +253,11 @@ const AppointmentsAndActions: React.FC = () => {
                 <CustomButton
                   fullWidth
                   variant="contained"
-                  startIcon={<UserPlus />}
+                  startIcon={
+                    <Suspense fallback={null}>
+                      <UserPlus size={18} />
+                    </Suspense>
+                  }
                   sx={{
                     background:
                       "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
@@ -249,7 +276,11 @@ const AppointmentsAndActions: React.FC = () => {
                 <CustomButton
                   fullWidth
                   variant="contained"
-                  startIcon={<Stethoscope />}
+                  startIcon={
+                    <Suspense fallback={null}>
+                      <Stethoscope size={18} />
+                    </Suspense>
+                  }
                   sx={{
                     background:
                       "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
@@ -268,7 +299,11 @@ const AppointmentsAndActions: React.FC = () => {
                 <CustomButton
                   fullWidth
                   variant="contained"
-                  startIcon={<Building2 />}
+                  startIcon={
+                    <Suspense fallback={null}>
+                      <Building2 size={18} />
+                    </Suspense>
+                  }
                   sx={{
                     background:
                       "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
@@ -287,7 +322,11 @@ const AppointmentsAndActions: React.FC = () => {
                 <CustomButton
                   fullWidth
                   variant="contained"
-                  startIcon={<CreditCard />}
+                  startIcon={
+                    <Suspense fallback={null}>
+                      <CreditCard size={18} />
+                    </Suspense>
+                  }
                   sx={{
                     py: 1.5,
                     borderRadius: 2,
@@ -307,7 +346,11 @@ const AppointmentsAndActions: React.FC = () => {
                 <CustomButton
                   fullWidth
                   variant="contained"
-                  startIcon={<Activity />}
+                  startIcon={
+                    <Suspense fallback={null}>
+                      <Activity size={18} />
+                    </Suspense>
+                  }
                   sx={{
                     background:
                       "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",

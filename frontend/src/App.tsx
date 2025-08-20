@@ -1,11 +1,17 @@
 // src/App.tsx
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import LoginPage from "./pages/Auth/Login";
 import ProtectedRoute from "./routes/ProtectedRoutes";
-import AdminDashboard from "./pages/dashboards/AdminDashboard";
+const AdminDashboard = lazy(() => import("./pages/dashboards/AdminDashboard"));
 import DoctorDashboard from "./pages/dashboards/DoctorDashboard";
 import PatientDashboard from "./pages/dashboards/PatientDashboad";
 import RegisterPage from "./pages/Auth/RegisterPage";
@@ -15,10 +21,10 @@ import Navbar from "./components/NavBar";
 import AllPatients from "./pages/Admin-pages/AllPatients";
 import AllDoctors from "./pages/Admin-pages/AllDoctors";
 import TestBookAppointment from "./pages/PatientUtility/Appointment";
-import { AllMedicines } from './pages/Admin-pages/AllMedicines';
-import DoctorAppointments from './pages/Doctor-pages/DoctorAppointments';
-import AdminDepartmentsPage from './pages/Admin-pages/AllDepartment';
-import DoctorPriscriptions from './pages/Doctor-pages/DoctorPriscriptions';
+import { AllMedicines } from "./pages/Admin-pages/AllMedicines";
+import DoctorAppointments from "./pages/Doctor-pages/DoctorAppointments";
+import AdminDepartmentsPage from "./pages/Admin-pages/AllDepartment";
+import DoctorPriscriptions from "./pages/Doctor-pages/DoctorPriscriptions";
 import AddPrescription from "./pages/Doctor-pages/AddPrescription";
 import DoctorProfileUpdate from "./pages/Doctor-pages/DoctorProfileUpdate";
 import AdminAppointment from "./components/ADMIN/appoinments/AdminAppointments";
@@ -81,7 +87,13 @@ function App() {
     setMobileOpen(!mobileOpen);
   };
 
-  const noSidebarRoutes = ["/", "/signup", "/unauthorized", "/forgot-pass", "/reset-pass"];
+  const noSidebarRoutes = [
+    "/",
+    "/signup",
+    "/unauthorized",
+    "/forgot-pass",
+    "/reset-pass",
+  ];
 
   const shouldShowSidebar =
     user && !noSidebarRoutes.includes(location.pathname);
@@ -105,15 +117,15 @@ function App() {
           component="main"
           sx={{
             flexGrow: 1,
-            display: 'flex',
+            display: "flex",
             flexDirection: "column",
             minHeight: "100vh",
             backgroundColor: "#f5f5f5",
-            width: '100%',
+            width: "100%",
             ...(shouldShowSidebar && {
-              width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
+              width: { xs: "100%", sm: `calc(100% - ${drawerWidth}px)` },
               ml: { md: 0 },
-              pt: { xs: '64px' },
+              pt: { xs: "64px" },
             }),
           }}
         >
@@ -123,15 +135,30 @@ function App() {
             <Route path="/signup" element={<RegisterPage />} />
             <Route path="/forgot-pass" element={<ForgotPass />} />
             <Route path="/reset-password/:token" element={<ResetPass />} />
-
-
-
-            {/* Admin Routes */}
             <Route
               path="/admin/dashboard"
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
-                  <AdminDashboard />
+                  <Suspense
+                    fallback={
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          height: "100vh",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <CircularProgress />
+                        <p style={{ marginTop: "10px", fontSize: "16px" }}>
+                          Loading Dashboard...
+                        </p>
+                      </div>
+                    }
+                  >
+                    <AdminDashboard />
+                  </Suspense>
                 </ProtectedRoute>
               }
             />
@@ -154,7 +181,7 @@ function App() {
             <Route
               path="/admin/departments"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminDepartmentsPage />
                 </ProtectedRoute>
               }
@@ -188,7 +215,7 @@ function App() {
             <Route
               path="/doctor/appointments"
               element={
-                <ProtectedRoute allowedRoles={['doctor']}>
+                <ProtectedRoute allowedRoles={["doctor"]}>
                   <DoctorAppointments />
                 </ProtectedRoute>
               }
@@ -196,7 +223,7 @@ function App() {
             <Route
               path="/doctor/prescriptions"
               element={
-                <ProtectedRoute allowedRoles={['doctor']}>
+                <ProtectedRoute allowedRoles={["doctor"]}>
                   <DoctorPriscriptions />
                 </ProtectedRoute>
               }
@@ -212,7 +239,7 @@ function App() {
             <Route
               path="doctor/prescription/:appointmentId"
               element={
-                <ProtectedRoute allowedRoles={['doctor']}>
+                <ProtectedRoute allowedRoles={["doctor"]}>
                   <AddPrescription />
                 </ProtectedRoute>
               }
@@ -220,7 +247,7 @@ function App() {
             <Route
               path="doctor/report/:id"
               element={
-                <ProtectedRoute allowedRoles={['doctor']}>
+                <ProtectedRoute allowedRoles={["doctor"]}>
                   <PatientReport />
                 </ProtectedRoute>
               }
@@ -255,7 +282,7 @@ function App() {
             <Route
               path="/patient/book-appointments"
               element={
-                <ProtectedRoute allowedRoles={['patient']}>
+                <ProtectedRoute allowedRoles={["patient"]}>
                   <TestBookAppointment />
                 </ProtectedRoute>
               }

@@ -6,7 +6,12 @@ export const updatePatientSchema = Joi.object({
 
     ...userDetailsSchema,
 
-    blood_group: Joi.string().max(3),
+    blood_group: Joi.string()
+    .valid('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', null)
+    .allow(null)
+    .messages({
+    "any.only": "Invalid blood group format",
+    }),
     height: Joi.number().min(2),
     weight: Joi.number().min(0),
 
