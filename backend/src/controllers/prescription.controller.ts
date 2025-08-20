@@ -39,6 +39,23 @@ export const addPrescription = async (
       throw new ApiError("Appointment ID doesn't exist", 404);
     }
 
+    const appointmentDate = new Date(appointment.appointment_date);
+    const now = new Date();
+
+    const windowStart = appointmentDate;
+    const windowEnd = new Date(appointmentDate.getTime() + 30 * 60 * 1000); // +30 minutes
+
+    if (
+      now < windowStart || // before appointment
+      now > windowEnd || // after 30-min window
+      now.toDateString() !== appointmentDate.toDateString()
+    ) {
+      throw new ApiError(
+        "Prescription can only be created during the appointment time slot (within 30 minutes).",
+        400
+      );
+    }
+
     const medicineIds = medications.map((m: any) => m.medicine_id);
     const foundMedicines = await getMedicinesByIds(medicineIds);
 
@@ -208,12 +225,12 @@ export const getPrescriptionByAppointmentIdHandler = async (
       })
     );
 
-    res.json({
-      success: true,
-      message: "Prescription fetched successfully",
-      prescriptions: prescriptionsWithMedicines,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+        res.status(201).json({
+            success: true,
+            message: 'Prescription fetched successfully',
+            prescriptions: prescriptionsWithMedicines
+        })
+    } catch (error) {
+        next(error)
+    }
+}

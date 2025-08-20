@@ -20,7 +20,7 @@ export const getPatientBill = async (req: AuthRequest, res: Response, next: Next
         }
 
         if (!bills || bills.length === 0) {
-        return res.json({
+        return res.status(201).json({
             success: true,
             message: "No bills found",
             bill: [],
@@ -37,7 +37,7 @@ export const getPatientBill = async (req: AuthRequest, res: Response, next: Next
         };
         });
             
-        res.json({
+        res.status(201).json({
             success: true,
             message: 'Bill fetched successfully',
             bills: formattedBills
