@@ -32,13 +32,12 @@ export const getAllMedicens=async()=>{
 }
 
 export const createPrescription =async(data:any)=>{
-    console.log(data)
     await commonAPI('POST',`${baseURL}/prescription`,data);
 }
 
 export const updatePrescritptionStatus =async(data:any)=>{
     console.log(data)
-    await commonAPI('POST',`${baseURL}/prescription`,data);
+    await commonAPI('PATCH',`${baseURL}/prescription/completed`,data);
 }
 
 export const getDoctorProfile=async()=>{

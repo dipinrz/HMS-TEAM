@@ -57,7 +57,8 @@ export const getDoctorsByDepartmentId = async (id: number) => {
     return await doctorRepo.find({
         where: {
             department: {department_id: id}
-        }
+        },
+        relations:['user']
     })
 }
 

@@ -14,6 +14,7 @@ interface DoctorStore {
   medicines: Medicine[];
   report: ReportData | null;
   doctor:Doctor|null;
+  doctors:Doctor[];
   patientsCount: number;
   completedCount: number;
   remainingCount: number;
@@ -33,7 +34,7 @@ interface DoctorStore {
   clearReport: () => void;
 }
 
-export const useDoctorStore = create<DoctorStore>((set, get) => ({
+export const useDoctorStore = create<DoctorStore>((set) => ({
   appointments: [],
   allAppointments: [],
   recentPatients: [],
@@ -42,6 +43,7 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
   medicines:[],
   prescriptons:[],
   doctor:null,
+  doctors:[],
   report:null,
   patientsCount: 0,
   completedCount: 0,
@@ -64,6 +66,7 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
         remainingCount: data.remaining_appointments,
         loading:false,
       });
+      console.log("Appoint",appointments)
     } catch (error) {
       console.error("Failed to fetch appointments:", error);
       set({ loading: false, error: "Failed to fetch appointments" });
@@ -164,13 +167,19 @@ export const useDoctorStore = create<DoctorStore>((set, get) => ({
     set({report:null});
   },
   fetchHeadDoctor:async()=>{
+    set({loading:false,error:null})
     try{
       const response=await getIsHeadDoctor();
       const res=response.data;
-      set({isHeadDoctor:res.is_head_doctor})
-      console.log(res.is_head_doctor)
+      set({
+        isHeadDoctor:res.is_head_doctor,
+        doctors:res.doctors,
+        loading:false
+      })
+      console.log(res.doctors)
     }catch(err:any){
       console.log("falid to get the isHeadDoctor")
+      set({loading:false,error:err})
     }
   }
 }));
