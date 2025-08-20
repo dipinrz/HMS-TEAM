@@ -1,6 +1,5 @@
 import {
   Box,
-  Chip,
   Grid,
   Typography,
   Stack,
@@ -53,18 +52,18 @@ const PatientDashboard = () => {
     fetchAppointments();
   }, []);
 
-  const getStatusChipColor = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case "completed":
-        return "success";
-      case "cancelled":
-        return "error";
-      case "upcoming":
-        return "info";
-      default:
-        return "default";
-    }
-  };
+  // const getStatusChipColor = (status: string) => {
+  //   switch (status?.toLowerCase()) {
+  //     case "completed":
+  //       return "success";
+  //     case "cancelled":
+  //       return "error";
+  //     case "scheduled":
+  //       return "info";
+  //     default:
+  //       return "default";
+  //   }
+  // };
 
   const handleViewClick = (appointment: any) => {
     setSelectedAppointment(appointment);
@@ -88,7 +87,7 @@ const PatientDashboard = () => {
   };
 
   return (
-    <Box sx={{ paddingX: "30px", backgroundColor: "#f8fafc" }}>
+    <Box sx={{ paddingX: "30px", paddingBottom: '40px', backgroundColor: "#f8fafc" }} >
       <Box
         sx={{ marginTop: { xs: "20vh", md: "3vh" } }}
         display="flex"
@@ -112,7 +111,7 @@ const PatientDashboard = () => {
             label="BOOK APPOINTMENT"
             variant="contained"
             startIcon={<MedicalServices fontSize="small" />}
-            onClick={() => navigate("/patient/appointments")}
+            onClick={() => navigate("/patient/book-appointments")}
           />
         </Stack>
       </Box>
@@ -127,7 +126,9 @@ const PatientDashboard = () => {
             sx={{
               backgroundColor: "#fff",
               borderRadius: "16px",
-              marginTop:"50px",
+              marginTop: "20px",
+              minWidth: '500px',
+              minHeight: '20px',
               p: 3,
               boxShadow: "0 6px 24px rgba(0, 0, 0, 0.05)",
               height: "100%",
@@ -147,8 +148,8 @@ const PatientDashboard = () => {
                 alignItems: "center",
                 mb: 3,
                 pb: 2,
-                borderBottom: "1px solid",
-                borderColor: "divider",
+                // borderBottom: "1px solid",
+                // borderColor: "divider",
               }}
             >
               <CalendarToday
@@ -187,7 +188,7 @@ const PatientDashboard = () => {
               </Box>
             ) : (
               <Box sx={{ overflowY: "auto", flex: 1, pr: 1 }}>
-                {appointments.map((appt) => (
+                {appointments.slice(0, 3).map((appt) => (
                   <Card
                     key={appt._id}
                     animated={false}
@@ -219,6 +220,7 @@ const PatientDashboard = () => {
                               justifyContent: "center",
                               color: "white",
                               boxShadow: "0 2px 6px rgba(0, 0, 0, 0.08)",
+
                             }}
                           >
                             {getAppointmentIcon(appt.mode || "in-person")}
@@ -270,7 +272,7 @@ const PatientDashboard = () => {
                             justifyContent: "space-between",
                           }}
                         >
-                          <Chip
+                          {/* <Chip
                             label={appt.status || "Upcoming"}
                             size="small"
                             color={getStatusChipColor(appt.status)}
@@ -280,7 +282,7 @@ const PatientDashboard = () => {
                               height: "20px",
                               textTransform: "capitalize",
                             }}
-                          />
+                          /> */}
                           <Button
                             size="small"
                             variant="outlined"

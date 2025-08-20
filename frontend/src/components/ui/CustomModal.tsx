@@ -43,7 +43,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           backgroundColor: theme.palette.background.paper,
           boxShadow: `0 10px 30px rgba(0,0,0,0.1)`,
           
-        },
+        },  
       }}
     >
       {title && (

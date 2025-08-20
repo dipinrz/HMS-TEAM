@@ -95,7 +95,7 @@ export const getPrescriptionsByAppoinment = async(appoinmentId:number)=>{
         where: {
             appointment: {appointment_id: appoinmentId }
         },
-        relations: ['appointment']
+        relations: ['appointment', 'appointment.doctor']
     })
 }
 

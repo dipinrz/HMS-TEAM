@@ -109,12 +109,13 @@ const Sidebar: React.FC<SidebarProps> = ({
       ],
       patient: [
         {
-          path: "/patient/appointments",
+          path: "/patient/book-appointments",
           name: "Book Appointments",
           icon: <CalendarIcon />,
         },
         { path: "/patient/doctors", name: "Doctors", icon: <DoctorIcon /> },
         { path: "/patient/medical-record", name: "Medical Records", icon: <MedicalReportIcon/> },
+        { path: "/patient/appointments", name: "Appointments", icon: <DoctorIcon /> },
       ],
     };
 
