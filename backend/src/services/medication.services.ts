@@ -33,6 +33,7 @@ export const getMedicinesOfPrescription = async (prescriptionId: number) => {
     return await medicationRepo.find({
         where: {
             prescription: { prescription_id: prescriptionId }
-        }
+        },
+        relations:['medicine']
     })
 }

@@ -29,3 +29,7 @@ export const getPatientPrescriptions = async () => {
 export const getPatientMedicalReport=async()=>{
     return await commonAPI('GET',`${baseURL}/records`)
 }
+export const getPatientPrescriptionsByAppointmentId=async (id:number) => {
+    return await commonAPI('GET',`${baseURL}/prescription/appointment/${id}`)
+    
+}

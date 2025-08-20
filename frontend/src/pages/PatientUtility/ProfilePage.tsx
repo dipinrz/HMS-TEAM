@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../store/useAuthStore";
-import { getPatientById, updatePatient } from "../services/patientApi";
 import { toast } from "react-toastify";
 import {
     TextField,
@@ -17,8 +15,10 @@ import {
     MenuItem
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
-import CustomButton from "../components/ui/CustomButton";
-import CustomModal from "../components/ui/CustomModal";
+import { getPatientById, updatePatient } from "../../services/patientApi";
+import { useAuthStore } from "../../store/useAuthStore";
+import CustomButton from "../../components/ui/CustomButton";
+import CustomModal from "../../components/ui/CustomModal";
 
 function ProfilePage() {
     const { user } = useAuthStore();
@@ -99,7 +99,7 @@ function ProfilePage() {
     };
 
     const handleOpenModal = () => {
-        setEditData(formData); 
+        setEditData(formData);
         setErrors({});
         setOpenEditModal(true);
     };
@@ -115,7 +115,7 @@ function ProfilePage() {
             try {
                 await updatePatient(formDataWithoutEmail);
                 toast.success("Patient profile updated successfully!");
-                setFormData(editData); 
+                setFormData(editData);
                 setOpenEditModal(false);
             } catch (error) {
                 console.error("Error updating patient:", error);
@@ -123,6 +123,59 @@ function ProfilePage() {
             }
         }
     };
+
+    // const formContent = (
+    //     <Grid container spacing={2}>
+    //         {Object.keys(editData).map((key) => (
+    //             <Grid size={{ xs: 12, sm: 6 }} key={key}>
+    //                 {key === "gender" ? (
+    //                     <FormControl fullWidth margin="normal" required error={!!errors[key]}>
+    //                         <InputLabel>Gender</InputLabel>
+    //                         <Select
+    //                         name="gender"
+    //                         label='gender'
+    //                             value={editData.gender || ""}
+    //                             onChange={(e) =>
+    //                                 setEditData({ ...editData, gender: e.target.value })
+    //                             }
+    //                         >
+    //                             <MenuItem value="male">Male</MenuItem>
+    //                             <MenuItem value="female">Female</MenuItem>
+    //                         </Select>
+    //                         {errors[key] && (
+    //                             <Typography variant="caption" color="error">
+    //                                 {errors[key]}
+    //                             </Typography>
+    //                         )}
+    //                     </FormControl>
+    //                 ) : (
+    //                     <TextField
+    //                         fullWidth
+    //                         label={key
+    //                             .split("_")
+    //                             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    //                             .join(" ")}
+    //                         name={key}
+    //                         value={(editData as any)[key]}
+    //                         onChange={handleEditChange}
+    //                         margin="normal"
+    //                         disabled={key === "email"}
+    //                         required={key !== "email"}
+    //                         error={!!errors[key]}
+    //                         helperText={errors[key]}
+    //                         sx={{
+    //                             "& .MuiOutlinedInput-root": {
+    //                                 "&:hover fieldset": {
+    //                                     borderColor: "#020aa5",
+    //                                 },
+    //                             },
+    //                         }}
+    //                     />
+    //                 )}
+    //             </Grid>
+    //         ))}
+    //     </Grid>
+    // );
 
     const formContent = (
         <Grid container spacing={2}>
@@ -132,8 +185,8 @@ function ProfilePage() {
                         <FormControl fullWidth margin="normal" required error={!!errors[key]}>
                             <InputLabel>Gender</InputLabel>
                             <Select
-                            name="gender"
-                            label='gender'
+                                name="gender"
+                                label="gender"
                                 value={editData.gender || ""}
                                 onChange={(e) =>
                                     setEditData({ ...editData, gender: e.target.value })
@@ -148,6 +201,19 @@ function ProfilePage() {
                                 </Typography>
                             )}
                         </FormControl>
+                    ) : key === "date_of_birth" ? (
+                        <TextField
+                            fullWidth
+                            label="Date of Birth"
+                            name="date_of_birth"
+                            type="date"  // <-- enables the calendar popup
+                            value={editData.date_of_birth}
+                            onChange={handleEditChange}
+                            margin="normal"
+                            InputLabelProps={{ shrink: true }} // keeps the label above the field
+                            error={!!errors[key]}
+                            helperText={errors[key]}
+                        />
                     ) : (
                         <TextField
                             fullWidth
@@ -165,9 +231,7 @@ function ProfilePage() {
                             helperText={errors[key]}
                             sx={{
                                 "& .MuiOutlinedInput-root": {
-                                    "&:hover fieldset": {
-                                        borderColor: "#020aa5",
-                                    },
+                                    "&:hover fieldset": { borderColor: "#020aa5" },
                                 },
                             }}
                         />
@@ -195,7 +259,7 @@ function ProfilePage() {
                             backgroundColor: 'white',
                             color: '#020aa5',
                             '&:hover': { backgroundColor: 'rgba(255,255,255,0.9)' }
-                        }}  
+                        }}
                     />
                 </Box>
 

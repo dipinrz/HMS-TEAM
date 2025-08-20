@@ -24,11 +24,12 @@ import DoctorProfileUpdate from "./pages/Doctor-pages/DoctorProfileUpdate";
 import AdminAppointment from "./components/ADMIN/appoinments/AdminAppointments";
 import ForgotPass from "./pages/Auth/ForgotPass";
 import ResetPass from "./pages/Auth/ResetPass";
-import ProfilePage from "./pages/ProfilePage";
 import PatientReport from "./pages/Doctor-pages/PatientReport";
 import DoctorPatients from "./pages/Doctor-pages/DoctorPatients";
 import ListOfDoctors from "./pages/Doctor-pages/ListOfDoctors";
 import MedicalRecord from "./pages/PatientUtility/MedicalRecord";
+import ProfilePage from "./pages/PatientUtility/ProfilePage";
+import AllAppointments from "./pages/PatientUtility/AllAppointments";
 
 const theme = createTheme({
   palette: {
@@ -204,7 +205,7 @@ function App() {
               path="/doctor/getProfile"
               element={
                 <ProtectedRoute allowedRoles={['doctor']}>
-                  <DoctorProfileUpdate/>
+                  <DoctorProfileUpdate />
                 </ProtectedRoute>
               }
             />
@@ -250,9 +251,9 @@ function App() {
                 </ProtectedRoute>
               }
             />
-           
+
             <Route
-              path="/patient/appointments"
+              path="/patient/book-appointments"
               element={
                 <ProtectedRoute allowedRoles={['patient']}>
                   <TestBookAppointment />
@@ -272,6 +273,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["patient"]}>
                   <div>Patient Doctors Page</div>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/patient/appointments"
+              element={
+                <ProtectedRoute allowedRoles={["patient"]}>
+                  <AllAppointments />
                 </ProtectedRoute>
               }
             />
