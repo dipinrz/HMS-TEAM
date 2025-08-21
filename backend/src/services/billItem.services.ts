@@ -23,3 +23,10 @@ export const deleteBillItem = async (billItemId: number) => {
 
     return await billItemRepo.delete({ bill_item_id: billItemId })
 }
+
+export const getBillItemBybillId = async (bill_id: number) => {
+
+    return await billItemRepo.find({ where: {
+        bill: {bill_id: bill_id}
+    }, relations: ['medication', 'medication.medicine'] })
+}
