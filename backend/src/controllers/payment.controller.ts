@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import { createOrder, getMonthlyRevenue, verifySignature } from '../services/payment.services';
+import { createOrder, getMonthlyRevenue, getPaymentHistoryByPatientId, verifySignature } from '../services/payment.services';
 import { razorpay } from '../config/razorpay';
 import { getBillById, markBillAsPaid } from '../services/bill.services';
 import { ApiError } from '../utils/apiError';
 import { Payment } from '../entities/payment.entity';
+import { AuthRequest } from './doctor.controller';
+import { instanceToPlain } from 'class-transformer';
 
 export const createRazorpayOrder = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -115,3 +117,29 @@ export const getMonthWiseBilling = async (req: Request, res: Response, next: Nex
         next(error);
     }
 };
+
+export const getPaymentHistorybyPatientHandler = async (req: AuthRequest, res: Response, next: NextFunction) => {
+
+    try {
+        const patient_id = req.user.userId;
+
+        if(!patient_id){
+            throw new ApiError("user not found", 404);
+        }
+
+        const payment_history = await getPaymentHistoryByPatientId(patient_id);
+
+        if(!payment_history){
+            throw new ApiError('Payment history not found', 404);
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Payment history fetched successfully',
+            payment_history: instanceToPlain(payment_history)
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}

@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { Payment } from '../entities/payment.entity';
 import { AppDataSource } from '../config/data-source';
 import { Bill } from '../entities/bill.entity';
+import { getBillsByPatientId } from './bill.services';
 
 interface paymentDataType{
     payment_method: string;
@@ -13,6 +14,7 @@ interface paymentDataType{
 }
 
 const paymentRepo = AppDataSource.getRepository(Payment);
+const billRepo = AppDataSource.getRepository(Bill);
 
 export const createOrder = async (amount: number, currency: string = 'INR') => {
 
@@ -77,4 +79,14 @@ export const getMonthlyRevenue = async () => {
             order: { payment_date: 'ASC' }
         }
     );
+}
+
+
+export const getPaymentHistoryByPatientId = async (patient_id: number) => {
+
+    return await paymentRepo.find({
+        where: { bill: { patient: { user_id: patient_id } } },
+        order: { payment_date: 'DESC' }
+    })
+    
 }

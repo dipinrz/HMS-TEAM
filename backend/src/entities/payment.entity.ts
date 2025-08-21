@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Column, CreateDateColumn } from "typeorm";
 import { Bill } from "./bill.entity";
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class Payment {
@@ -27,9 +28,11 @@ export class Payment {
     transaction_id: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
+    @Exclude()
     razorpay_order_id: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
+    @Exclude()
     razorpay_signature: string;
 
     @Column({ type: 'boolean', default: false })
