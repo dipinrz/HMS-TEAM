@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { getPatientById } from "../services/patient.services";
 import { ApiError } from "../utils/apiError";
-import { getAppoinmentsByPatientId, getMedicalReportByPId, getPrescriptionsByAppoinment } from "../services/medicalReport.services";
+import {
+  getAppoinmentsByPatientId,
+  getMedicalReportByPId,
+  getPrescriptionsByAppoinment,
+} from "../services/medicalReport.services";
 
 export interface MedicalRequest extends Request {
   user?: { userId: number };
@@ -25,10 +29,7 @@ export const fetchPatientMedicalRecordController = async (
       throw new ApiError("Medical record not found", 404);
     }
 
-    console.log("Response from fetch records",response)
-
     const appointments = await getAppoinmentsByPatientId(Number(userId));
-    console.log("Response from fetch records",appointments)
     res.status(201).json({
       success: true,
       message: "Medical record fetched successfully",
@@ -74,4 +75,3 @@ export const fetchPatientMedicalRecordControllerById = async (
     next(error);
   }
 };
-

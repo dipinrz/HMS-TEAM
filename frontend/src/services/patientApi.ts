@@ -31,3 +31,7 @@ export const getPatientMedicalReport = async () => {
 export const getPatientPrescriptionsByAppointmentId = async (id: number) => {
   return await commonAPI("GET", `${baseURL}/prescription/appointment/${id}`);
 };
+
+export const getPatientPaymentHistory=async()=>{
+    return await commonAPI("GET",`${baseURL}/payment/history/user`)
+}

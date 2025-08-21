@@ -122,7 +122,7 @@ export const DetailRow = ({
 );
 const MedicalRecord = () => {
   const [loading, setLoading] = useState(true);
-  const [appointments, setAppointments] = useState<Appointments | null>(null);
+  const [appointments, setAppointments] = useState<Appointments | null>([]);
   const [medical_report, setMedicalReport] = useState<MedicalReport | null>(
     null
   );
@@ -132,7 +132,6 @@ const MedicalRecord = () => {
 
   const fetching = async () => {
     const response = await getPatientMedicalReport();
-    console.log(response.data);
     const { data, success } = response.data;
     if (success) {
       const { appointments, medical_report } = data;
@@ -272,7 +271,10 @@ const MedicalRecord = () => {
                     ) : (
                       <DetailRow
                         label="Phone"
-                        value={medical_report?.patient.phone_number}
+                        value={
+                          medical_report?.patient?.phone_number ||
+                          "Not mentioned"
+                        }
                         valueColor="#1f2937"
                         fontWeight="600"
                       />
@@ -294,7 +296,10 @@ const MedicalRecord = () => {
                     ) : (
                       <DetailRow
                         label="Date of Birth"
-                        value={medical_report?.patient.date_of_birth}
+                        value={
+                          medical_report?.patient?.date_of_birth ||
+                          "Not mentioned"
+                        }
                         valueColor="#1f2937"
                         fontWeight="600"
                       />
@@ -316,7 +321,10 @@ const MedicalRecord = () => {
                     ) : (
                       <DetailRow
                         label="Gender"
-                        value={medical_report?.patient.gender.toUpperCase()}
+                        value={
+                          medical_report?.patient?.gender?.toUpperCase() ||
+                          "Not mentioned"
+                        }
                         labelColor="#374151"
                         valueColor="#dc2626"
                       />
@@ -338,7 +346,9 @@ const MedicalRecord = () => {
                     ) : (
                       <DetailRow
                         label="Address"
-                        value={medical_report?.patient.address}
+                        value={
+                          medical_report?.patient?.address || "Not mentioned"
+                        }
                         valueColor="#1f2937"
                         fontWeight="600"
                       />
@@ -589,5 +599,4 @@ const MedicalRecord = () => {
     </>
   );
 };
-
 export default MedicalRecord;
