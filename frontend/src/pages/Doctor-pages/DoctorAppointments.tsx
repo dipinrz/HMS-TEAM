@@ -36,6 +36,9 @@ const DoctorAppointments = () => {
         setOpenModal(true);
     };
 
+    const today = new Date();
+    const formatted = today.toISOString().split('T')[0];
+    console.log(formatted);
     const handleCloseModal = () => {
         setOpenModal(false);
         setSelectedAppointmentId(null);
@@ -118,7 +121,7 @@ const DoctorAppointments = () => {
                                         color={getStatusColor(appointment.status)}
                                         size="small"
                                     />
-                                    {appointment.status === "scheduled" && (
+                                    {appointment.status === "scheduled" && formatted===appointment.appointment_date.split(' ')[0]&& (
                                         <CustomButton size="small" onClick={()=>handleAddPrescription(appointment.appointment_id) } label="Start" />
                                     )}
                                 </Box>

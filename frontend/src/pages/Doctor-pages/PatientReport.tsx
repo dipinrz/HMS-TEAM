@@ -19,7 +19,8 @@ import { getStatusColor } from "../../utility/DoctorUtility";
 import { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { CancelPresentation } from "@mui/icons-material";
+import { Cake, CancelPresentation, Email, EmailOutlined, LocationCity, Person, Phone } from "@mui/icons-material";
+import { LocationEditIcon } from "lucide-react";
 
 
 const PatientReport = () => {
@@ -72,40 +73,74 @@ const PatientReport = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       {/* Patient Info */}
-      <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
-        <Box display="flex" alignItems="center" gap={2}>
-          <Avatar sx={{ bgcolor: "primary.main", color: "white", fontWeight: "bold" }}>
-            {patient.first_name?.charAt(0)}
+      <Paper
+        elevation={3}
+        sx={{
+          p: 3,
+          mb: 4,
+          borderRadius: 3,
+          bgcolor: "#fdfdfd",
+        }}
+      >
+        {/* Header */}
+        <Box display="flex" alignItems="center" gap={2} mb={2}>
+          <Avatar
+            sx={{
+              bgcolor: "primary.main",
+              color: "white",
+              fontWeight: "bold",
+              width: 56,
+              height: 56,
+              fontSize: 24,
+            }}
+          >
+            {patient.first_name?.charAt(0).toUpperCase()}
           </Avatar>
           <Box>
             <Typography variant="h5" fontWeight={600}>
               {patient.first_name} {patient.last_name}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {patient.email}
-            </Typography>
+            <Box display="flex" gap={1}>
+              <Email sx={{ fontSize: 16 }}/>
+              <Typography variant="body2" color="text.secondary">
+                {patient.email}
+              </Typography>
+            </Box>
           </Box>
         </Box>
 
-        <Grid container spacing={2} mt={2}>
+        {/* Details Grid */}
+        <Grid container spacing={2}>
           <Grid size={{ xs: 12, sm: 6 }} >
-            <Typography variant="body2">
-              <strong>Phone:</strong> {patient.phone_number || "N/A"}
-            </Typography>
-            <Typography variant="body2">
-              <strong>Gender:</strong> {patient.gender || "N/A"}
-            </Typography>
+            <Box display='flex' gap={1}>
+              <Phone sx={{ fontSize: 16 }}/>
+              <Typography variant="body2" color="text.secondary" mb={0.5}>
+                <strong>Phone:</strong> {patient.phone_number || "N/A"}
+              </Typography>
+            </Box>
+            <Box display='flex' gap={1}>
+              <Person sx={{ fontSize: 16 }}/>
+              <Typography variant="body2" color="text.secondary" mb={0.5}>
+                <strong>Gender:</strong> {patient.gender || "N/A"}
+              </Typography>
+            </Box>
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }} >
-            <Typography variant="body2">
-              <strong>Address:</strong> {patient.address || "N/A"}
-            </Typography>
-            <Typography variant="body2">
-              <strong>Date of Birth:</strong>{" "}
-              {patient.date_of_birth
-                ? format(new Date(patient.date_of_birth), "dd MMM yyyy")
-                : "N/A"}
-            </Typography>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <Box display='flex' gap={1}>
+              <LocationCity sx={{ fontSize: 16 }}/>
+              <Typography variant="body2" color="text.secondary" mb={0.5}>
+                <strong> Address:</strong> {patient.address || "N/A"}
+              </Typography>
+            </Box>
+            <Box display='flex' gap={1}>
+              <Cake sx={{ fontSize: 16 }}/>
+              <Typography variant="body2" color="text.secondary">
+                <strong> Date of Birth:</strong>{" "}
+                {patient.date_of_birth
+                  ? format(new Date(patient.date_of_birth), "dd MMM yyyy")
+                  : "N/A"}
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
       </Paper>
@@ -145,10 +180,10 @@ const PatientReport = () => {
             return (
               <Grid size={{ xs: 12, sm: 6, md: 4 }} key={appointment.appointment_id}>
                 <Card
-                animated={false}
+                  animated={false}
                   elevation={0}
                   sx={{
-                    display: "flex", width: '100%',height:'100%'
+                    display: "flex", width: '100%', height: '100%'
                   }}
                 >
                   <CardContent sx={{ width: "100%" }}>
@@ -262,7 +297,7 @@ const PatientReport = () => {
                         )}
                       </Box>
                     ) : (
-                      <Box sx={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', width:'100%'}}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                         <Typography
                           variant="body2"
                           color="text.secondary"
