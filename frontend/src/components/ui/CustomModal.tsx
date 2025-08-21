@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import React, { type ReactNode } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -8,8 +8,8 @@ import {
   useTheme,
   Typography,
   Box,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface CustomModalProps {
   open: boolean;
@@ -17,7 +17,7 @@ interface CustomModalProps {
   title?: string;
   content: ReactNode;
   actions?: ReactNode;
-  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
 }
 
 const CustomModal: React.FC<CustomModalProps> = ({
@@ -26,7 +26,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   title,
   content,
   actions,
-  maxWidth = 'sm',
+  maxWidth = "sm",
 }) => {
   const theme = useTheme();
 
@@ -42,8 +42,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           borderRadius: 3,
           backgroundColor: theme.palette.background.paper,
           boxShadow: `0 10px 30px rgba(0,0,0,0.1)`,
-          
-        },  
+        },
       }}
     >
       {title && (
@@ -61,18 +60,19 @@ const CustomModal: React.FC<CustomModalProps> = ({
           >
             <Typography
               variant="h6"
+              textAlign={"center"}
               fontWeight={600}
-              sx={{ width: '100%' }}
+              sx={{ width: "100%" }}
             >
               {title}
             </Typography>
             <IconButton
               onClick={onClose}
               sx={{
-                position: 'absolute',
+                position: "absolute",
                 right: 0,
                 color: theme.palette.grey[600],
-                '&:hover': {
+                "&:hover": {
                   backgroundColor: theme.palette.action.hover,
                 },
               }}
@@ -90,7 +90,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           color: theme.palette.text.primary,
         }}
       >
-        {typeof content === 'string' ? (
+        {typeof content === "string" ? (
           <Typography variant="body1" sx={{ lineHeight: 1.6 }}>
             {content}
           </Typography>
@@ -104,7 +104,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           sx={{
             px: 3,
             py: 2,
-            justifyContent: 'center',
+            justifyContent: "center",
             backgroundColor: theme.palette.background.default,
           }}
         >

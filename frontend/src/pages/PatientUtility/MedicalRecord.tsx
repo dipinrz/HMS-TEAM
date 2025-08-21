@@ -446,21 +446,20 @@ const MedicalRecord = () => {
                             </Typography>
                           </Box>
                           <Chip
-                            label={appt.status.toUpperCase()}
+                            label={appt.status}
                             size="small"
-                            color={
-                              appt.status === "completed"
-                                ? "success"
-                                : appt.status === "cancelled"
-                                ? "error"
-                                : appt.status === "confirmed"
-                                ? "warning"
-                                : "primary"
-                            }
                             sx={{
                               fontWeight: "bold",
                               fontSize: "0.7rem",
                               fontFamily: "'Poppins', sans-serif",
+                              color:
+                                appt.status === "completed"
+                                  ? (theme) => theme.palette.success.light
+                                  : appt.status === "cancelled"
+                                  ? (theme) => theme.palette.error.light
+                                  : appt.status === "scheduled"
+                                  ? (theme) => theme.palette.warning.light
+                                  : (theme) => theme.palette.primary.light,
                             }}
                           />
                         </Box>
@@ -565,12 +564,16 @@ const MedicalRecord = () => {
                             Consultation Fee:
                           </Typography>
                           <Chip
-                            label={`$${appt.department.consultation_fee}`}
-                            color="primary"
-                            variant="filled"
+                            label={`₹ ${appt.department.consultation_fee}`}
+                            variant="outlined"
                             sx={{
                               fontWeight: "bold",
                               fontFamily: "'Poppins', sans-serif",
+                              fontSize: "14px",
+                              px: 1.5,
+                              borderRadius: "12px",
+                              color: "success.main",
+                              borderColor: "success.light",
                             }}
                           />
                         </Box>

@@ -5,7 +5,6 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  InputBase,
   Badge,
   MenuItem,
   Menu,
@@ -17,7 +16,6 @@ import {
   ListItemText,
   Divider,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Bell, Stethoscope } from "lucide-react";
@@ -33,8 +31,8 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
   const userRole = "admin";
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const {user}=useAuthStore();
-  const navigate=useNavigate()
+  const { user } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -42,18 +40,17 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
-
   };
 
-  const handleGetProfile=()=>{
-    if(user?.role==='doctor'){
-      navigate('/doctor/getProfile')
-    } else if(user?.role==='patient'){
-      const id = user?.user_id
+  const handleGetProfile = () => {
+    if (user?.role === "doctor") {
+      navigate("/doctor/getProfile");
+    } else if (user?.role === "patient") {
+      const id = user?.user_id;
       navigate(`/patient/profile/${id}`);
     }
     setAnchorEl(null);
-  }
+  };
 
   const drawer = (
     <Box sx={{ width: 250 }}>
@@ -165,7 +162,6 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
             )}
           </Box>
 
-
           {!isSmallScreen && (
             <Box
               sx={{
@@ -253,8 +249,8 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
                         userRole === "admin"
                           ? "error.main"
                           : userRole === "doctor"
-                            ? "success.main"
-                            : "primary.main",
+                          ? "success.main"
+                          : "primary.main",
                       color: "white",
                       borderRadius: "12px",
                       boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
@@ -292,7 +288,7 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
               zIndex: theme.zIndex.modal + 1,
             }}
           >
-            <MenuItem onClick={()=>handleGetProfile()}>Profile</MenuItem>
+            <MenuItem onClick={() => handleGetProfile()}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>Settings</MenuItem>
           </Menu>
         </Toolbar>
@@ -317,6 +313,6 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
       </Box>
     </Box>
   );
-}
+};
 
 export default Navbar;
