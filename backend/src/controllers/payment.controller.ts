@@ -123,15 +123,7 @@ export const getPaymentHistorybyPatientHandler = async (req: AuthRequest, res: R
     try {
         const patient_id = req.user.userId;
 
-        if(!patient_id){
-            throw new ApiError("user not found", 404);
-        }
-
         const payment_history = await getPaymentHistoryByPatientId(patient_id);
-
-        if(!payment_history){
-            throw new ApiError('Payment history not found', 404);
-        }
 
         res.status(200).json({
             success: true,
