@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Box,
-  Container,
   Paper,
   Typography,
   TextField,
@@ -61,7 +60,10 @@ export interface FormData {
   notes: string;
 }
 
-interface ApiError {
+export interface ApiError {
+  data?: {
+    message?: string;
+  };
   response?: {
     data?: {
       message?: string;
@@ -219,7 +221,7 @@ const TestBookAppointment: React.FC = () => {
     // Check if date is tomorrow or later
     const selectedDateTime = new Date(formData.appointment_date);
     const today = new Date();
-    
+
     if (selectedDateTime <= today)
       return "Please select a date starting from today and current time slot .";
 
@@ -263,13 +265,14 @@ const TestBookAppointment: React.FC = () => {
         setFormData(INITIAL_FORM_STATE);
         setSelectedDate("");
         setSelectedTime("");
-      } else {
+      } else if (data.success == false) {
         setFeedback({ type: "error", message: data.message });
       }
     } catch (err) {
       const apiError = err as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
+        apiError?.data?.message ||
         "Failed to book appointment. Please try again.";
       setFeedback({ type: "error", message: errorMessage });
     } finally {
@@ -279,6 +282,8 @@ const TestBookAppointment: React.FC = () => {
 
   const handleReset = () => {
     setFormData(INITIAL_FORM_STATE);
+    setSelectedDate("");
+    setSelectedTime("");
     setFeedback(null);
   };
 
@@ -311,7 +316,7 @@ const TestBookAppointment: React.FC = () => {
         background: "linear-gradient(135deg, #f5f7fa 0%, #e4f0fd 100%)",
         display: "flex",
         alignItems: "center",
-        mt:{xs: 2, md:0}
+        mt: { xs: 2, md: 0 },
       }}
     >
       <Box sx={{ p: 3 }}>

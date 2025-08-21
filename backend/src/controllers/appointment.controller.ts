@@ -28,14 +28,11 @@ export const addAppointment = async (req: AuthRequest, res: Response, next: Next
             reason_for_visit,
             notes,
         } = req.body;
-        console.log("req body doctor id and depratment id",doctor_id,department_id)
 
         const patient = await getUserById(patient_id);
         const doctor = await getUserById(doctor_id);
         const department = await getDepartmentById(department_id);
         const medicalReport = await getMedicalReportByPId(patient_id);
-        console.log("doctor", doctor)
-        console.log("department", department);
 
         if(!doctor || !department){
             throw new ApiError("Doctor and Department cannot be empty");
