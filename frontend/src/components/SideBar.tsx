@@ -28,6 +28,7 @@ import {
   MedicalServices as DoctorIcon,
   Person as PersonIcon,
    Description   as MedicalReportIcon,     
+   ReceiptLong as PaymentIcon
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
@@ -116,6 +117,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         { path: "/patient/doctors", name: "Doctors", icon: <DoctorIcon /> },
         { path: "/patient/medical-record", name: "Medical Records", icon: <MedicalReportIcon/> },
         { path: "/patient/appointments", name: "Appointments", icon: <DoctorIcon /> },
+        { path: "/patient/payment-history", name: "Payments", icon: <PaymentIcon /> },
       ],
     };
 
