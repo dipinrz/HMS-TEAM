@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { createOrder, getMonthlyRevenue, getPaymentHistoryByPatientId, verifySignature } from '../services/payment.services';
+import { createOrder, fetchPaymentByIdService, getAllPayments, getMonthlyRevenue, getPaymentHistoryByPatientId, verifySignature } from '../services/payment.services';
 import { razorpay } from '../config/razorpay';
 import { getBillById, markBillAsPaid } from '../services/bill.services';
 import { ApiError } from '../utils/apiError';
@@ -134,4 +134,42 @@ export const getPaymentHistorybyPatientHandler = async (req: AuthRequest, res: R
     } catch (error) {
         next(error);
     }
+}
+
+export const getAllPaymentHistory = async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const paymentData = await getAllPayments()
+
+        if(!paymentData){
+            throw new ApiError ("No bills found",404)
+        }
+        res.status(200).json({
+            message:"All bills fetched successfully",
+            paymentData,
+            length:paymentData.length
+        })
+    }catch (error) {
+        next(error);
+    }
+}
+
+
+export const getPaymentById = async (req:Request,res:Response,next:NextFunction)=>{
+    try{    
+        const paymentId = req.params.id
+        const payment = await fetchPaymentByIdService(Number(paymentId))
+
+        if(!payment){
+            throw new ApiError("Bill not found",404)
+        }
+
+        res.status(200).json({
+            message:"Bill fetched successfully",
+            payment
+        })
+
+    }catch(error){
+        next(error)
+    }
+
 }
