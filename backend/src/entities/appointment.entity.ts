@@ -11,6 +11,7 @@ import { MedicalReport } from './medicalReport.entity';
 
 export enum AppointmentStatus {
   SCHEDULED = 'scheduled',
+  PROGRESS = 'progress',
   COMPLETED = 'completed',
   CANCELLED = 'cancelled',
 }

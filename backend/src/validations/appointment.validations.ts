@@ -37,7 +37,7 @@ export const appointmentSchema = Joi.object({
 
 export const appointmentQuerySchema = Joi.object({
     status: Joi.string()
-        .valid('scheduled', 'completed', 'cancelled')
+        .valid('scheduled', 'completed', 'cancelled', 'progress')
         .insensitive()
         .optional()
         .messages({

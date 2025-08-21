@@ -72,6 +72,9 @@ export const addPrescription = async (
       diagnosis,
     });
 
+    await updateAppointmentStatus(appointment_id, AppointmentStatus.PROGRESS);
+    appointment.status = AppointmentStatus.PROGRESS;
+
     const newMedicationsData = medications.map((m: any) => {
       const medicine = foundMedicines.find(
         (med) => med.medicine_id === m.medicine_id
