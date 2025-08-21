@@ -10,6 +10,8 @@ import {
   Typography,
   Chip,
   Box,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { fetchAllAppointmentsAPI } from "../../../services/adminAPi";
 
@@ -40,6 +42,9 @@ interface Appointment {
 
 const AdminAppointment: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const fetchAllAppointments = async () => {
     try {
@@ -104,16 +109,26 @@ const AdminAppointment: React.FC = () => {
         sx={{
           boxShadow: 3,
           borderRadius: 2,
-          overflow: "hidden",
+          overflowX: "auto",
         }}
       >
-        <Table sx={{ minWidth: 650 }} aria-label="appointments table">
-          <TableHead sx={{ bgcolor: "primary.light" }}>
+        <Table
+          sx={{ minWidth: { xs: 500, sm: 650 } }}
+          aria-label="appointments table"
+        >
+          <TableHead
+            sx={{
+              backgroundColor: "rgba(25, 118, 210, 0.08)",
+              "& .MuiTableCell-head": {
+                borderBottom: "2px solid rgba(25, 118, 210, 0.1)",
+              },
+            }}
+          >
             <TableRow>
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  color: "common.white",
+                  color: "#1565c0",
                 }}
               >
                 SL.NO
@@ -121,7 +136,7 @@ const AdminAppointment: React.FC = () => {
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  color: "common.white",
+                  color: "#1565c0",
                 }}
               >
                 Date & Time
@@ -129,7 +144,7 @@ const AdminAppointment: React.FC = () => {
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  color: "common.white",
+                  color: "#1565c0",
                 }}
               >
                 Patient
@@ -137,7 +152,7 @@ const AdminAppointment: React.FC = () => {
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  color: "common.white",
+                  color: "#1565c0",
                 }}
               >
                 Doctor
@@ -145,7 +160,7 @@ const AdminAppointment: React.FC = () => {
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  color: "common.white",
+                  color: "#1565c0",
                 }}
               >
                 Department
@@ -153,15 +168,16 @@ const AdminAppointment: React.FC = () => {
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  color: "common.white",
+                  color: "#1565c0",
                 }}
               >
                 Fee
               </TableCell>
               <TableCell
                 sx={{
+                  display: { xs: "none", sm: "table-cell" },
                   fontWeight: "bold",
-                  color: "common.white",
+                  color: "#1565c0",
                 }}
               >
                 Reason
@@ -169,7 +185,7 @@ const AdminAppointment: React.FC = () => {
               <TableCell
                 sx={{
                   fontWeight: "bold",
-                  color: "common.white",
+                  color: "#1565c0",
                 }}
               >
                 Status
@@ -186,9 +202,31 @@ const AdminAppointment: React.FC = () => {
                 }}
               >
                 <TableCell>{index + 1}</TableCell>
-                <TableCell sx={{ fontWeight: "medium" }}>
-                  {formatDate(appointment.appointment_date)}
+                <TableCell sx={{ fontWeight: "medium", whiteSpace: "nowrap" }}>
+                  {isMobile ? (
+                    <Box>
+                      <Typography variant="body2">
+                        {new Date(
+                          appointment.appointment_date
+                        ).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {new Date(
+                          appointment.appointment_date
+                        ).toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    formatDate(appointment.appointment_date)
+                  )}
                 </TableCell>
+
                 <TableCell>
                   {`${appointment.patient.first_name} ${appointment.patient.last_name}`}
                 </TableCell>
@@ -199,7 +237,7 @@ const AdminAppointment: React.FC = () => {
                 <TableCell>
                   ₹{appointment.department.consultation_fee}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
                   {appointment.reason_for_visit
                     ? appointment.reason_for_visit
                     : "N/A"}

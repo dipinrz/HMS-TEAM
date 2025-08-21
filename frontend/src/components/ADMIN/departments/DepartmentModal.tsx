@@ -1,4 +1,11 @@
-import { Box, Button, Modal, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 
 interface Props {
@@ -59,12 +66,13 @@ export default function DepartmentModal({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 700,
+          width: { xs: "90%", sm: 600, md: 700 },
           bgcolor: "#fff",
           borderRadius: 3,
+          maxHeight: "90vh",
+          overflowY: "auto",
         }}
       >
-        {/* Header */}
         <Box
           sx={{
             px: 3,
@@ -77,7 +85,6 @@ export default function DepartmentModal({
           {isEditMode ? "EDIT DEPARTMENT" : "ADD NEW DEPARTMENT"}
         </Box>
 
-        {/* Form */}
         <Box sx={{ p: 3, bgcolor: "#f5f7fa" }}>
           <Stack spacing={2}>
             <Typography fontWeight={700} color="#011d39ff">
@@ -140,7 +147,6 @@ export default function DepartmentModal({
           </Stack>
         </Box>
 
-        {/* Actions */}
         <Box sx={{ p: 2, display: "flex", justifyContent: "flex-end", gap: 2 }}>
           <Button variant="outlined" color="error" onClick={onClose}>
             Close
