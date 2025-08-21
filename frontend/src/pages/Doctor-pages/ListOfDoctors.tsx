@@ -8,12 +8,10 @@ import {
   CircularProgress,
   Avatar,
   Box,
-  Chip,
   Stack,
   Divider
 } from "@mui/material";
-import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
-import EmailIcon from "@mui/icons-material/Email";
+
 import SchoolIcon from "@mui/icons-material/School";
 import WorkIcon from "@mui/icons-material/Work";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";

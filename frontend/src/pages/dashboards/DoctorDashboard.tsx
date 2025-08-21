@@ -1,6 +1,6 @@
 
-import { Avatar, Box, Chip, Divider, Grid, Typography, useTheme } from "@mui/material";
-import { AccessTime, CalendarToday, Description, EventBusy, Group } from "@mui/icons-material";
+import { Avatar, Box, Chip, Divider, Grid, Stack, Typography, useTheme } from "@mui/material";
+import { AccessTime, CalendarToday, Cancel, CheckCircle, Description, EventBusy, Group, Healing, InfoOutlined } from "@mui/icons-material";
 import { Stethoscope } from "lucide-react";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
@@ -8,10 +8,12 @@ import { useEffect, useState } from "react";
 
 import CustomButton from "../../components/ui/CustomButton";
 import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
-import { useAuthStore } from "../../store/useAuthStore"; 
+import { useAuthStore } from "../../store/useAuthStore";
 import { useDoctorStore } from "../../store/doctorStore";
 import { getInitials } from "../../utility/DoctorUtility";
 import { useNavigate } from "react-router-dom";
+import type { Appointment } from "../../types/doctorType";
+
 
 
 type ThemeColorKey =
@@ -32,33 +34,57 @@ interface TodayStats {
 
 const DoctorDashboard = () => {
   const {
-  appointments,
-  todayAppointments,
-  patientsCount,
-  remainingCount,
-  completedCount,
-  recentPatients,
-  fetchAppointments,
-  fetchPatients,
-  fetchRecentPatients,
-} = useDoctorStore();
+    appointments,
+    todayAppointments,
+    patientsCount,
+    remainingCount,
+    completedCount,
+    recentPatients,
+    fetchAppointments,
+    fetchPatients,
+    fetchRecentPatients,
+  } = useDoctorStore();
 
   const theme = useTheme();
-  const {user}=useAuthStore()
+  const { user } = useAuthStore()
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const navigate =useNavigate()
-  
- 
-  useEffect(()=>{
-    if(user?.user_id){
+  const navigate = useNavigate()
+
+
+  useEffect(() => {
+    if (user?.user_id) {
       fetchAppointments();
       fetchPatients();
       fetchRecentPatients();
-    }    
-  },[])
+    }
+  }, [])
 
+const getBorderColor = (status: string) => {
+  switch (status) {
+    case 'scheduled':
+      return 'primary.main';
+    case 'completed':
+      return 'success.main';
+    case 'cancelled':
+      return 'error.main';
+    default:
+      return 'grey.500';
+  }
+};
 
-  
+const getStatusIcon = (status: string) => {
+  switch (status) {
+    case 'scheduled':
+      return <CalendarToday fontSize="small" color="primary" />;
+    case 'completed':
+      return <CheckCircle fontSize="small" color="success" />;
+    case 'cancelled':
+      return <Cancel fontSize="small" color="error" />;
+    default:
+      return <InfoOutlined fontSize="small" color="action" />;
+  }
+};
+
   const getStatusChipColor = (status: string) => {
     switch (status) {
       case 'completed':
@@ -78,42 +104,67 @@ const DoctorDashboard = () => {
     }
   };
 
-const statsData: TodayStats[] = [
-  {
-    title: "Today's Appointments",
-    value:`${appointments.length}`,
-    subtitle: `${completedCount} completed, ${remainingCount} remaining`,
-    icon: <CalendarToday color="primary" />,
-    bgcolor: "primary"
-  },
-  {
-    title: 'Total Patients',
-    value: `${patientsCount}`,
-    subtitle: 'Under your care',
-    icon: <Group color="success" />,
-    bgcolor: "success"
-  },
-  {
-    title: 'Pending Reports',
-    value: '12',
-    subtitle: 'Require your review',
-    icon: <Description color="warning" />,
-    bgcolor: "warning"
-  },
-  {
-    title: 'Next Appointment',
-    value: '10:30 AM',
-    subtitle: 'Sarah Johnson',
-    icon: <AccessTime color="secondary" />,
-    bgcolor: "secondary"
+  const getUpcomingAppointment = (appointments: Appointment[]) => {
+    const now = new Date();
+    const upcoming = appointments
+      .filter(
+        (a): a is Appointment & { appointment_date: string } =>
+          !!a.appointment_date && new Date(a.appointment_date) > new Date() && a.status === 'scheduled'
+      )
+      .sort((a, b) => new Date(a.appointment_date).getTime() - new Date(b.appointment_date).getTime());
+
+    return upcoming.length > 0 ? upcoming[0] : null;
   }
-];
-const handleAddPrescription=(id:number)=>{
-        navigate(`/doctor/prescription/${id}`)    
+
+  const formatTime12hr = (dateStr: string): string => {
+    const date = new Date(dateStr);
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+
+  const nextAppointment = getUpcomingAppointment(appointments);
+  console.log(nextAppointment)
+  const statsData: TodayStats[] = [
+    {
+      title: "Today's Appointments",
+      value: `${appointments.length}`,
+      subtitle: `${completedCount} completed, ${remainingCount} remaining`,
+      icon: <CalendarToday color="primary" />,
+      bgcolor: "primary"
+    },
+    {
+      title: 'Total Patients',
+      value: `${patientsCount}`,
+      subtitle: 'Under your care',
+      icon: <Group color="success" />,
+      bgcolor: "success"
+    },
+    {
+      title: 'Pending Reports',
+      value: '12',
+      subtitle: 'Require your review',
+      icon: <Description color="warning" />,
+      bgcolor: "warning"
+    },
+    {
+      title: 'Next Appointment',
+      value: nextAppointment?.appointment_date
+        ? formatTime12hr(nextAppointment.appointment_date)
+        : 'No upcoming',
+      subtitle: `${nextAppointment?.patient.first_name}`,
+      icon: <AccessTime color="secondary" />,
+      bgcolor: "secondary"
     }
+  ];
+  const handleAddPrescription = (id: number) => {
+    navigate(`/doctor/prescription/${id}`)
+  }
   return (
-    <Box sx={{p:2}}>
-      
+    <Box sx={{ p: 2 }}>
+
       <Box mb={4} display={"flex"} justifyContent="space-between" alignItems={"center"}>
         <Box>
           <Typography variant="h4" color="text.primary" fontWeight={600} sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}>Good morning, Dr {user?.first_name}</Typography>
@@ -168,35 +219,71 @@ const handleAddPrescription=(id:number)=>{
           <Card sx={{ width: '100%' }}>
             <CardHeader title="Today's Schedule" subheader={new Date().toLocaleDateString()} />
             <CardContent>
-              {todayAppointments.length>0 ?(
-              todayAppointments.map((appointent) => (
-                <Box
-                  key={appointent.appointment_id}
-                  borderLeft={4}
-                  borderColor={appointent.status=== 'scheduled' ? 'primary.main':appointent.status==='completed'?'success.main' :'error.main' }
-                  bgcolor="#eef3fc"
-                  p={2}
-                  mb={2}
-                  borderRadius={2}
-                >
-                  <Grid container alignItems="center" justifyContent="space-between">
-                    <Grid size={{ xs: 8 }} display="flex" alignItems="center" gap={2}>
-                      <Avatar>{getInitials(appointent.patient.first_name,appointent.patient.last_name)}</Avatar>
-                      <Box>
-                        <Typography fontWeight={600}>{appointent.patient.first_name}{appointent.patient.last_name}</Typography>
-                        <Typography variant="body2">{appointent.reason_for_visit} {appointent.notes}</Typography>
-                      </Box>
+              {todayAppointments.length > 0 ? (
+                todayAppointments.slice(0,5).map((appointment) => (
+                  <Box
+                    key={appointment.appointment_id}
+                    borderLeft={4}
+                    borderColor={getBorderColor(appointment.status)}
+                    bgcolor="#f9fafe"
+                    p={2}
+                    mb={2}
+                    borderRadius={2}
+                    boxShadow={1}
+                  >
+                    <Grid container spacing={2} alignItems="center">
+                      {/* Avatar + Name + Reason */}
+                      <Grid size={{xs:8, sm:9}} >
+                        <Stack direction="row" spacing={2} alignItems="center">
+                          <Avatar sx={{ bgcolor: 'primary.light', color: 'white' }}>
+                            {getInitials(appointment.patient.first_name, appointment.patient.last_name)}
+                          </Avatar>
+                          <Box>
+                            <Typography fontWeight={600} fontSize="1rem">
+                              {appointment.patient.first_name} {appointment.patient.last_name}
+                            </Typography>
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Healing fontSize="small" color="action" />
+                              <Typography variant="body2" color="text.secondary">
+                                {appointment.reason_for_visit} {appointment.notes && `- ${appointment.notes}`}
+                              </Typography>
+                            </Stack>
+                          </Box>
+                        </Stack>
+                      </Grid>
+
+                      {/* Time and Status */}
+                      <Grid size={{xs:4 ,sm:3}} textAlign="right">
+                        <Stack direction="column" alignItems="flex-end" spacing={1}>
+                          <Stack direction="row" spacing={0.5} alignItems="center">
+                            <AccessTime fontSize="small" color="action" />
+                            <Typography variant="body2" color="text.secondary">
+                              {formatTime12hr(appointment.appointment_date)}
+                            </Typography>
+                          </Stack>
+
+                          <Stack direction="row" spacing={1} alignItems="center">
+                            {getStatusIcon(appointment.status)}
+                            <Chip
+                              label={appointment.status}
+                              size="small"
+                              color={getStatusChipColor(appointment.status)}
+                              variant="outlined"
+                            />
+                            {appointment.status === 'scheduled' && (
+                              <CustomButton
+                                variant="contained"
+                                onClick={() => handleAddPrescription(appointment.appointment_id)}
+                                size="small"
+                                label="Start"
+                              />
+                            )}
+                          </Stack>
+                        </Stack>
+                      </Grid>
                     </Grid>
-                    <Grid display="flex" alignItems="center" gap={1}>
-                      {/* {appointent.urgency === 'high' && <ErrorOutline color="error" />} */}
-                      <Chip label={appointent.status} size="small" color={getStatusChipColor(appointent.status)} />
-                      {appointent.status === 'scheduled' && (
-                        <CustomButton variant="contained" onClick={()=>handleAddPrescription(appointent.appointment_id) } size="small" label="Start"></CustomButton>
-                      )}
-                    </Grid>
-                  </Grid>
-                </Box>
-              ))):(
+                  </Box>
+                ))) : (
                 <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={4} mb={4}>
                   <EventBusy sx={{ fontSize: 48, color: 'text.disabled' }} />
                   <Typography variant="h6" color="text.secondary" mt={2}>
@@ -208,7 +295,7 @@ const handleAddPrescription=(id:number)=>{
           </Card>
         </Grid>
         <Grid container size={{ xs: 12, md: 4 }} display={'flex'}>
-          <Card sx={{width:'100%'}}>
+          <Card sx={{ width: '100%' }}>
             <CardHeader title="Calendar" subheader="Navigate your schedule" />
             <CardContent>
               <LocalizationProvider dateAdapter={AdapterDateFns} >
@@ -216,57 +303,57 @@ const handleAddPrescription=(id:number)=>{
                   displayStaticWrapperAs="desktop"
                   value={selectedDate}
                   onChange={(newValue: Date | null) => setSelectedDate(newValue)}
-                  sx={{width:"100%"}}
+                  sx={{ width: "100%" }}
                 />
               </LocalizationProvider>
               <Box mt={2} display="flex" flexDirection="column" gap={1}>
                 <CustomButton variant="outlined" label="View Full Schedule" sx={{
-                backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
-                border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
+                  backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
+                  border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
                 }} startIcon={<CalendarToday />}></CustomButton>
                 <CustomButton variant="outlined" label="Set Availability" sx={{
-                backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
-                border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
-                }}startIcon={<AccessTime />}></CustomButton>
+                  backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
+                  border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
+                }} startIcon={<AccessTime />}></CustomButton>
               </Box>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
       <Box mt={4}>
-        <Card sx={{width:"100%"}}>
+        <Card sx={{ width: "100%" }}>
           <CardHeader title="Recent Patients" subheader="Patients you have recently treated"></CardHeader>
           <Grid container spacing={5} padding={2}>
-                {recentPatients.map((appointent)=>(
-                  <Grid size={{xs:12,md:4}} key={appointent.patient.user_id}>
-                    <Card variant="outlined" sx={{width:"100%"}}>
-                      <CardContent>
-                        <Box display="flex" gap={2} mb={2} alignItems="center">
-                          <Avatar>{getInitials(appointent.patient.first_name,appointent.patient.last_name)}</Avatar>
-                          <Box>
-                            <Typography fontWeight={600}>{appointent.patient.first_name}</Typography>
-                            <Typography variant="body2" color="textSecondary">Age {appointent.patient.date_of_birth} • {appointent.patient.gender}</Typography>
-                          </Box>
-                        </Box>
-                        <Divider/>
-                        <Box mt={2} mb={2}>
-                          <Box display="flex" justifyContent="space-between"> 
-                            <Typography variant="body2">Condition: </Typography>
-                            <Typography><strong>{appointent.reason_for_visit}</strong></Typography>
-                          </Box>
-                          <Box display="flex" justifyContent="space-between"> 
-                            <Typography variant="body2">Status:  </Typography>
-                            <Typography color={getStatusChipColor(appointent.status)}><strong>{appointent.status}</strong></Typography>
-                          </Box>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))} 
+            {recentPatients.map((appointent) => (
+              <Grid size={{ xs: 12, md: 4 }} key={appointent.patient.user_id}>
+                <Card variant="outlined" sx={{ width: "100%" }}>
+                  <CardContent>
+                    <Box display="flex" gap={2} mb={2} alignItems="center">
+                      <Avatar>{getInitials(appointent.patient.first_name, appointent.patient.last_name)}</Avatar>
+                      <Box>
+                        <Typography fontWeight={600}>{appointent.patient.first_name}</Typography>
+                        <Typography variant="body2" color="textSecondary">Age {appointent.patient.date_of_birth} • {appointent.patient.gender}</Typography>
+                      </Box>
+                    </Box>
+                    <Divider />
+                    <Box mt={2} mb={2}>
+                      <Box display="flex" justifyContent="space-between">
+                        <Typography variant="body2">Condition: </Typography>
+                        <Typography><strong>{appointent.reason_for_visit}</strong></Typography>
+                      </Box>
+                      <Box display="flex" justifyContent="space-between">
+                        <Typography variant="body2">Status:  </Typography>
+                        <Typography color={getStatusChipColor(appointent.status)}><strong>{appointent.status}</strong></Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
         </Card>
       </Box>
-    </Box> 
+    </Box>
   );
 };
 
