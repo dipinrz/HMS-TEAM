@@ -1,32 +1,44 @@
 import React from 'react';
 import axios from 'axios';
 import CustomButton from './ui/CustomButton';
+import { useAuthStore } from '../store/useAuthStore';
+import { toast } from 'react-toastify';
 
 type RazorpayOrderResponse = {
-  orderId: string;
-  amount: number;
-  currency: string;
+    orderId: string;
+    amount: number;
+    currency: string;
 };
 
 type VerifyResponse = {
-  success: boolean;
-  message: string;
+    success: boolean;
+    message: string;
 };
 
+
 const accessTokenString = localStorage.getItem('authUser');
-let token=''
+let token = ''
 
 if (accessTokenString) {
-  const authUser = JSON.parse(accessTokenString);
-  token = authUser.token;
+    const authUser = JSON.parse(accessTokenString);
+    token = authUser.token;
+
+}
+interface BillPropType {
+    billAmount: number,
+    billId: number,
+    onPaymentSuccess: () => void,
+
+
 }
 
+const PaymentButton: React.FC<BillPropType> = ({ billAmount, billId, onPaymentSuccess }) => {
 
-const PaymentButton: React.FC = () => {
+
 
     const loadRazorpayScript = () => {
         return new Promise((resolve) => {
-        const script = document.createElement('script');
+            const script = document.createElement('script');
             script.src = 'https://checkout.razorpay.com/v1/checkout.js';
             script.onload = () => resolve(true);
             script.onerror = () => resolve(false);
@@ -34,82 +46,100 @@ const PaymentButton: React.FC = () => {
         });
     };
 
-    const handlePayment = async () => {
+    const { user } = useAuthStore();
+
+
+    const handlePayment = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation(); // ✅ prevents Card click event (modal open)
+
         const res = await loadRazorpayScript();
         if (!res) {
             alert('Razorpay SDK failed to load. Are you online?');
-        return;
+            return;
         }
 
         try {
-        const orderResponse = await axios.post<RazorpayOrderResponse>(
-            'http://localhost:5000/api/v1/payment/create-order',
-            { amount: 500 },
-            {
-                headers: {
-                Authorization: `Bearer ${token}`,
+            const orderResponse = await axios.post<RazorpayOrderResponse>(
+                'http://localhost:5000/api/v1/payment/create-order',
+                { amount: billAmount },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            const { orderId, amount, currency } = orderResponse.data;
+            console.log("this is the current amount: ", amount);
+            console.log("bill Amount:  ", billAmount);
+
+            console.log("bill id is : ", billId);
+            console.log("Order response:", orderResponse.data);
+
+
+
+
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+                amount,
+                currency,
+                name: 'My App',
+                description: 'Test Transaction',
+                order_id: orderId,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                handler: async function (response: any) {
+                    const data = {
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                        bill_id: billId,
+                        amount_paid: amount,
+
+                    };
+
+                    // 2. Send verification request to backend
+                    const verifyRes = await axios.post<VerifyResponse>('http://localhost:5000/api/v1/payment/verify', data, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+
+                    if (verifyRes.data.success) {
+                        onPaymentSuccess();
+                        toast.success("Payment Completed")
+
+                    } else {
+                        toast.error("Payment Failed");
+                    }
                 },
-            }
-        );
-
-        const { orderId, amount, currency } = orderResponse.data;
-
-        const options = {
-            key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-            amount,
-            currency,
-            name: 'My App',
-            description: 'Test Transaction',
-            order_id: orderId,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            handler: async function (response: any) {
-            const data = {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                bill_id: 10,
-                amount_paid: amount,
-
+                prefill: {
+                    name: user?.first_name,
+                    email: user?.email,
+                    contact: user?.phone_number,
+                },
+                theme: {
+                    color: '#3399cc',
+                },
             };
 
-            // 2. Send verification request to backend
-            const verifyRes = await axios.post<VerifyResponse>('http://localhost:5000/api/v1/payment/verify', data, {
-                headers: {
-                Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (verifyRes.data.success) {
-                alert('Payment Verified Successfully!');
-            } else {
-                alert('Payment Verification Failed');
-            }
-            },
-            prefill: {
-                name: 'Test User',
-                email: 'test@example.com',
-                contact: '9999999999',
-            },
-            theme: {
-                color: '#3399cc',
-            },
-        };
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const razor = new (window as any).Razorpay(options);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const razor = new (window as any).Razorpay(options);
             razor.open();
+
         } catch (err) {
-        console.error(err);
+            console.error(err);
             alert('Something went wrong. Please try again later.');
         }
     };
 
+
+
     return (
-        <CustomButton 
-        label='Pay' 
-        variant='contained' 
-        sx={{bgcolor: 'green', margin:'5px'}} 
-        onClick={handlePayment} />
+        <CustomButton
+            label='Pay'
+            variant='contained'
+            sx={{ bgcolor: 'green', margin: '5px' }}
+            onClick={handlePayment} />
     );
 };
 

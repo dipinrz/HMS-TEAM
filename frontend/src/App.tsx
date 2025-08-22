@@ -37,6 +37,7 @@ import MedicalRecord from "./pages/PatientUtility/MedicalRecord";
 import ProfilePage from "./pages/PatientUtility/ProfilePage";
 import AllAppointments from "./pages/PatientUtility/AllAppointments";
 import PaymentHistory from "./pages/PatientUtility/PaymentHistory";
+import Bill from "./pages/PatientUtility/Bill";
 
 const theme = createTheme({
   palette: {
@@ -257,7 +258,7 @@ function App() {
               path="doctor/patients"
               element={
                 <ProtectedRoute allowedRoles={['doctor']}>
-                  <DoctorPatients/>
+                  <DoctorPatients />
                 </ProtectedRoute>
               }
             />
@@ -265,7 +266,7 @@ function App() {
               path="doctor/doctors"
               element={
                 <ProtectedRoute allowedRoles={['doctor']}>
-                  <ListOfDoctors/>
+                  <ListOfDoctors />
                 </ProtectedRoute>
               }
             />
@@ -296,14 +297,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/patient/doctors"
-              element={
-                <ProtectedRoute allowedRoles={["patient"]}>
-                  <div>Patient Doctors Page</div>
-                </ProtectedRoute>
-              }
-            />
+            
             <Route
               path="/patient/appointments"
               element={
@@ -325,6 +319,16 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["patient"]}>
                   <PaymentHistory />
+                </ProtectedRoute>
+              }
+            />
+
+
+            <Route
+              path="/patient/bills"
+              element={
+                <ProtectedRoute allowedRoles={["patient"]}>
+                  <Bill />
                 </ProtectedRoute>
               }
             />

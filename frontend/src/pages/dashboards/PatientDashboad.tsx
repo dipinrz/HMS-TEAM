@@ -87,9 +87,9 @@ const PatientDashboard = () => {
   };
 
   return (
-    <Box sx={{ paddingX: "30px", paddingBottom: '40px', backgroundColor: "#f8fafc" }} >
+    <Box sx={{ paddingX: "30px", paddingBottom: '40px', backgroundColor: "#f8fafc",minWidth:'360px' }} >
       <Box
-        sx={{ marginTop: { xs: "20vh", md: "3vh" } }}
+        sx={{ marginTop: { xs: "10vh", md: "3vh" } }}
         display="flex"
         justifyContent="space-between"
         flexDirection={{ xs: "column", md: "row" }}
@@ -127,8 +127,9 @@ const PatientDashboard = () => {
               backgroundColor: "#fff",
               borderRadius: "16px",
               marginTop: "20px",
-              minWidth: '500px',
+              minWidth: '320px',
               minHeight: '20px',
+              marginRight:'10px',
               p: 3,
               boxShadow: "0 6px 24px rgba(0, 0, 0, 0.05)",
               height: "100%",
@@ -187,7 +188,7 @@ const PatientDashboard = () => {
                 </Typography>
               </Box>
             ) : (
-              <Box sx={{ overflowY: "auto", flex: 1, pr: 1 }}>
+              <Box sx={{ overflowY: "au ", flex: 1, pr: 1 }}>
                 {appointments.slice(0, 3).map((appt) => (
                   <Card
                     key={appt._id}
@@ -230,7 +231,13 @@ const PatientDashboard = () => {
                               variant="subtitle1"
                               fontWeight={600}
                               color="text.primary"
-                              sx={{ mb: 0.5 }}
+                              sx={{ mb: 0.5, 
+                                width: '130px',
+                                whiteSpace: 'nowrap',
+                                overflow:'hidden',
+                                display: 'inline-block',
+                                textOverflow:'ellipsis'
+                              }}
                             >
                               {appt.reason_for_visit || "General Checkup"}
                             </Typography>
@@ -296,7 +303,7 @@ const PatientDashboard = () => {
                               mt: 1,
                             }}
                           >
-                            View Details
+                            Details
                           </Button>
                         </Box>
                       </Box>

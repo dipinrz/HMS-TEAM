@@ -44,7 +44,7 @@ export class Bill {
     payment_status: PaymentStatus;
 
     @CreateDateColumn()
-    billing_date: Date;
+        billing_date: Date;
 
     @OneToMany(() => Payment, (payment) => payment.bill)
     payments: Payment[];
