@@ -21,7 +21,7 @@ const DashboardMetrics: React.FC = () => {
             setAppointments(allAppointments);
 
             const now = new Date();
-            
+
 
             const upcomingDate = allAppointments.filter((appt: any) => {
                 const apptDate = new Date(appt.appointment_date);
@@ -89,21 +89,23 @@ const DashboardMetrics: React.FC = () => {
     ];
 
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+        }}>
             <Grid container spacing={5} sx={{ width: '100%' }}>
                 {metrics.map((metric, index) => {
                     const Icon = metric.icon;
 
                     return (
-                        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
+                        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index} >
                             <Card sx={{ width: '100%' }} animated={false}>
                                 <CardContent>
                                     <Box display="flex" justifyContent="space-between" alignItems="center">
-                                        <Box>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column'}}>
                                             <Typography variant="subtitle2" color="text.secondary">
                                                 {metric.title}
                                             </Typography>
-                                            <Typography textAlign="center" variant="h5" fontWeight="bold" mt={0.5}>
+                                            <Typography variant="h5" fontWeight="bold" mt={0.5}>
                                                 {metric.value}
                                             </Typography>
                                         </Box>
@@ -128,3 +130,7 @@ const DashboardMetrics: React.FC = () => {
 };
 
 export default DashboardMetrics;
+
+
+
+

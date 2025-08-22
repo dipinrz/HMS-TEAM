@@ -16,7 +16,7 @@ import {
   Paper,
   Chip,
   Button,
-  
+
 } from "@mui/material";
 import {
   Dashboard as DashboardIcon,
@@ -27,12 +27,12 @@ import {
   Description as PrescriptionIcon,
   MedicalServices as DoctorIcon,
   Person as PersonIcon,
-   Description   as MedicalReportIcon,     
+  Description as MedicalReportIcon,   
    ReceiptLong as PaymentIcon
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { LogOutIcon, Stethoscope, User } from "lucide-react";
+import { Calendar, CreditCard, LogOutIcon, Stethoscope, User } from "lucide-react";
 import { useDoctorStore } from "../store/doctorStore";
 
 
@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   handleDrawerToggle,
 }) => {
   const { user, logout } = useAuthStore();
-  const {fetchHeadDoctor,isHeadDoctor}=useDoctorStore()
+  const { fetchHeadDoctor, isHeadDoctor } = useDoctorStore()
   const location = useLocation();
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("sm")
@@ -105,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {
           path: "/doctor/patients",
           name: "Patients",
-          icon: <User/>
+          icon: <User />
         },
       ],
       patient: [
@@ -114,25 +114,26 @@ const Sidebar: React.FC<SidebarProps> = ({
           name: "Book Appointments",
           icon: <CalendarIcon />,
         },
-        { path: "/patient/doctors", name: "Doctors", icon: <DoctorIcon /> },
-        { path: "/patient/medical-record", name: "Medical Records", icon: <MedicalReportIcon/> },
-        { path: "/patient/appointments", name: "Appointments", icon: <DoctorIcon /> },
+        { path: "/patient/medical-record", name: "Medical Records", icon: <MedicalReportIcon /> },
+        { path: "/patient/appointments", name: "Appointments", icon: <Calendar /> },
+        { path: "/patient/bills", name: "Bills", icon: <CreditCard /> },
         { path: "/patient/payment-history", name: "Payments", icon: <PaymentIcon /> },
+
       ],
     };
 
     if (isHeadDoctor) {
       roleSpecificLinks.doctor.push({
-      path: "/doctor/doctors",
-      name: "Doctors",
-      icon: <Stethoscope/>, // Replace with actual icon
+        path: "/doctor/doctors",
+        name: "Doctors",
+        icon: <Stethoscope />, // Replace with actual icon
       });
     }
     return [...commonLinks, ...(roleSpecificLinks[role] || [])];
 
   };
 
-  
+
   const allLinks = getLinksForRole(user?.role as UserRole);
 
   const handleLogout = () => {
@@ -214,20 +215,20 @@ const Sidebar: React.FC<SidebarProps> = ({
         }}
       >
         <Typography
-        variant="body2"
-        color="text.secondary"
-        component = 'div'
-        sx={{ mt: 0.5, fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
-      >
-        <Box style={{textAlign:"center"}}>{currentTime.toLocaleDateString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}</Box>{" "}
-         <Box style={{textAlign:"center"}}>{currentTime.toLocaleTimeString("en-US")}</Box>
-      </Typography>
-      <br />
+          variant="body2"
+          color="text.secondary"
+          component='div'
+          sx={{ mt: 0.5, fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
+        >
+          <Box style={{ textAlign: "center" }}>{currentTime.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}</Box>{" "}
+          <Box style={{ textAlign: "center" }}>{currentTime.toLocaleTimeString("en-US")}</Box>
+        </Typography>
+        <br />
 
         <Box
           sx={{
@@ -361,19 +362,19 @@ const Sidebar: React.FC<SidebarProps> = ({
             zIndex: (theme) => theme.zIndex.drawer,
             ...(isMobile
               ? {
-                  // Mobile drawer
-                  height: "100vh",
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                }
+                // Mobile drawer
+                height: "100vh",
+                position: "fixed",
+                top: 0,
+                left: 0,
+              }
               : {
-                  // Desktop drawer
-                  position: "fixed",
-                  height: "100vh",
-                  top: 0,
-                  left: 0,
-                }),
+                // Desktop drawer
+                position: "fixed",
+                height: "100vh",
+                top: 0,
+                left: 0,
+              }),
           },
         }}
       >
