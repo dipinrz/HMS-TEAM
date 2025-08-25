@@ -26,7 +26,10 @@ export const createRazorpayOrder = async (req: Request, res: Response, next: Nex
         });
 
     } catch (err) {
-        next(err);
+        // next(err);
+         if (!res.headersSent) {
+            next(err);
+        }
     }
 };
 
