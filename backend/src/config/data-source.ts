@@ -44,6 +44,7 @@ export const AppDataSource = new DataSource({
 // import { Medicine } from "../entities/medicine.entity";
 // import { Bill } from "../entities/bill.entity";
 // import { BillItem } from "../entities/billItem.entity";
+// import { Payment } from "../entities/payment.entity";
 
 // dotenv.config();
 

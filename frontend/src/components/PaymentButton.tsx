@@ -3,12 +3,7 @@ import axios from 'axios';
 import CustomButton from './ui/CustomButton';
 import { useAuthStore } from '../store/useAuthStore';
 import { toast } from 'react-toastify';
-
-type RazorpayOrderResponse = {
-    orderId: string;
-    amount: number;
-    currency: string;
-};
+import { createOrder } from '../services/paymentAPI';
 
 type VerifyResponse = {
     success: boolean;
@@ -59,15 +54,7 @@ const PaymentButton: React.FC<BillPropType> = ({ billAmount, billId, onPaymentSu
         }
 
         try {
-            const orderResponse = await axios.post<RazorpayOrderResponse>(
-                'http://localhost:5000/api/v1/payment/create-order',
-                { amount: billAmount },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const orderResponse = await createOrder(billAmount);
 
             const { orderId, amount, currency } = orderResponse.data;
             console.log("this is the current amount: ", amount);
