@@ -26,12 +26,31 @@ const headCells = [
 ];
 
 interface Props {
-  departments: any[];
+  departments: Department[];
   searchTerm: string;
-  onEdit: (dept: any) => void;
+  onEdit: (dept: Department) => void;
   onDelete: (id: number) => void;
   onDownloadPDF: () => void;
 }
+
+interface DoctorUser {
+  first_name: string;
+  last_name: string;
+}
+
+interface Doctor {
+  doctor_id: number;
+  user: DoctorUser;
+}
+
+export interface Department {
+  department_id: number;
+  name: string;
+  description: string;
+  consultation_fee: number;
+  head_doctor: Doctor | null;
+}
+
 
 export default function DepartmentTable({
   departments,
@@ -41,7 +60,7 @@ export default function DepartmentTable({
   onDownloadPDF,
 }: Props) {
   const filtered = departments.filter(
-    (dept: any) =>
+    (dept) =>
       dept.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       dept.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -64,7 +83,7 @@ export default function DepartmentTable({
           </TableHead>
 
           <TableBody>
-            {filtered.map((dept: any, index: number) => (
+            {filtered.map((dept, index: number) => (
               <TableRow
                 key={dept.department_id}
                 sx={{

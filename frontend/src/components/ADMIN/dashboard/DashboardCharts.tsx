@@ -38,7 +38,17 @@ interface Department {
   appointment_count: number;
 }
 
-const formatRevenueData = (data: any[]) => {
+interface RevenueItem {
+  month: string;        
+  total_amount: number; 
+}
+
+interface RevenueChartData {
+  month: string;   
+  revenue: number; 
+}
+
+const formatRevenueData = (data: RevenueItem[]) => {
   return data.map((item) => {
     const date = new Date(item.month + "-01"); 
     const monthName = date.toLocaleString("default", { month: "short" }); 
@@ -51,7 +61,7 @@ const formatRevenueData = (data: any[]) => {
   });
 };
 
-const MemoizedBarChart = React.memo(({ data }: { data: any[] }) => (
+const MemoizedBarChart = React.memo(({ data }: { data: RevenueChartData[] }) => (
   <ResponsiveContainer width="100%" height={300}>
     <BarChart data={data}>
       <defs>

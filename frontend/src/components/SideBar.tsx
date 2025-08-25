@@ -18,6 +18,7 @@ import {
   Button,
 
 } from "@mui/material";
+
 import {
   Dashboard as DashboardIcon,
   People as PeopleIcon,
@@ -30,11 +31,11 @@ import {
   Description as MedicalReportIcon,   
    ReceiptLong as PaymentIcon
 } from "@mui/icons-material";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong"
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { Calendar, CreditCard, LogOutIcon, Stethoscope, User } from "lucide-react";
 import { useDoctorStore } from "../store/doctorStore";
-
 
 const drawerWidth = 280;
 
@@ -90,6 +91,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           icon: <MedicationIcon />,
         },
         { path: "/admin/doctors", name: "Doctors", icon: <DoctorIcon /> },
+        {path:"/admin/payments", name:"Payments", icon:<ReceiptLongIcon/>}
       ],
       doctor: [
         {

@@ -29,7 +29,7 @@ interface DoctorForm {
 
 const AdminDashboard = () => {
   const [open, setOpen] = useState(false);
-  const [departments, setDepartments] = useState<any[]>([]);
+  const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showExtras, setShowExtras] = useState(false);
   const navigate = useNavigate();
@@ -77,9 +77,9 @@ const AdminDashboard = () => {
       await registerDoctor(formData);
       toast.success("Doctor registered successfully!");
       handleCloseModal();
-    } catch (error: any) {
-      if (error.response) {
-        toast.error(error.response.data.message || "Failed to register doctor");
+    } catch (error) {
+      if (error) {
+        toast.error("Failed to register doctor");
       } else {
         toast.error("Something went wrong");
       }

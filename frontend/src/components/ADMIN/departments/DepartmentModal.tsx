@@ -11,11 +11,28 @@ import { useState } from "react";
 interface Props {
   open: boolean;
   isEditMode: boolean;
-  formData: any;
-  doctors: any[];
+  formData: DepartmentData;
+  doctors: DoctorOption[];
   onClose: () => void;
-  onChange: (data: any) => void;
+  onChange: (data: DepartmentData) => void;
   onSubmit: () => void;
+}
+
+interface DepartmentData {
+   name: string,
+    description: string,
+    consultation_fee:number,
+    head_doctor: number,
+}
+
+type DepartmentFormErrors = Partial<Record<keyof DepartmentData, string>>;
+
+interface DoctorOption {
+  doctor_id: number;
+  user: {
+    first_name: string;
+    last_name: string;
+  };
 }
 
 export default function DepartmentModal({
@@ -27,7 +44,7 @@ export default function DepartmentModal({
   onChange,
   onSubmit,
 }: Props) {
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<DepartmentFormErrors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,11 +55,11 @@ export default function DepartmentModal({
           ? Number(value)
           : value,
     });
-    setErrors((prev: any) => ({ ...prev, [name]: "" })); // clear error on change
+    setErrors((prev: DepartmentFormErrors) => ({ ...prev, [name]: "" })); // clear error on change
   };
 
   const handleSubmit = () => {
-    const newErrors: any = {};
+    const newErrors: DepartmentFormErrors = {};
     if (!formData.name?.trim()) newErrors.name = "Name is missing";
     if (!formData.description?.trim())
       newErrors.description = "Description is missing";
@@ -138,7 +155,7 @@ export default function DepartmentModal({
               helperText={errors.head_doctor}
             >
               <option value={0}>Select Head Doctor</option>
-              {doctors.map((doc: any) => (
+              {doctors.map((doc) => (
                 <option key={doc.doctor_id} value={doc.doctor_id}>
                   {doc.user.first_name} {doc.user.last_name}
                 </option>

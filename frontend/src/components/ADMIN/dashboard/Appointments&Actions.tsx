@@ -55,6 +55,23 @@ const getStatusStyle = (status: string) => {
   }
 };
 
+interface Appointment {
+  appointment_id: number;
+  appointment_date: string; 
+  status: string;
+  patient: {
+    first_name: string;
+    last_name: string;
+  };
+  doctor: {
+    first_name: string;
+    last_name: string;
+  };
+  department: {
+    name: string;
+  };
+}
+
 const AppointmentsAndActions: React.FC = () => {
   const [todayAppointments, setTodaysAppointmnets] = useState([]);
   const navigate = useNavigate();
@@ -73,7 +90,7 @@ const AppointmentsAndActions: React.FC = () => {
     }
   };
 
-  const transformAppointmentData = (appointments: any[]) => {
+  const transformAppointmentData = (appointments: Appointment[]) => {
     return appointments.map((appointment) => ({
       id: appointment.appointment_id,
       patient: `${appointment.patient.first_name} ${appointment.patient.last_name}`,

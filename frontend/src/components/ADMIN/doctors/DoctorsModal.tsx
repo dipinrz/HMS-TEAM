@@ -29,8 +29,17 @@ interface DoctorsModalProps {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent) => void;
   loading: boolean;
-  departments: any[];
+  departments: DepartmentData[];
 }
+
+interface DepartmentData {
+  department_id:number,
+   name: string,
+    description: string,
+    consultation_fee:number,
+    head_doctor: number,
+}
+
 
 const DoctorsModal = ({
   handleCloseModal,
@@ -199,7 +208,7 @@ const DoctorsModal = ({
                     error={!!errors.department_id}
                     helperText={errors.department_id}
                   >
-                    {departments.map((dept: any) => (
+                    {departments.map((dept) => (
                       <MenuItem
                         key={dept.department_id}
                         value={dept.department_id}

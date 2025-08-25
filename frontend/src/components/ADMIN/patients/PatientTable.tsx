@@ -17,8 +17,24 @@ import {
 } from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material";
 
+
+
+interface PatientUser {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string | null;
+  created_at: string;
+}
+
+export interface Patient {
+  patient_id: number;
+  blood_group: string | null;
+  user: PatientUser;
+}
+
 interface PatientTableProps {
-  patients: any[];
+  patients: Patient[];
   isLoading: boolean;
   onDeleteClick: (id: number) => void;
 }
@@ -67,7 +83,7 @@ const PatientTable = ({
           </Box>
         ) : (
           <TableBody>
-            {patients.map((patient: any, index) => (
+            {patients.map((patient,index) => (
               <TableRow key={patient.patient_id}>
                 <TableCell>
                   <Badge badgeContent={index + 1} color="primary">

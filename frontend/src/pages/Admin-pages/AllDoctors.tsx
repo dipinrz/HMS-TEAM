@@ -27,6 +27,31 @@ interface DoctorForm {
   department_id: number;
 }
 
+interface Department {
+  department_id: number;
+  name: string;
+  description: string;
+  consultation_fee: number;
+}
+
+interface User {
+  first_name: string;
+  last_name: string;
+  email: string;
+  created_at?: string;
+}
+
+interface Doctor {
+  doctor_id: number;
+  user: User;
+  specialization: string;
+  qualification: string;
+  license_number: string;
+  years_of_experience: number;
+  department?: Department;
+}
+
+
 const AdminDoctorsPage = () => {
   const [allDoctors, setAllDoctors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +62,7 @@ const AdminDoctorsPage = () => {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedDoctor, setSelectedDoctor] = useState<any>(null);
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
 
   const [formData, setFormData] = useState<DoctorForm>({
     first_name: "",
@@ -140,9 +165,9 @@ const AdminDoctorsPage = () => {
 
       fetchAllDoctors();
       handleCloseModal();
-    } catch (error: any) {
-      if (error.response) {
-        toast.error(error.response.data.message || "Failed to save doctor");
+    } catch (error) {
+      if (error) {
+        toast.error("Failed to save doctor");
       } else {
         toast.error("Something went wrong");
       }
@@ -185,7 +210,7 @@ const AdminDoctorsPage = () => {
       toast.success("Doctor deleted successfully");
       fetchAllDoctors();
       handleCloseDeleteDialog();
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Couldn't delete doctor");
       console.log("Error in deleting doctor", error);
     }
@@ -215,7 +240,7 @@ const AdminDoctorsPage = () => {
       setIsLoading(true);
       const response = await getAllDoctors();
       setAllDoctors(response.data.data);
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Could not fetch doctors");
       console.log("Error in fetching all doctors", error);
     } finally {

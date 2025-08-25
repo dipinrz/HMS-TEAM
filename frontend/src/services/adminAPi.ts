@@ -77,3 +77,7 @@ export const fetchTodaysAppoinments = async () =>{
 export const getMonthlyRevenue = async ()=>{
   return await commonAPI('GET',`${baseURL}/payment/monthly`)
 }
+
+export const getAllPayments = async()=>{
+  return await commonAPI('GET',`${baseURL}/payment/allPayments`)
+}

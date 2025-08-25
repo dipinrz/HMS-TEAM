@@ -14,11 +14,32 @@ const headCells = [
   { id: "actions", numeric: false, label: "Actions" },
 ];
 
+interface DoctorUser {
+  first_name: string;
+  last_name: string;
+  email: string;
+  created_at: string;
+}
+
+interface Department {
+  department_id: number;
+  name: string;
+}
+
+export interface Doctor {
+  doctor_id: number;
+  specialization: string;
+  license_number: string;
+  department: Department | null;
+  user: DoctorUser;
+}
+
+
 interface DoctorsTableProps {
   isLoading: boolean;
-  allDoctors: any[];
+  allDoctors: Doctor[];
   searchQuery: string;
-  handleEditDoctor: (doctor: any) => void;
+  handleEditDoctor: (doctor: Doctor) => void;
   handleOpenDeleteDialog: (id: number) => void;
   downloadPDF: () => void;
 }
@@ -33,7 +54,7 @@ export const DoctorsTable = ({
 }: DoctorsTableProps) => {
 
    const filteredDoctors = allDoctors?.filter(
-    (doctor: any) =>
+    (doctor) =>
       doctor?.user?.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doctor?.user?.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doctor?.user?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -108,7 +129,7 @@ export const DoctorsTable = ({
               <TableBody>
                 {allDoctors
                   ?.filter(
-                    (doctor: any) =>
+                    (doctor) =>
                       doctor?.user?.first_name
                         ?.toLowerCase()
                         .includes(searchQuery.toLowerCase()) ||
@@ -128,7 +149,7 @@ export const DoctorsTable = ({
                         ?.toLowerCase()
                         .includes(searchQuery.toLowerCase())
                   )
-                  .map((doctor: any, index) => (
+                  .map((doctor,index) => (
                     <TableRow
                       key={doctor?.doctor_id}
                       sx={{
@@ -158,7 +179,7 @@ export const DoctorsTable = ({
                           >
                             {doctor?.user?.first_name
                               .split(" ")
-                              .map((n: any) => n[0])
+                              .map((n) => n[0])
                               .join("")}
                           </Avatar>
                           <Box>
@@ -294,6 +315,8 @@ export const DoctorsTable = ({
           />
         </Box>
       </Box>
+
+      
     </Paper>
   );
-};
+};  
