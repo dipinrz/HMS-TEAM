@@ -91,11 +91,17 @@ export const getPaymentHistoryByPatientId = async (patient_id: number) => {
     
 }
 
-export const getAllPayments = async()=>{
+export const getAllPayments = async () => {
     return await paymentRepo.find({
-        order:{payment_date:'DESC'},
-        relations:['bill','bill.patient']})
+        relations: ['bill', 'bill.patient'],
+        order: {
+            bill: {
+                bill_id: 'DESC'
+            }
+        }
+    });
 }
+
 
 
 export const fetchPaymentByIdService = async(id:number)=>{
