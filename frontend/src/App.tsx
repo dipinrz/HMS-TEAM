@@ -38,6 +38,7 @@ import ProfilePage from "./pages/PatientUtility/ProfilePage";
 import AllAppointments from "./pages/PatientUtility/AllAppointments";
 import PaymentHistory from "./pages/PatientUtility/PaymentHistory";
 import Bill from "./pages/PatientUtility/Bill";
+import AdminPaymentsTable from "./pages/Admin-pages/AllPayments";
 
 const theme = createTheme({
   palette: {
@@ -201,6 +202,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminAppointment />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/payments"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminPaymentsTable/>
                 </ProtectedRoute>
               }
             />

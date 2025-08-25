@@ -8,14 +8,27 @@ import PatientToolbar from "../../components/ADMIN/patients/PatientToolbar";
 import PatientTable from "../../components/ADMIN/patients/PatientTable";
 import PatientDeleteDialog from "../../components/ADMIN/patients/PatientDeleteDialog";
 
+
+interface User{
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number?: string;
+  created_at: string;
+}
+
+interface Patient {
+  patient_id: number;
+  blood_group?: string;
+  user: User;
+}
+
 const AdminPatientsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [allPatients, setAllPatients] = useState<any[]>([]);
+  const [allPatients, setAllPatients] = useState<Patient[]>([]);
   const [filteredPatients, setFilteredPatients] = useState<any[]>([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(
-    null
-  );
+  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(null);
 
   useEffect(() => {
     fetchAllPatients();

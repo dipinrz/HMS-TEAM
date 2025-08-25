@@ -16,6 +16,24 @@ import DepartmentTable from "../../components/ADMIN/departments/DepartmentTable"
 import DepartmentModal from "../../components/ADMIN/departments/DepartmentModal";
 import DepartmentDeleteDialog from "../../components/ADMIN/departments/DepartmentDeleteDialog";
 
+interface Doctor {
+  doctor_id: number;
+  user: {
+    first_name: string;
+    last_name: string;
+  };
+}
+
+interface Department {
+  department_id: number;
+  name: string;
+  description: string;
+  consultation_fee: number;
+  head_doctor?: Doctor | null;
+}
+
+
+
 const AdminDepartmentsPage = () => {
   const [departments, setDepartments] = useState([]);
   const [allDoctors, setAllDoctors] = useState([]);
@@ -70,7 +88,7 @@ const AdminDepartmentsPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleEditClick = (dept: any) => {
+  const handleEditClick = (dept: Department) => {
     setIsEditMode(true);
     setEditDeptId(dept.department_id);
     setFormData({
@@ -129,7 +147,7 @@ const AdminDepartmentsPage = () => {
           "Head Doctor",
         ],
       ],
-      body: departments.map((d: any, i) => [
+      body: departments.map((d: Department, i) => [
         i + 1,
         d.name,
         d.description,
@@ -147,9 +165,9 @@ const AdminDepartmentsPage = () => {
    <Box
   sx={{
     p: 3,
-    backgroundColor: "#f8fafc", // page background
+    backgroundColor: "#f8fafc", 
     minHeight: "100vh",
-    pt: { xs: 10, sm: 8, md: 6 }, // responsive top padding
+    pt: { xs: 10, sm: 8, md: 6 }, 
   }}
 >
   <Typography
@@ -199,3 +217,4 @@ const AdminDepartmentsPage = () => {
 };
 
 export default AdminDepartmentsPage;
+

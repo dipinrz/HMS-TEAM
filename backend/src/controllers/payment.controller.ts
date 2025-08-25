@@ -152,7 +152,7 @@ export const getAllPaymentHistory = async(req:Request,res:Response,next:NextFunc
             length:paymentData.length
         })
     }catch (error) {
-        next(error);
+        next(error);    
     }
 }
 
@@ -165,10 +165,10 @@ export const getPaymentById = async (req:Request,res:Response,next:NextFunction)
         if(!payment){
             throw new ApiError("Bill not found",404)
         }
-
+       
         res.status(200).json({
             message:"Bill fetched successfully",
-            payment
+            payment:instanceToPlain(payment)
         })
 
     }catch(error){
