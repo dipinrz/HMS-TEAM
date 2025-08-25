@@ -62,7 +62,9 @@ const Sidebar: React.FC<SidebarProps> = ({
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-    fetchHeadDoctor();
+    if(user?.role === 'doctor'){
+      fetchHeadDoctor();
+    }
     return () => clearInterval(timer);
   }, []);
 
