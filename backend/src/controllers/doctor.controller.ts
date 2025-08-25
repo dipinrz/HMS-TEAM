@@ -306,11 +306,11 @@ export const isHeadDoctorHandler = async (req: AuthRequest, res: Response, next:
     let department = await findHeadDoctorDepartment(head_doctor_id);
     
     if(department === null){
-      res.json({
-      success: true,
-      message: "No Department found as head doctor",
-      is_head_doctor: false,
-    })
+      return res.json({
+        success: true,
+        message: "No Department found as head doctor",
+        is_head_doctor: false,
+      })
     }
 
     const doctors = await getDoctorsByDepartmentId(department.department_id);
