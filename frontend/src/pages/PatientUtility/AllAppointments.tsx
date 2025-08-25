@@ -75,8 +75,9 @@ function AllAppointments() {
         toast.error(message);
       }
     } catch (error) {
-        const apierr=error as ApiError
-        const errorMessage= apierr.data?.message || "Failed to cancel appointment"
+      const apierr = error as ApiError;
+      const errorMessage =
+        apierr.data?.message || "Failed to cancel appointment";
       toast.error(errorMessage);
     }
   };
@@ -121,10 +122,17 @@ function AllAppointments() {
                   <Box
                     sx={{
                       display: "flex",
+                      flexDirection: {
+                        xs: "column",
+                        sm: "column",
+                        md: "column",
+                        lg: "row",
+                      },
                       alignItems: "center",
-                      justifyContent: "space-around",
+                      // justifyContent: "space-around",
                       gap: 2,
                       mb: 1.5,
+                      minHeight: 110,
                     }}
                   >
                     <Box
@@ -141,13 +149,15 @@ function AllAppointments() {
                     >
                       <CalendarToday sx={{ color: "white" }} />
                     </Box>
-                    <Box>
+                    <Box sx={{ width: "100%", height: "100%" }}>
                       <Typography
                         variant="h6"
                         fontWeight={600}
                         sx={{
                           overflow: { xs: "hidden" },
                           fontSize: { xs: "1rem", sm: "1.2rem" },
+                          textAlign: { xs: "center", sm: "center", lg: "left" },
+                          maxWidth:{lg:160}
                         }}
                       >
                         {appt.reason_for_visit}
@@ -158,6 +168,11 @@ function AllAppointments() {
                         sx={{
                           display: "flex",
                           alignItems: "center",
+                          justifyContent: {
+                            xs: "center",
+                            sm: "center",
+                            lg: "left",
+                          },
                           gap: 0.5,
                           mt: 0.5,
                         }}

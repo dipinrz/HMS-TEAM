@@ -19,6 +19,7 @@ import {
   CardContent,
   useTheme,
   useMediaQuery,
+  Divider,
 } from "@mui/material";
 import {
   TrendingUp,
@@ -26,6 +27,8 @@ import {
   CreditCard,
   Payment,
   AccountBalance,
+  FilterList as FilterIcon,
+  CalendarToday as CalendarIcon,
 } from "@mui/icons-material";
 
 import { getPatientPaymentHistory } from "../../services/patientApi";
@@ -145,13 +148,13 @@ const PaymentHistory = () => {
 
         <Grid container spacing={2} sx={{ mb: 3 }}>
           {cardData.map((card) => (
-            <Grid size={{ xs: 12, sm: 4 }}>
+            <Grid size={{ xs: 12, sm: 6, lg: 4,md:6 }} key={card.title}>
               <Card
-                elevation={3}
+                elevation={2}
                 sx={{
-                  background: "",
                   color: "grey",
                   minHeight: 160,
+                  borderRadius:5,
                 }}
               >
                 <CardContent sx={{ position: "relative", p: 3 }}>
@@ -194,48 +197,120 @@ const PaymentHistory = () => {
             </Grid>
           ))}
         </Grid>
-        <Box
+        <Paper
+          elevation={3}
           sx={{
             p: 3,
             mb: 3,
             borderRadius: 2,
-            backgroundColor: "#f5f5f5",
-            display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            gap: 2,
+            background: theme.palette.grey[50],
+            border: `1px solid ${theme.palette.grey[200]}`,
           }}
         >
-          <FormControl sx={{ minWidth: isMobile ? "100%" : 150 }}>
-            <InputLabel>Select Year</InputLabel>
-            <Select
-              label="Select Year"
-              value={selectYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
+          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+            <FilterIcon color="primary" sx={{ mr: 1 }} />
+            <Typography variant="h6" color="primary.main">
+              Filter Options
+            </Typography>
+          </Box>
+          <Divider sx={{ mb: 2 }} />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              gap: 2,
+            }}
+          >
+            <FormControl
+              size="small"
+              sx={{
+                minWidth: isMobile ? "100%" : 150,
+                background: "white",
+                borderRadius: 1,
+                maxeight: 50,
+              }}
             >
-              <MenuItem value="">All Years</MenuItem>
-              {years.map((year) => (
-                <MenuItem key={year} value={year}>
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl sx={{ minWidth: isMobile ? "100%" : 150 }}>
-            <InputLabel>Select month</InputLabel>
-            <Select
-              label="Select month"
-              value={selectMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
+              <InputLabel id="year-select-label">
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <CalendarIcon sx={{ fontSize: 18, mr: 0.5 }} />
+                  Select Year
+                </Box>
+              </InputLabel>
+              <Select
+                labelId="year-select-label"
+                label={
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <CalendarIcon sx={{ fontSize: 18, mr: 0.5 }} />
+                    Select Year
+                  </Box>
+                }
+                value={selectYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: 48 * 4,
+                      width: 160,
+                    },
+                  },
+                }}
+              >
+                <MenuItem value="">All Years</MenuItem>
+                {years.map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl
+              size="small"
+              sx={{
+                minWidth: isMobile ? "100%" : 160,
+                background: "white",
+                borderRadius: 1,
+              }}
             >
-              <MenuItem value="">All Months</MenuItem>
-              {months.map((month, index) => (
-                <MenuItem key={month} value={index}>
-                  {month}
+              <InputLabel id="year-select-label">
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <CalendarIcon sx={{ fontSize: 18, mr: 0.5 }} />
+                  Select Month
+                </Box>
+              </InputLabel>
+              <Select
+                labelId="month-select-label"
+                label={
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <CalendarIcon sx={{ fontSize: 18, mr: 0.5 }} />
+                    Select Month
+                  </Box>
+                }
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: 48 * 3,
+                      width: 160,
+                    },
+                  },
+                }}
+                value={selectMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+                sx={{ maxHeight: 50 }}
+              >
+                <MenuItem value="">
+                  <em>All Months</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
+                {months.map((month, index) => (
+                  <MenuItem key={month} value={index}>
+                    {month}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </Paper>
+
         <TableContainer
           component={Paper}
           elevation={3}

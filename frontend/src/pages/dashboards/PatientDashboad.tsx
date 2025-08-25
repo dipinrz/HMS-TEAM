@@ -1,10 +1,4 @@
-import {
-  Box,
-  Grid,
-  Typography,
-  Stack,
-  Button,
-} from "@mui/material";
+import { Box, Grid, Typography, Stack, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -87,7 +81,13 @@ const PatientDashboard = () => {
   };
 
   return (
-    <Box sx={{ paddingX: "30px", paddingBottom: '40px', backgroundColor: "#f8fafc",minWidth:'360px' }} >
+    <Box
+      sx={{
+        paddingX: "30px",
+        paddingBottom: "40px",
+        backgroundColor: "#f8fafc",
+      }}
+    >
       <Box
         sx={{ marginTop: { xs: "10vh", md: "3vh" } }}
         display="flex"
@@ -120,16 +120,15 @@ const PatientDashboard = () => {
         <DashboardMetrics />
       </Box>
 
-      <Grid container spacing={4} sx={{ mt: 1 }} >
+      <Grid container spacing={4} sx={{ mt: 1 }}>
         <Grid size={{ xs: 12, lg: 4 }}>
           <Box
             sx={{
               backgroundColor: "#fff",
               borderRadius: "16px",
               marginTop: "20px",
-              minWidth: '320px',
-              minHeight: '20px',
-              marginRight:'10px',
+              minWidth: "500px",
+              minHeight: "20px",
               p: 3,
               boxShadow: "0 6px 24px rgba(0, 0, 0, 0.05)",
               height: "100%",
@@ -174,7 +173,6 @@ const PatientDashboard = () => {
                   py: 6,
                   color: "text.secondary",
                 }}
-
               >
                 <EventAvailable
                   sx={{
@@ -191,7 +189,7 @@ const PatientDashboard = () => {
               <Box sx={{ overflowY: "au ", flex: 1, pr: 1 }}>
                 {appointments.slice(0, 3).map((appt) => (
                   <Card
-                    key={appt._id}
+                    key={appt.appointment_id}
                     animated={false}
                     sx={{
                       mb: 2,
@@ -212,7 +210,8 @@ const PatientDashboard = () => {
                         <Box display="flex" gap={2}>
                           <Box
                             sx={{
-                              background: "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                              background:
+                                "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
                               borderRadius: "10px",
                               width: "48px",
                               height: "48px",
@@ -221,7 +220,6 @@ const PatientDashboard = () => {
                               justifyContent: "center",
                               color: "white",
                               boxShadow: "0 2px 6px rgba(0, 0, 0, 0.08)",
-
                             }}
                           >
                             {getAppointmentIcon(appt.mode || "in-person")}
@@ -244,10 +242,15 @@ const PatientDashboard = () => {
                             <Typography
                               variant="body2"
                               color="text.secondary"
-                              sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
                             >
                               <Person fontSize="small" />
-                              Dr. {appt.doctor?.first_name} {appt.doctor?.last_name}
+                              Dr. {appt.doctor?.first_name}{" "}
+                              {appt.doctor?.last_name}
                             </Typography>
                             <Typography
                               variant="body2"
@@ -260,13 +263,16 @@ const PatientDashboard = () => {
                               }}
                             >
                               <AccessTime fontSize="small" />
-                              {new Date(appt.appointment_date).toLocaleString([], {
-                                weekday: "short",
-                                month: "short",
-                                day: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
+                              {new Date(appt.appointment_date).toLocaleString(
+                                [],
+                                {
+                                  weekday: "short",
+                                  month: "short",
+                                  day: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }
+                              )}
                             </Typography>
                           </Box>
                         </Box>
@@ -279,17 +285,6 @@ const PatientDashboard = () => {
                             justifyContent: "space-between",
                           }}
                         >
-                          {/* <Chip
-                            label={appt.status || "Upcoming"}
-                            size="small"
-                            color={getStatusChipColor(appt.status)}
-                            sx={{
-                              fontWeight: 600,
-                              fontSize: "0.65rem",
-                              height: "20px",
-                              textTransform: "capitalize",
-                            }}
-                          /> */}
                           <Button
                             size="small"
                             variant="outlined"

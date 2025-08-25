@@ -33,7 +33,6 @@ const DashboardMetrics: React.FC = () => {
             );
 
             setUpcomming(upcomingDate);
-            console.log(upcomingDate);
 
         } catch (error) {
             console.error('Failed to fetch appointments:', error);
