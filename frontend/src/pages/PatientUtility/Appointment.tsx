@@ -222,12 +222,12 @@ const TestBookAppointment: React.FC = () => {
     const selectedDateTime = new Date(formData.appointment_date);
     const today = new Date();
 
-    if (selectedDateTime <= today)
-      return "Please select a date starting from today and current time slot .";
-
     // Check if time is between 09:00 and 18:00
     const selectedHour = selectedDateTime.getHours();
     const selectedMinutes = selectedDateTime.getMinutes();
+
+    if (selectedDateTime <= today)
+      return `Please select another time slot for today ; selected time slot ${selectedHour}:00 is booked`;
 
     if (
       selectedHour < 9 ||
@@ -259,7 +259,6 @@ const TestBookAppointment: React.FC = () => {
           message:
             "Appointment booked successfully! You will receive a confirmation email shortly.",
         });
-        console.log("Submitting the data", formData);
 
         // Reset form
         setFormData(INITIAL_FORM_STATE);
@@ -423,7 +422,6 @@ const TestBookAppointment: React.FC = () => {
                   </TextField>
                 </Grid>
 
-                {/* Doctor Selection */}
                 <Grid size={{ xs: 12, md: 6 }}>
                   <TextField
                     select
