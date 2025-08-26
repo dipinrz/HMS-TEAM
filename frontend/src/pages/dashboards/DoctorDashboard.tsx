@@ -1,7 +1,6 @@
 
 import { Avatar, Box, Chip, Divider, Grid, Stack, Typography, useTheme } from "@mui/material";
 import { AccessTime, CalendarToday, Cancel, CheckCircle, Description, EventBusy, Group, Healing, InfoOutlined } from "@mui/icons-material";
-import { Stethoscope } from "lucide-react";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
 import { useEffect, useState } from "react";
@@ -105,7 +104,6 @@ const getStatusIcon = (status: string) => {
   };
 
   const getUpcomingAppointment = (appointments: Appointment[]) => {
-    const now = new Date();
     const upcoming = appointments
       .filter(
         (a): a is Appointment & { appointment_date: string } =>
@@ -162,6 +160,9 @@ const getStatusIcon = (status: string) => {
   const handleAddPrescription = (id: number) => {
     navigate(`/doctor/prescription/${id}`)
   }
+  const handleGetReport=()=>{
+    navigate('/doctor/patients');
+  }
   return (
     <Box sx={{ p: 2 }}>
 
@@ -171,11 +172,11 @@ const getStatusIcon = (status: string) => {
           <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: "0.875rem", sm: "1rem" }, mt: 0.5 }}>You have {appointments.length} appointments scheduled for today</Typography>
         </Box>
         <Box display="flex" gap={2}>
-          <CustomButton startIcon={<Description />} sx={{
+          <CustomButton onClick={()=>handleGetReport()} startIcon={<Description />} sx={{
             backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
             border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
           }} label="View Reports"></CustomButton>
-          <CustomButton startIcon={<Stethoscope />} label="Start Consultation"></CustomButton>
+          {/* <CustomButton startIcon={<Stethoscope />} label="Start Consultation"></CustomButton> */}
 
         </Box>
       </Box>
