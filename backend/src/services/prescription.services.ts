@@ -49,3 +49,4 @@ export const getPrescriptionByIds = async (appointmentIds: number[]) => {
         relations: ['appointment', 'appointment.patient']
     });
 }
+
