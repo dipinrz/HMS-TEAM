@@ -24,6 +24,7 @@ import {
 import { createBillItem } from "../services/billItem.services";
 import { FeeType } from "../entities/billItem.entity";
 import { getPrescriptionsByAppoinment } from "../services/medicalReport.services";
+import { request } from "http";
 
 export const addPrescription = async (
   req: Request,
@@ -140,16 +141,37 @@ export const updateAppoinmentStatus = async (req: Request, res: Response) => {
       throw new ApiError("Appointment ID doesn't exist", 404);
     }
 
+    const appointmentDate = new Date(appointment.appointment_date);
+    const now = new Date();
+
+    const windowStart = appointmentDate;
+    const windowEnd = new Date(appointmentDate.getTime() + 30 * 60 * 1000);
+
+    if (now < windowStart || now > windowEnd) {
+      throw new ApiError(
+        "Status can only be updated during the appointment time slot (within 30 minutes of start).",
+        400
+      );
+    }
+
+    const prescriptions = await getPrescriptionsByAppoinment(appointment_id);
+
+    if (prescriptions.length == 0) {
+      throw new ApiError(
+        "Status cannot be updated without adding prescription"
+      );
+    }
+
     await updateAppointmentStatus(appointment_id, AppointmentStatus.COMPLETED);
     appointment.status = AppointmentStatus.COMPLETED;
-    
 
-    res.status(201).json({
-        success:true,
-        message:"Appointment status updated to completed"
-    })
+    res.status(200).json({
+      success: true,
+      message: "Appointment status updated to completed",
+    });
   } catch (error) {
-    console.log("Error in updateAppoinmentStatus", error);
+    console.error("Error in updateAppoinmentStatus", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -228,12 +250,12 @@ export const getPrescriptionByAppointmentIdHandler = async (
       })
     );
 
-        res.status(201).json({
-            success: true,
-            message: 'Prescription fetched successfully',
-            prescriptions: prescriptionsWithMedicines
-        })
-    } catch (error) {
-        next(error)
-    }
-}
+    res.status(201).json({
+      success: true,
+      message: "Prescription fetched successfully",
+      prescriptions: prescriptionsWithMedicines,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

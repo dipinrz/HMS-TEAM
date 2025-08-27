@@ -31,6 +31,36 @@ export const isAppointmentExistsSameDay = async (doctor_id: number, patient_id: 
     return !!existingAppointment;
 };
 
+export const anotherAppointmentExistsService = async (
+  doctor_id: number,
+  appointment_date: Date
+) => {
+  const newStart = appointment_date;
+  const newEnd = new Date(newStart.getTime() + 30 * 60 * 1000); 
+
+  const startOfDay = new Date(newStart);
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date(newStart);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const appointments = await appointmentRepo.find({
+    where: {
+      doctor: { user_id: doctor_id },
+      appointment_date: Between(startOfDay, endOfDay),
+    },
+  });
+
+  const conflict = appointments.find((appt) => {
+    const existingStart = new Date(appt.appointment_date);
+    const existingEnd = new Date(existingStart.getTime() + 30 * 60 * 1000);
+    return existingStart < newEnd && existingEnd > newStart;
+  });
+
+  return conflict ? true : false;
+};
+
+
 
 export const getAppointmentById = async (appointmentId: number) => {
 

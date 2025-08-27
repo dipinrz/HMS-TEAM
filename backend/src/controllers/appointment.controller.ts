@@ -5,7 +5,7 @@ import { getUserById } from "../services/user.services";
 import { getDepartmentByDoctorId, getDepartmentById } from "../services/department.services";
 import { getMedicalReportByPId } from "../services/medicalReport.services";
 import { ApiError } from "../utils/apiError";
-import { createAppointment, deleteAppointmentById, getAllAppointments, getAppointmentById, getScheduledAppointmentById, getTodayAppoinmentService, isAppointmentExistsSameDay } from "../services/appointment.services";
+import { anotherAppointmentExistsService, createAppointment, deleteAppointmentById, getAllAppointments, getAppointmentById, getScheduledAppointmentById, getTodayAppoinmentService, isAppointmentExistsSameDay } from "../services/appointment.services";
 import { createBill, deleteBillById, getBillByAppointmentId } from "../services/bill.services";
 import { createBillItem } from "../services/billItem.services";
 import { FeeType } from "../entities/billItem.entity";
@@ -51,6 +51,11 @@ export const addAppointment = async (req: AuthRequest, res: Response, next: Next
         const exists = await isAppointmentExistsSameDay(doctor_id, patient_id, new Date(appointment_date));
         if (exists) {
         throw new ApiError("An appointment already exists for this doctor and patient on the same day", 409);
+        }
+
+        const anotherAppoinmentFound = await anotherAppointmentExistsService(doctor_id,new Date(appointment_date)) 
+        if (anotherAppoinmentFound) {
+        throw new ApiError("The appoinment slot is already filled. Please choose another slot", 409);
         }
 
         const appointment = await createAppointment({
