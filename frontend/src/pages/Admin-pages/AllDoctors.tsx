@@ -86,7 +86,7 @@ const AdminDoctorsPage = () => {
       last_name: "",
       email: "",
       password: "",
-      specialization: "",
+      specialization: "ortho",
       qualification: "",
       license_number: "",
       years_of_experience: 0,

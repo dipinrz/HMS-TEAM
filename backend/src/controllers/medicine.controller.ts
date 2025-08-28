@@ -98,13 +98,6 @@ export const updateMedicineHandler = async (req: Request, res: Response, next: N
 
     const { medicine_name, description, cost, expiry_date } = req.body;
 
-    const medicineWithSameName = await findMedicineByName(medicine_name);
-    console.log("medicineWithSameName", medicineWithSameName);
-
-    if (medicineWithSameName) {
-      throw new ApiError('medicine name already exists', 409);
-    }
-
     const medicineData = {
       medicine_name,
       description,
