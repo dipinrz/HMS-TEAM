@@ -394,7 +394,6 @@ const TestBookAppointment: React.FC = () => {
                       updateFormData("department_id", e.target.value);
                     }}
                     disabled={loading}
-                    required
                     slotProps={{
                       input: {
                         startAdornment: (
@@ -432,7 +431,6 @@ const TestBookAppointment: React.FC = () => {
                       updateFormData("doctor_id", e.target.value)
                     }
                     disabled={loading || !formData.department_id}
-                    required
                     slotProps={{
                       input: {
                         startAdornment: (
@@ -487,7 +485,6 @@ const TestBookAppointment: React.FC = () => {
                         }
                       }}
                       disabled={loading}
-                      required
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ min: getMinDate() }}
                       slotProps={{
@@ -520,7 +517,6 @@ const TestBookAppointment: React.FC = () => {
                           });
                         }
                       }}
-                      required
                       helperText="Select a time slot"
                       SelectProps={{
                         MenuProps: {
@@ -588,7 +584,6 @@ const TestBookAppointment: React.FC = () => {
                       updateFormData("reason_for_visit", e.target.value)
                     }
                     disabled={loading}
-                    required
                     inputProps={{ maxLength: 500 }}
                     error={
                       formData.reason_for_visit.length > 0 &&
