@@ -29,6 +29,7 @@ const PatientDashboard = () => {
     const fetchAppointments = async () => {
       try {
         const res = await getPatientAppointments();
+        console.log("All apoinments",res.data.appointments)
         const now = new Date();
         const upcoming = res.data.appointments
           .filter((appt: any) => new Date(appt.appointment_date) > now)
@@ -37,6 +38,7 @@ const PatientDashboard = () => {
               new Date(a.appointment_date).getTime() -
               new Date(b.appointment_date).getTime()
           );
+          console.log("Upcoming apoinments ",upcoming)
         setAppointments(upcoming);
       } catch (err) {
         toast.error("Failed to fetch appointments");
@@ -46,18 +48,6 @@ const PatientDashboard = () => {
     fetchAppointments();
   }, []);
 
-  // const getStatusChipColor = (status: string) => {
-  //   switch (status?.toLowerCase()) {
-  //     case "completed":
-  //       return "success";
-  //     case "cancelled":
-  //       return "error";
-  //     case "scheduled":
-  //       return "info";
-  //     default:
-  //       return "default";
-  //   }
-  // };
 
   const handleViewClick = (appointment: any) => {
     setSelectedAppointment(appointment);
@@ -81,13 +71,7 @@ const PatientDashboard = () => {
   };
 
   return (
-    <Box
-      sx={{
-        paddingX: "30px",
-        paddingBottom: "40px",
-        backgroundColor: "#f8fafc",
-      }}
-    >
+    <Box sx={{ minHeight: '92vh', paddingX: "30px", paddingBottom: '40px', backgroundColor: "#f8fafc", minWidth: '360px' }} >
       <Box
         sx={{ marginTop: { xs: "10vh", md: "3vh" } }}
         display="flex"
@@ -127,8 +111,9 @@ const PatientDashboard = () => {
               backgroundColor: "#fff",
               borderRadius: "16px",
               marginTop: "20px",
-              minWidth: "500px",
-              minHeight: "20px",
+              minWidth: '320px',
+              minHeight: '20px',
+              marginRight: '10px',
               p: 3,
               boxShadow: "0 6px 24px rgba(0, 0, 0, 0.05)",
               height: "100%",
@@ -136,10 +121,7 @@ const PatientDashboard = () => {
               flexDirection: "column",
               border: "1px solid",
               borderColor: "divider",
-              // transition: "all 0.3s ease",
-              // "&:hover": {
-              //   boxShadow: "0 10px 32px rgba(0, 0, 0, 0.08)",
-              // },
+       
             }}
           >
             <Box
@@ -148,8 +130,6 @@ const PatientDashboard = () => {
                 alignItems: "center",
                 mb: 3,
                 pb: 2,
-                // borderBottom: "1px solid",
-                // borderColor: "divider",
               }}
             >
               <CalendarToday
@@ -197,21 +177,22 @@ const PatientDashboard = () => {
                       border: "1px solid",
                       borderColor: "divider",
                       backgroundColor: "#ffffff",
-                      // transition: "transform 0.2s ease, box-shadow 0.2s ease",
-                      // "&:hover": {
-                      //   transform: "translateY(-4px)",
-                      //   borderColor: "primary.main",
-                      //   boxShadow: "0 6px 16px rgba(0, 0, 0, 0.08)",
-                      // },
                     }}
                   >
+
                     <CardContent sx={{ p: 2.5 }}>
-                      <Box display="flex" justifyContent="space-between">
-                        <Box display="flex" gap={2}>
+                      <Box
+                        display="flex"
+                        flexDirection={{ xs: "column", sm: "row" }} 
+                        justifyContent="space-between"
+                        alignItems={{ xs: "center", sm: "center" }}
+                        gap={2} 
+                      >
+                        {/* Left Section: Icon + Typography */}
+                        <Box display="flex" alignItems="center" gap={2}>
                           <Box
                             sx={{
-                              background:
-                                "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
+                              background: "linear-gradient(135deg, #020aa5ff 0%, #0a036bff 100%)",
                               borderRadius: "10px",
                               width: "48px",
                               height: "48px",
@@ -229,12 +210,13 @@ const PatientDashboard = () => {
                               variant="subtitle1"
                               fontWeight={600}
                               color="text.primary"
-                              sx={{ mb: 0.5, 
+                              sx={{
+                                mb: 0.5,
                                 width: '130px',
                                 whiteSpace: 'nowrap',
-                                overflow:'hidden',
+                                overflow: 'hidden',
                                 display: 'inline-block',
-                                textOverflow:'ellipsis'
+                                textOverflow: 'ellipsis'
                               }}
                             >
                               {appt.reason_for_visit || "General Checkup"}
@@ -242,47 +224,34 @@ const PatientDashboard = () => {
                             <Typography
                               variant="body2"
                               color="text.secondary"
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                              }}
+                              sx={{ display: "flex", alignItems: "center", gap: 1 }}
                             >
                               <Person fontSize="small" />
-                              Dr. {appt.doctor?.first_name}{" "}
-                              {appt.doctor?.last_name}
+                              Dr. {appt.doctor?.first_name} {appt.doctor?.last_name}
                             </Typography>
                             <Typography
                               variant="body2"
                               color="text.secondary"
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                                mt: 1,
-                              }}
+                              sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                             >
                               <AccessTime fontSize="small" />
-                              {new Date(appt.appointment_date).toLocaleString(
-                                [],
-                                {
-                                  weekday: "short",
-                                  month: "short",
-                                  day: "numeric",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                }
-                              )}
+                              {new Date(appt.appointment_date).toLocaleString([], {
+                                weekday: "short",
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
                             </Typography>
                           </Box>
                         </Box>
 
+                        {/* Right Section: Button */}
                         <Box
                           sx={{
                             display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end",
-                            justifyContent: "space-between",
+                            justifyContent: { xs: "flex-start", sm: "flex-end" },
+                            mt: { xs: 2, sm: 0 }, 
                           }}
                         >
                           <Button
@@ -295,7 +264,6 @@ const PatientDashboard = () => {
                               borderRadius: "8px",
                               px: 1.5,
                               py: 0.5,
-                              mt: 1,
                             }}
                           >
                             Details
@@ -303,6 +271,8 @@ const PatientDashboard = () => {
                         </Box>
                       </Box>
                     </CardContent>
+
+
                   </Card>
                 ))}
               </Box>
