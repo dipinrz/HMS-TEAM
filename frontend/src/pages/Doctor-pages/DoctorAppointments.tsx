@@ -121,8 +121,8 @@ const DoctorAppointments = () => {
                                         color={getStatusColor(appointment.status)}
                                         size="small"
                                     />
-                                    {appointment.status === "scheduled" && formatted===appointment.appointment_date.split(' ')[0]&& (
-                                        <CustomButton size="small" onClick={()=>handleAddPrescription(appointment.appointment_id) } label="Start" />
+                                    {(appointment.status === "scheduled" || appointment.status === "progress") && formatted===appointment.appointment_date.split(' ')[0]&& (
+                                        <CustomButton size="small" onClick={()=>handleAddPrescription(appointment.appointment_id) } label={appointment.status==="progress"? "Continue" :"Start"} />
                                     )}
                                 </Box>
                                 

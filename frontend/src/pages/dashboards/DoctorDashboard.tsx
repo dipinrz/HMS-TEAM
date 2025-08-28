@@ -271,12 +271,12 @@ const getStatusIcon = (status: string) => {
                               color={getStatusChipColor(appointment.status)}
                               variant="outlined"
                             />
-                            {appointment.status === 'scheduled' && (
+                            {(appointment.status === 'scheduled' || appointment.status ===  'progress') &&(
                               <CustomButton
                                 variant="contained"
                                 onClick={() => handleAddPrescription(appointment.appointment_id)}
                                 size="small"
-                                label="Start"
+                                label={appointment.status === "scheduled" ? "Start" : "Continue"}
                               />
                             )}
                           </Stack>

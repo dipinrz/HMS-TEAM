@@ -35,14 +35,16 @@ export const getInitials = (firstName?: string, lastName?: string): string => {
 };
 
 export const getStatusColor = (status: string) => {
-    switch (status) {
-        case "completed":
-            return "success";
-        case "scheduled":
-            return "info";
-        case "cancelled":
-            return "error";
-        default:
-            return "default";
-    }
+  switch (status) {
+    case "completed":
+      return "success";
+    case "scheduled":
+      return "info";
+    case "cancelled":
+      return "error";
+    case "progress":
+      return "warning";
+    default:
+      return "default";
+  }
 };
