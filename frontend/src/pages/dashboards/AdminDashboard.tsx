@@ -111,6 +111,7 @@ const AdminDashboard = () => {
       sx={{
         paddingX: "30px",
         backgroundColor: "#f8fafc",
+        paddingBottom:"20px"
       }}
     >
       {open && (

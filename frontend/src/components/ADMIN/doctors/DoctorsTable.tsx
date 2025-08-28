@@ -1,5 +1,21 @@
-import { Box,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Typography,Avatar,
-  Chip,Tooltip,IconButton,Badge,CircularProgress,Divider,Paper} from "@mui/material";
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Avatar,
+  Chip,
+  Tooltip,
+  IconButton,
+  Badge,
+  CircularProgress,
+  Divider,
+  Paper,
+} from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import CustomButton from "../../ui/CustomButton";
 
@@ -34,7 +50,6 @@ export interface Doctor {
   user: DoctorUser;
 }
 
-
 interface DoctorsTableProps {
   isLoading: boolean;
   allDoctors: Doctor[];
@@ -52,15 +67,24 @@ export const DoctorsTable = ({
   handleOpenDeleteDialog,
   downloadPDF,
 }: DoctorsTableProps) => {
-
-   const filteredDoctors = allDoctors?.filter(
+  const filteredDoctors = allDoctors?.filter(
     (doctor) =>
-      doctor?.user?.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doctor?.user?.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doctor?.user?.first_name
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      doctor?.user?.last_name
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
       doctor?.user?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doctor?.specialization?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doctor?.license_number?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      doctor?.department?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+      doctor?.specialization
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      doctor?.license_number
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      doctor?.department?.name
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -149,14 +173,15 @@ export const DoctorsTable = ({
                         ?.toLowerCase()
                         .includes(searchQuery.toLowerCase())
                   )
-                  .map((doctor,index) => (
+                  .map((doctor, index) => (
                     <TableRow
                       key={doctor?.doctor_id}
                       sx={{
                         "&:hover": {
                           backgroundColor: "rgba(25, 118, 210, 0.04)",
-                          transform: "scale(1.001)",
-                          transition: "all 0.2s ease",
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                          transition:
+                            "box-shadow 0.2s ease, background-color 0.2s ease",
                         },
                         "&:last-child td": { border: 0 },
                         transition: "all 0.2s ease",
@@ -315,8 +340,6 @@ export const DoctorsTable = ({
           />
         </Box>
       </Box>
-
-      
     </Paper>
   );
-};  
+};
