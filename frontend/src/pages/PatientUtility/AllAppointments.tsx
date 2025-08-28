@@ -62,6 +62,8 @@ function AllAppointments() {
       toast.error("Failed to fetch prescription");
     }
   };
+  console.log(prescriptions);
+
 
   const handleOpenCancelModal = (id: number) => {
     setOpenCancelModal(true);

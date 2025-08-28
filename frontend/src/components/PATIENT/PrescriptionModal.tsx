@@ -82,10 +82,10 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
         const addInfoItem = (label: string, value: string, y: number): number => {
             setFont(FONTS.subHeader);
             doc.setTextColor(...COLORS.text);
-            doc.text(`${label}:`, 25, y); // Label always starts at x=25
+            doc.text(`${label}:`, 25, y); // Label always at x=25
 
             setFont(FONTS.body);
-            doc.text(value, VALUE_X, y); // Value always starts at fixed x
+            doc.text(value, VALUE_X, y); // Value aligned at fixed x
 
             return y + SPACING.itemGap;
         };
@@ -98,37 +98,15 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
             return currentY;
         };
 
-        // Main PDF generation
-        prescriptions.forEach((prescription: any, index: number) => {
-            const appointment = prescription.appointment;
+        // ================= ADD REPORT TITLE =================
+        currentY = addTitle('Medical Prescription Report', currentY);
+        currentY += SPACING.sectionGap;
+
+        if (prescriptions.length > 0) {
+            // ================= SHOW APPOINTMENT DETAILS ONCE =================
+            const appointment = prescriptions[0].appointment;
             const doctor = appointment.doctor;
 
-            // Add title for first page
-            if (index === 0) {
-                currentY = addTitle('Medical Prescription Report', currentY);
-                currentY += SPACING.sectionGap;
-            } else {
-                // Separator between prescriptions
-                doc.setDrawColor(...COLORS.mediumGray);
-                doc.setLineWidth(0.5);
-                doc.line(20, currentY - 5, 190, currentY - 5);
-                currentY += 10;
-            }
-
-            // ================= PRESCRIPTION DETAILS =================
-            currentY = checkPageBreakForText(50, currentY);
-            currentY = addSectionHeader('PRESCRIPTION INFORMATION', currentY);
-
-            currentY = addInfoItem(
-                'Prescribed Date',
-                new Date(prescription.prescribed_date).toLocaleDateString('en-GB'),
-                currentY
-            );
-            currentY = addInfoItem('Diagnosis', prescription.diagnosis || 'Not specified', currentY);
-
-            currentY += SPACING.sectionGap;
-
-            // ================= APPOINTMENT DETAILS =================
             currentY = checkPageBreakForText(70, currentY);
             currentY = addSectionHeader('APPOINTMENT DETAILS', currentY);
 
@@ -144,102 +122,117 @@ const PrescriptionModal: React.FC<PrescriptionModalProps> = ({
 
             currentY += SPACING.sectionGap;
 
-            // ================= MEDICATION TABLE =================
-            currentY = checkPageBreakForText(30, currentY);
-            currentY = addSectionHeader('PRESCRIBED MEDICATIONS', currentY);
-            currentY += 5;
+            // ================= LOOP THROUGH PRESCRIPTIONS =================
+            prescriptions.forEach((prescription: any, index: number) => {
+                if (index > 0) {
+                    // Separator between prescriptions
+                    doc.setDrawColor(...COLORS.mediumGray);
+                    doc.setLineWidth(0.5);
+                    doc.line(20, currentY - 5, 190, currentY - 5);
+                    currentY += 10;
+                }
 
-            const medicineColumns = [
-                { header: 'Medicine', dataKey: 'name' },
-                { header: 'Dosage', dataKey: 'dosage' },
-                { header: 'Freq./Day', dataKey: 'frequency' },
-                { header: 'Duration', dataKey: 'duration' },
-                { header: 'Instructions', dataKey: 'instructions' },
-                { header: 'Cost', dataKey: 'cost' },
-                { header: 'Expiry', dataKey: 'expiry' }
-            ];
+                // ===== PRESCRIPTION INFO =====
+                currentY = checkPageBreakForText(50, currentY);
+                currentY = addSectionHeader(`PRESCRIPTION #${index + 1}`, currentY);
 
-            const medicineRows = prescription.medicines.map((med: any) => ({
-                name: med.medicine.medicine_name,
-                dosage: med.dosage,
-                frequency: `${med.frequency}x`,
-                duration: `${med.duration} days`,
-                instructions: med.instructions || 'N/A',
-                cost: ` ${med.medicine.cost}`,
-                expiry: new Date(med.medicine.expiry_date).toLocaleDateString('en-GB')
-            }));
-
-            autoTable(doc, {
-                columns: medicineColumns,
-                body: medicineRows,
-                startY: currentY,
-                theme: 'striped',
-                headStyles: {
-                    fillColor: COLORS.primary,
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold',
-                    fontSize: 10,
-                    halign: 'center'
-                },
-                bodyStyles: {
-                    fontSize: 9,
-                    cellPadding: { top: 4, right: 3, bottom: 4, left: 3 },
-                    textColor: COLORS.text
-                },
-                alternateRowStyles: {
-                    fillColor: COLORS.lightGray
-                },
-                styles: {
-                    lineColor: COLORS.mediumGray,
-                    lineWidth: 0.1,
-                    cellPadding: { top: 4, right: 3, bottom: 4, left: 3 }
-                },
-                columnStyles: {
-                    name: { cellWidth: 35 },
-                    dosage: { cellWidth: 20, halign: 'center' },
-                    frequency: { cellWidth: 18, halign: 'center' },
-                    duration: { cellWidth: 20, halign: 'center' },
-                    instructions: { cellWidth: 30 },
-                    cost: { cellWidth: 18, halign: 'right' },
-                    expiry: { cellWidth: 22, halign: 'center' }
-                },
-                margin: { left: 20, right: 20 },
-                tableWidth: 'wrap'
-            });
-
-            currentY = (doc as any).lastAutoTable.finalY + SPACING.sectionGap;
-
-            // ================= TOTAL COST =================
-            if (prescription.medicines.length > 0) {
-                const totalCost = prescription.medicines.reduce(
-                    (sum: number, med: any) => sum + parseFloat(med.medicine.cost),
-                    0
+                currentY = addInfoItem(
+                    'Prescribed Date',
+                    new Date(prescription.prescribed_date).toLocaleDateString('en-GB'),
+                    currentY
                 );
-                setFont(FONTS.subHeader);
-                doc.setTextColor(...COLORS.primary);
-                doc.text(`Total Medication Cost: ${totalCost.toFixed(2)}`, 20, currentY);
-                currentY += 10;
-            }
-        });
+                currentY = addInfoItem('Diagnosis', prescription.diagnosis || 'Not specified', currentY);
 
-        // ================= FOOTER =================
-        // const pageCount = doc.getNumberOfPages();
-        // for (let i = 1; i <= pageCount; i++) {
-        //     doc.setPage(i);
-        //     setFont(FONTS.small);
-        //     doc.setTextColor(150, 150, 150);
-        //     doc.text(
-        //         `Generated on ${new Date().toLocaleDateString('en-GB')} at ${new Date().toLocaleTimeString('en-GB')}`,
-        //         20,
-        //         290
-        //     );
-        //     doc.text(`Page ${i} of ${pageCount}`, 180, 290);
-        // }
+                currentY += SPACING.sectionGap;
+
+                // ===== MEDICATION TABLE =====
+                currentY = checkPageBreakForText(30, currentY);
+                currentY = addSectionHeader('PRESCRIBED MEDICATIONS', currentY);
+                currentY += 5;
+
+                const medicineColumns = [
+                    { header: 'Medicine', dataKey: 'name' },
+                    { header: 'Dosage', dataKey: 'dosage' },
+                    { header: 'Freq./Day', dataKey: 'frequency' },
+                    { header: 'Duration', dataKey: 'duration' },
+                    { header: 'Instructions', dataKey: 'instructions' },
+                    { header: 'Cost', dataKey: 'cost' },
+                    { header: 'Expiry', dataKey: 'expiry' }
+                ];
+
+                const medicineRows = prescription.medicines.map((med: any) => ({
+                    name: med.medicine.medicine_name,
+                    dosage: med.dosage,
+                    frequency: `${med.frequency}x`,
+                    duration: `${med.duration} days`,
+                    instructions: med.instructions || 'N/A',
+                    cost: ` ${med.medicine.cost}`,
+                    expiry: new Date(med.medicine.expiry_date).toLocaleDateString('en-GB')
+                }));
+
+                autoTable(doc, {
+                    columns: medicineColumns,
+                    body: medicineRows,
+                    startY: currentY,
+                    theme: 'striped',
+                    headStyles: {
+                        fillColor: COLORS.primary,
+                        textColor: [255, 255, 255],
+                        fontStyle: 'bold',
+                        fontSize: 10,
+                        halign: 'center'
+                    },
+                    bodyStyles: {
+                        fontSize: 9,
+                        cellPadding: { top: 4, right: 3, bottom: 4, left: 3 },
+                        textColor: COLORS.text
+                    },
+                    alternateRowStyles: {
+                        fillColor: COLORS.lightGray
+                    },
+                    styles: {
+                        lineColor: COLORS.mediumGray,
+                        lineWidth: 0.1,
+                        cellPadding: { top: 4, right: 3, bottom: 4, left: 3 }
+                    },
+                    columnStyles: {
+                        name: { cellWidth: 35 },
+                        dosage: { cellWidth: 20, halign: 'center' },
+                        frequency: { cellWidth: 18, halign: 'center' },
+                        duration: { cellWidth: 20, halign: 'center' },
+                        instructions: { cellWidth: 30 },
+                        cost: { cellWidth: 18, halign: 'right' },
+                        expiry: { cellWidth: 22, halign: 'center' }
+                    },
+                    margin: { left: 20, right: 20 },
+                    tableWidth: 'wrap'
+                });
+
+                currentY = (doc as any).lastAutoTable.finalY + SPACING.sectionGap;
+
+                // ===== TOTAL COST =====
+                if (prescription.medicines.length > 0) {
+                    const totalCost = prescription.medicines.reduce(
+                        (sum: number, med: any) =>
+                            sum +
+                            (parseFloat(med.medicine.cost) *
+                                Number(med.duration) *
+                                Number(med.frequency)),
+                        0
+                    );
+                    setFont(FONTS.subHeader);
+                    doc.setTextColor(...COLORS.primary);
+                    doc.text(`Total Medication Cost: ${totalCost.toFixed(2)}`, 20, currentY);
+                    currentY += 10;
+                }
+            });
+        }
 
         // Save PDF
         const fileName = `prescriptions_${new Date().toISOString().split('T')[0]}.pdf`;
         doc.save(fileName);
     };
+
 
     const renderPrescriptionContent = () => {
         if (!prescriptions.length) {
