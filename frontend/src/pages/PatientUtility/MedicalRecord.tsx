@@ -8,6 +8,7 @@ import {
   Grid,
   Chip,
   Skeleton,
+  Grow,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getPatientMedicalReport } from "../../services/patientApi";
@@ -168,432 +169,436 @@ const MedicalRecord = () => {
           </Typography>
 
           {/* Patient Info */}
-          <Card
-            sx={{
-              mb: 4,
-              background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
-              border: "1px solid #e2e8f0",
-              borderRadius: "12px",
-              boxShadow:
-                "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-            }}
-          >
-            <CardContent sx={{ p: 3 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  mb: 2,
-                  p: 2,
-                  background:
-                    "linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%)",
-                  borderRadius: "8px",
-                  color: "white",
-                }}
-              >
-                <Person sx={{ fontSize: "28px" }} />
-                <Typography
-                  variant="h6"
-                  component="div"
+          <Grow in timeout={800}>
+            <Card
+              sx={{
+                mb: 4,
+                background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
+                border: "1px solid #e2e8f0",
+                borderRadius: "12px",
+                boxShadow:
+                  "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+              }}
+            >
+              <CardContent sx={{ p: 3 }}>
+                <Box
                   sx={{
-                    fontWeight: "600",
-                    fontSize: "1.25rem",
-                    lineBreak: "break",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mb: 2,
+                    p: 2,
+                    background:
+                      "linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%)",
+                    borderRadius: "8px",
+                    color: "white",
                   }}
                 >
-                  Patient Details
-                </Typography>
-              </Box>
-              <Divider
-                sx={{ mb: 3, borderColor: "#cbd5e1", borderWidth: "1px" }}
-              />
+                  <Person sx={{ fontSize: "28px" }} />
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{
+                      fontWeight: "600",
+                      fontSize: "1.25rem",
+                      lineBreak: "break",
+                    }}
+                  >
+                    Patient Details
+                  </Typography>
+                </Box>
+                <Divider
+                  sx={{ mb: 3, borderColor: "#cbd5e1", borderWidth: "1px" }}
+                />
 
-              <Grid container spacing={2}>
-                <Grid size={{ xs: 6 }}>
-                  <Box
-                    sx={{
-                      p: 2,
-                      background: "white",
-                      borderRadius: "8px",
-                      border: "1px solid #e2e8f0",
-                      height: "100%",
-                    }}
-                  >
-                    {loading ? (
-                      <Skeleton variant="text" width={200} height={30} />
-                    ) : (
-                      <DetailRow
-                        label="Name"
-                        value={`${medical_report?.patient.first_name} ${medical_report?.patient.last_name}`}
-                        labelColor="#374151"
-                        valueColor="#1f2937"
-                        fontWeight="600"
-                      />
-                    )}
-                  </Box>
+                <Grid container spacing={2}>
+                  <Grid size={{ xs: 6 }}>
+                    <Box
+                      sx={{
+                        p: 2,
+                        background: "white",
+                        borderRadius: "8px",
+                        border: "1px solid #e2e8f0",
+                        height: "100%",
+                      }}
+                    >
+                      {loading ? (
+                        <Skeleton variant="text" width={200} height={30} />
+                      ) : (
+                        <DetailRow
+                          label="Name"
+                          value={`${medical_report?.patient.first_name} ${medical_report?.patient.last_name}`}
+                          labelColor="#374151"
+                          valueColor="#1f2937"
+                          fontWeight="600"
+                        />
+                      )}
+                    </Box>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Box
+                      sx={{
+                        p: 2,
+                        background: "white",
+                        borderRadius: "8px",
+                        border: "1px solid #e2e8f0",
+                        height: "100%",
+                      }}
+                    >
+                      {loading ? (
+                        <Skeleton variant="text" width={200} height={30} />
+                      ) : (
+                        <DetailRow
+                          label="Email"
+                          value={medical_report?.patient.email}
+                          labelColor="#374151"
+                          valueColor="#1f2937"
+                          fontWeight="600"
+                        />
+                      )}
+                    </Box>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Box
+                      sx={{
+                        p: 2,
+                        background: "white",
+                        borderRadius: "8px",
+                        border: "1px solid #e2e8f0",
+                        height: "100%",
+                      }}
+                    >
+                      {loading ? (
+                        <Skeleton variant="text" width={200} height={30} />
+                      ) : (
+                        <DetailRow
+                          label="Phone"
+                          value={
+                            medical_report?.patient?.phone_number ||
+                            "Not mentioned"
+                          }
+                          valueColor="#1f2937"
+                          fontWeight="600"
+                        />
+                      )}
+                    </Box>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Box
+                      sx={{
+                        p: 2,
+                        background: "white",
+                        borderRadius: "8px",
+                        border: "1px solid #e2e8f0",
+                        height: "100%",
+                      }}
+                    >
+                      {loading ? (
+                        <Skeleton variant="text" width={200} height={30} />
+                      ) : (
+                        <DetailRow
+                          label="Date of Birth"
+                          value={
+                            medical_report?.patient?.date_of_birth ||
+                            "Not mentioned"
+                          }
+                          valueColor="#1f2937"
+                          fontWeight="600"
+                        />
+                      )}
+                    </Box>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Box
+                      sx={{
+                        p: 2,
+                        background: "white",
+                        borderRadius: "8px",
+                        border: "1px solid #e2e8f0",
+                        height: "100%",
+                      }}
+                    >
+                      {loading ? (
+                        <Skeleton variant="text" width={200} height={30} />
+                      ) : (
+                        <DetailRow
+                          label="Gender"
+                          value={
+                            medical_report?.patient?.gender?.toUpperCase() ||
+                            "Not mentioned"
+                          }
+                          labelColor="#374151"
+                          valueColor="#dc2626"
+                        />
+                      )}
+                    </Box>
+                  </Grid>
+                  <Grid size={{ xs: 6 }}>
+                    <Box
+                      sx={{
+                        p: 2,
+                        background: "white",
+                        borderRadius: "8px",
+                        border: "1px solid #e2e8f0",
+                        height: "100%",
+                      }}
+                    >
+                      {loading ? (
+                        <Skeleton variant="text" width={200} height={30} />
+                      ) : (
+                        <DetailRow
+                          label="Address"
+                          value={
+                            medical_report?.patient?.address || "Not mentioned"
+                          }
+                          valueColor="#1f2937"
+                          fontWeight="600"
+                        />
+                      )}
+                    </Box>
+                  </Grid>
                 </Grid>
-                <Grid size={{ xs: 6 }}>
-                  <Box
-                    sx={{
-                      p: 2,
-                      background: "white",
-                      borderRadius: "8px",
-                      border: "1px solid #e2e8f0",
-                      height: "100%",
-                    }}
-                  >
-                    {loading ? (
-                      <Skeleton variant="text" width={200} height={30} />
-                    ) : (
-                      <DetailRow
-                        label="Email"
-                        value={medical_report?.patient.email}
-                        labelColor="#374151"
-                        valueColor="#1f2937"
-                        fontWeight="600"
-                      />
-                    )}
-                  </Box>
-                </Grid>
-                <Grid size={{ xs: 6 }}>
-                  <Box
-                    sx={{
-                      p: 2,
-                      background: "white",
-                      borderRadius: "8px",
-                      border: "1px solid #e2e8f0",
-                      height: "100%",
-                    }}
-                  >
-                    {loading ? (
-                      <Skeleton variant="text" width={200} height={30} />
-                    ) : (
-                      <DetailRow
-                        label="Phone"
-                        value={
-                          medical_report?.patient?.phone_number ||
-                          "Not mentioned"
-                        }
-                        valueColor="#1f2937"
-                        fontWeight="600"
-                      />
-                    )}
-                  </Box>
-                </Grid>
-                <Grid size={{ xs: 6 }}>
-                  <Box
-                    sx={{
-                      p: 2,
-                      background: "white",
-                      borderRadius: "8px",
-                      border: "1px solid #e2e8f0",
-                      height: "100%",
-                    }}
-                  >
-                    {loading ? (
-                      <Skeleton variant="text" width={200} height={30} />
-                    ) : (
-                      <DetailRow
-                        label="Date of Birth"
-                        value={
-                          medical_report?.patient?.date_of_birth ||
-                          "Not mentioned"
-                        }
-                        valueColor="#1f2937"
-                        fontWeight="600"
-                      />
-                    )}
-                  </Box>
-                </Grid>
-                <Grid size={{ xs: 6 }}>
-                  <Box
-                    sx={{
-                      p: 2,
-                      background: "white",
-                      borderRadius: "8px",
-                      border: "1px solid #e2e8f0",
-                      height: "100%",
-                    }}
-                  >
-                    {loading ? (
-                      <Skeleton variant="text" width={200} height={30} />
-                    ) : (
-                      <DetailRow
-                        label="Gender"
-                        value={
-                          medical_report?.patient?.gender?.toUpperCase() ||
-                          "Not mentioned"
-                        }
-                        labelColor="#374151"
-                        valueColor="#dc2626"
-                      />
-                    )}
-                  </Box>
-                </Grid>
-                <Grid size={{ xs: 6 }}>
-                  <Box
-                    sx={{
-                      p: 2,
-                      background: "white",
-                      borderRadius: "8px",
-                      border: "1px solid #e2e8f0",
-                      height: "100%",
-                    }}
-                  >
-                    {loading ? (
-                      <Skeleton variant="text" width={200} height={30} />
-                    ) : (
-                      <DetailRow
-                        label="Address"
-                        value={
-                          medical_report?.patient?.address || "Not mentioned"
-                        }
-                        valueColor="#1f2937"
-                        fontWeight="600"
-                      />
-                    )}
-                  </Box>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-
+              </CardContent>
+            </Card>
+          </Grow>
           {/* Appointments */}
           <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
             Appointments
           </Typography>
 
           <Divider sx={{ mb: 2 }} />
-
-          <Grid container spacing={3}>
-            {appointments?.length == 0 ? (
-              <>
-                <Typography>No appointments so far</Typography>
-              </>
-            ) : (
-              appointments?.map((appt: AppointmentType) => (
-                <Tooltip
-                  title={appt.reason_for_visit}
-                  arrow
-                  placement="top"
-                  componentsProps={{
-                    tooltip: {
-                      sx: {
-                        backgroundColor: "#1976d2",
-                        color: "#fff",
-                        fontSize: "0.9rem",
-                        fontWeight: 500,
-                        borderRadius: "8px",
-                        padding: "8px 12px",
-                        boxShadow: "0px 4px 12px rgba(0,0,0,0.2)",
-                      },
-                    },
-                    arrow: {
-                      sx: {
-                        color: "#1976d2",
-                      },
-                    },
-                  }}
-                >
-                  <Grid size={{ xs: 12, sm: 12, md: 6 }}>
-                    <Card
-                      key={appt.appointment_id}
-                      sx={{
-                        mb: 3,
-                        cursor: "pointer",
-                        transition: "all 0.2s ease-in-out",
-                        background:
-                          "linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)",
-                        border: "1px solid #e0e6ed",
-                        borderRadius: "12px",
-                        fontFamily: "'Poppins', 'Roboto', sans-serif",
-                        "&:hover": {
-                          transform: "translateY(-1px)",
-                          boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
-                          background:
-                            "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+          <Grow in timeout={800}>
+            <Grid container spacing={3}>
+              {appointments?.length == 0 ? (
+                <>
+                  <Typography>No appointments so far</Typography>
+                </>
+              ) : (
+                appointments?.map((appt: AppointmentType) => (
+                  <Tooltip
+                    title={appt.reason_for_visit}
+                    arrow
+                    placement="top"
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          backgroundColor: "#1976d2",
+                          color: "#fff",
+                          fontSize: "0.9rem",
+                          fontWeight: 500,
+                          borderRadius: "8px",
+                          padding: "8px 12px",
+                          boxShadow: "0px 4px 12px rgba(0,0,0,0.2)",
                         },
-                      }}
-                      onClick={() => setSelectedAppointment(appt)}
-                    >
-                      <CardContent sx={{ p: 3 }}>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            mb: 2,
-                          }}
-                        >
+                      },
+                      arrow: {
+                        sx: {
+                          color: "#1976d2",
+                        },
+                      },
+                    }}
+                  >
+                    <Grid size={{ xs: 12, sm: 12, md: 6 }}>
+                      <Card
+                        key={appt.appointment_id}
+                        sx={{
+                          mb: 3,
+                          cursor: "pointer",
+                          transition: "all 0.2s ease-in-out",
+                          background:
+                            "linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)",
+                          border: "1px solid #e0e6ed",
+                          borderRadius: "12px",
+                          fontFamily: "'Poppins', 'Roboto', sans-serif",
+                          "&:hover": {
+                            transform: "translateY(-1px)",
+                            boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+                            background:
+                              "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+                          },
+                        }}
+                        onClick={() => setSelectedAppointment(appt)}
+                      >
+                        <CardContent sx={{ p: 3 }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "flex-start",
+                              mb: 2,
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
+                              <CalendarToday
+                                sx={{ color: "#1976d2", fontSize: "20px" }}
+                              />
+                              <Typography
+                                variant="subtitle2"
+                                sx={{
+                                  color: "#2c5282",
+                                  fontWeight: "600",
+                                  fontFamily: "'Poppins', sans-serif",
+                                }}
+                              >
+                                Date:{" "}
+                                {new Date(
+                                  appt.appointment_date
+                                ).toLocaleDateString("en-US", {
+                                  weekday: "short",
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                })}
+                              </Typography>
+                            </Box>
+                            <Chip
+                              label={appt.status}
+                              size="small"
+                              sx={{
+                                fontWeight: "bold",
+                                fontSize: "0.7rem",
+                                fontFamily: "'Poppins', sans-serif",
+                                color:
+                                  appt.status === "completed"
+                                    ? (theme) => theme.palette.success.light
+                                    : appt.status === "cancelled"
+                                    ? (theme) => theme.palette.error.light
+                                    : appt.status === "scheduled"
+                                    ? (theme) => theme.palette.warning.light
+                                    : (theme) => theme.palette.primary.light,
+                              }}
+                            />
+                          </Box>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: "#64748",
+                              display: "block,mb:2",
+                              fontFamily: "'Robot',sans-serif",
+                            }}
+                          >
+                            ⏰{" "}
+                            {new Date(appt.appointment_date).toLocaleTimeString(
+                              "en-US",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            )}
+                          </Typography>
+
                           <Box
                             sx={{
                               display: "flex",
                               alignItems: "center",
                               gap: 1,
+                              mb: 2,
                             }}
                           >
-                            <CalendarToday
-                              sx={{ color: "#1976d2", fontSize: "20px" }}
+                            <Person
+                              sx={{ color: "#dc2626", fontSize: "20px" }}
                             />
                             <Typography
-                              variant="subtitle2"
+                              variant="body1"
+                              sx={{ color: "1e293b", fontWeight: "600" }}
+                            >
+                              Dr. {appt.doctor?.first_name}{" "}
+                              {appt.doctor?.last_name}
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1,
+                              mb: 2,
+                            }}
+                          >
+                            <LocalHospital
+                              sx={{ color: "#059669", fontSize: "20px" }}
+                            />
+                            <Typography
+                              variant="body2"
                               sx={{
-                                color: "#2c5282",
-                                fontWeight: "600",
+                                color: "#374151",
+                                fontFamily: "'Roboto', sans-serif",
+                              }}
+                            >
+                              {appt.department.name}
+                            </Typography>
+                          </Box>
+
+                          <Box sx={{ mb: 2 }}>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: "#6b7280",
+                                fontWeight: "500",
                                 fontFamily: "'Poppins', sans-serif",
                               }}
                             >
-                              Date:{" "}
-                              {new Date(
-                                appt.appointment_date
-                              ).toLocaleDateString("en-US", {
-                                weekday: "short",
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              })}
+                              REASON:
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "#4b5563",
+                                fontStyle: "italic",
+                                fontFamily: "'Roboto', sans-serif",
+                              }}
+                            >
+                              "{appt.reason_for_visit}"
                             </Typography>
                           </Box>
-                          <Chip
-                            label={appt.status}
-                            size="small"
-                            sx={{
-                              fontWeight: "bold",
-                              fontSize: "0.7rem",
-                              fontFamily: "'Poppins', sans-serif",
-                              color:
-                                appt.status === "completed"
-                                  ? (theme) => theme.palette.success.light
-                                  : appt.status === "cancelled"
-                                  ? (theme) => theme.palette.error.light
-                                  : appt.status === "scheduled"
-                                  ? (theme) => theme.palette.warning.light
-                                  : (theme) => theme.palette.primary.light,
-                            }}
-                          />
-                        </Box>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: "#64748",
-                            display: "block,mb:2",
-                            fontFamily: "'Robot',sans-serif",
-                          }}
-                        >
-                          ⏰{" "}
-                          {new Date(appt.appointment_date).toLocaleTimeString(
-                            "en-US",
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </Typography>
 
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                            mb: 2,
-                          }}
-                        >
-                          <Person sx={{ color: "#dc2626", fontSize: "20px" }} />
-                          <Typography
-                            variant="body1"
-                            sx={{ color: "1e293b", fontWeight: "600" }}
-                          >
-                            Dr. {appt.doctor?.first_name}{" "}
-                            {appt.doctor?.last_name}
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                            mb: 2,
-                          }}
-                        >
-                          <LocalHospital
-                            sx={{ color: "#059669", fontSize: "20px" }}
-                          />
-                          <Typography
-                            variant="body2"
+                          <Box
                             sx={{
-                              color: "#374151",
-                              fontFamily: "'Roboto', sans-serif",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              mt: 2,
+                              pt: 2,
+                              borderTop: "2px dashed #e2e8f0",
                             }}
                           >
-                            {appt.department.name}
-                          </Typography>
-                        </Box>
-
-                        <Box sx={{ mb: 2 }}>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: "#6b7280",
-                              fontWeight: "500",
-                              fontFamily: "'Poppins', sans-serif",
-                            }}
-                          >
-                            REASON:
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: "#4b5563",
-                              fontStyle: "italic",
-                              fontFamily: "'Roboto', sans-serif",
-                            }}
-                          >
-                            "{appt.reason_for_visit}"
-                          </Typography>
-                        </Box>
-
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            mt: 2,
-                            pt: 2,
-                            borderTop: "2px dashed #e2e8f0",
-                          }}
-                        >
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: "#475569",
-                              fontWeight: "500",
-                              fontFamily: "'Poppins', sans-serif",
-                            }}
-                          >
-                            Consultation Fee:
-                          </Typography>
-                          <Chip
-                            label={`₹ ${appt.department.consultation_fee}`}
-                            variant="outlined"
-                            sx={{
-                              fontWeight: "bold",
-                              fontFamily: "'Poppins', sans-serif",
-                              fontSize: "14px",
-                              px: 1.5,
-                              borderRadius: "12px",
-                              color: "success.main",
-                              borderColor: "success.light",
-                            }}
-                          />
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                </Tooltip>
-              ))
-            )}
-          </Grid>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: "#475569",
+                                fontWeight: "500",
+                                fontFamily: "'Poppins', sans-serif",
+                              }}
+                            >
+                              Consultation Fee:
+                            </Typography>
+                            <Chip
+                              label={`₹ ${appt.department.consultation_fee}`}
+                              variant="outlined"
+                              sx={{
+                                fontWeight: "bold",
+                                fontFamily: "'Poppins', sans-serif",
+                                fontSize: "14px",
+                                px: 1.5,
+                                borderRadius: "12px",
+                                color: "success.main",
+                                borderColor: "success.light",
+                              }}
+                            />
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Tooltip>
+                ))
+              )}
+            </Grid>
+          </Grow>
         </Box>
       </Box>
     </>
