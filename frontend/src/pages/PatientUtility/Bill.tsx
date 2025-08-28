@@ -241,7 +241,7 @@ function Bill() {
 
             {/* 🔹 Bill Cards */}
             <Stack spacing={2}>
-                {filteredBills.length === 0 || filteredBills === undefined ? (
+                {filteredBills.length === null || filteredBills === undefined ? (
                     <Paper
                         elevation={0}
                         sx={{
