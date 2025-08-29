@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction} from "express";
-import { createDepartment, deleteDepartmentById, getAllDepartments, getDepartmentById, getDepartmentsWithAppointmentCountService, getDeptByName, getDoctorsByDepartmentId, saveDoctorDepartment, updateDepartment } from "../services/department.services";
+import { createDepartment, deleteDepartmentById, getAllDepartments, getDepartmentById, getDepartmentsAndItsDoctorsService, getDepartmentsWithAppointmentCountService, getDeptByName, getDoctorsByDepartmentId, saveDoctorDepartment, updateDepartment } from "../services/department.services";
 import { ApiError } from "../utils/apiError";
 import { getDoctorById } from "../services/doctor.services";
 
@@ -171,5 +171,20 @@ export const getDepartmentAndAppointmentCount = async (req: Request, res: Respon
 
     } catch (error) {
         next(error);
+    }
+}
+
+
+export const getDepartmentsAndItsDoctors = async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const data = await getDepartmentsAndItsDoctorsService()
+
+        res.status(200).json({
+            message:"Department and its Doctors fetched successfully",
+            data
+        })
+
+    }catch(error){
+        next(error)
     }
 }

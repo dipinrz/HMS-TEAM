@@ -144,10 +144,8 @@ const PaymentsTable: React.FC<PaymentsTableProps> = ({payments,
                       cursor: "pointer",
                       "&:hover": {
                         backgroundColor: "rgba(25, 118, 210, 0.04)",
-                        transform: "scale(1.001)",
-                        transition: "all 0.2s ease",
+                        transition: "backgroundColor 0.2s ease",
                       },
-                      transition: "all 0.2s ease",
                     }}
                     onClick={() => handleRowClick(payment)}
                   >
