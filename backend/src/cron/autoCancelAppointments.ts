@@ -2,6 +2,7 @@ import cron from 'node-cron'
 import { AppDataSource } from '../config/data-source';
 import { Appointment, AppointmentStatus } from '../entities/appointment.entity';
 import { Bill } from '../entities/bill.entity';
+import { Brackets } from 'typeorm';
 
 export const scheduleAutoCancelAppointments = () => {
   cron.schedule('0 18 * * *', async () => {
@@ -18,7 +19,12 @@ export const scheduleAutoCancelAppointments = () => {
       const expiredAppointments = await appointmentRepo
         .createQueryBuilder('appointment')
         .select('appointment.appointment_id', 'appointment_id')
-        .where('appointment.status = :status', { status: AppointmentStatus.SCHEDULED })
+        .where(
+    new Brackets  ((qb) => {
+      qb.where('appointment.status = :scheduled', { scheduled: AppointmentStatus.SCHEDULED })
+        .orWhere('appointment.status = :progress', { progress: AppointmentStatus.PROGRESS });
+    }),
+  )
         .andWhere('appointment.appointment_date < :today', { today })
         .getRawMany();
 
