@@ -18,6 +18,8 @@ export interface Appointment {
   status: string;
   reason_for_visit: string | null;
   notes: string | null;
+  doctor:Doctor;
+  department:{name:string}
   patient: Patient;
   prescriptions: Prescription[];
 }
@@ -43,6 +45,7 @@ export interface Doctor {
   qualification: string;
   license_number: string;
   years_of_experience: number;
+  first_name:string;
   user:Patient;
 }
 

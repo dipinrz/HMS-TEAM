@@ -101,7 +101,7 @@ const PatientReport = () => {
               {patient.first_name} {patient.last_name}
             </Typography>
             <Box display="flex" gap={1}>
-              <Email sx={{ fontSize: 16 }}/>
+              <Email sx={{ fontSize: 16 }} />
               <Typography variant="body2" color="text.secondary">
                 {patient.email}
               </Typography>
@@ -113,13 +113,13 @@ const PatientReport = () => {
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, sm: 6 }} >
             <Box display='flex' gap={1}>
-              <Phone sx={{ fontSize: 16 }}/>
+              <Phone sx={{ fontSize: 16 }} />
               <Typography variant="body2" color="text.secondary" mb={0.5}>
                 <strong>Phone:</strong> {patient.phone_number || "N/A"}
               </Typography>
             </Box>
             <Box display='flex' gap={1}>
-              <Person sx={{ fontSize: 16 }}/>
+              <Person sx={{ fontSize: 16 }} />
               <Typography variant="body2" color="text.secondary" mb={0.5}>
                 <strong>Gender:</strong> {patient.gender || "N/A"}
               </Typography>
@@ -127,13 +127,13 @@ const PatientReport = () => {
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
             <Box display='flex' gap={1}>
-              <LocationCity sx={{ fontSize: 16 }}/>
+              <LocationCity sx={{ fontSize: 16 }} />
               <Typography variant="body2" color="text.secondary" mb={0.5}>
                 <strong> Address:</strong> {patient.address || "N/A"}
               </Typography>
             </Box>
             <Box display='flex' gap={1}>
-              <Cake sx={{ fontSize: 16 }}/>
+              <Cake sx={{ fontSize: 16 }} />
               <Typography variant="body2" color="text.secondary">
                 <strong> Date of Birth:</strong>{" "}
                 {patient.date_of_birth
@@ -215,14 +215,46 @@ const PatientReport = () => {
                       />
                     </Box>
 
-                    <Typography
-                      variant="body2"
-                      mb={2}
-                      sx={{ color: "#5a5a5a", fontSize: "0.85rem" }}
+                    <Box
                     >
-                      <strong>Date:</strong>{" "}
-                      {format(new Date(appointment.appointment_date), "dd MMM yyyy")}
-                    </Typography>
+                      <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="flex-start"
+                        flexWrap="wrap"
+                        mb={2}
+                      >
+                        {/* Left Section: Doctor & Department */}
+                        <Box display="flex" flexDirection="column">
+                          <Typography
+                            variant="body2"
+                            mb={1}
+                            sx={{ color: "#5a5a5a", fontSize: "0.85rem" }}
+                          >
+                            <strong>Doctor:</strong> {appointment.doctor.first_name}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: "#5a5a5a", fontSize: "0.85rem" }}
+                          >
+                            <strong>Department:</strong> {appointment.department.name}
+                          </Typography>
+                        </Box>
+
+                        {/* Right Section: Date */}
+                        <Box display="flex" flexDirection="column" justifyContent="flex-end">
+                          <Typography
+                            variant="body2"
+                            sx={{ color: "#5a5a5a", fontSize: "0.85rem" }}
+                          >
+                            <strong>Date:</strong>{" "}
+                            {format(new Date(appointment.appointment_date), "dd MMM yyyy")}
+                          </Typography>
+                        </Box>
+                      </Box>
+
+
+                    </Box>
 
                     <Divider sx={{ my: 2 }} />
 
