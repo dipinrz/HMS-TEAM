@@ -42,3 +42,7 @@ export const viewAllBills = async () => {
 export const getPatientPaymentHistory=async()=>{
     return await commonAPI("GET",`${baseURL}/payment/history/user`)
 }
+
+export const getDeptAndDoc=async()=>{
+  return await commonAPI("GET",`${baseURL}/department/departments-And-doctors`)
+}

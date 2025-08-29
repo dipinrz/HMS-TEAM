@@ -108,29 +108,29 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
         <IconButton onClick={goback} sx={{ color: "white" }}>
           <ArrowBack />
         </IconButton>
-        <Box sx={{display:"flex",gap:1,flexWrap:{xs:"wrap"}}}>
-        <Typography
-          variant="h4"
-          component="h1"
-          sx={{ flexGrow: 1, fontWeight: 600, pl: 4 }}
-        >
-          Appointment Details
-        </Typography>
-        <Chip
-          label={appointment.status.toUpperCase()}
-          color={getStatusColor(appointment.status)}
-          variant="filled"
-          size="medium"
-          sx={{
-            fontWeight: "bold",
-            color: "white",
-            wordBreak: "break-word",
-            mt: 1,
-            ml:{xs:4},
-             height: { xs: 20, sm: 28 },
-             fontSize:{xs:15,sm:12}
-          }}
-        />
+        <Box sx={{ display: "flex", gap: 1, flexWrap: { xs: "wrap" } }}>
+          <Typography
+            variant="h4"
+            component="h1"
+            sx={{ flexGrow: 1, fontWeight: 600, pl: 4 }}
+          >
+            Appointment Details
+          </Typography>
+          <Chip
+            label={appointment.status.toUpperCase()}
+            color={getStatusColor(appointment.status)}
+            variant="filled"
+            size="medium"
+            sx={{
+              fontWeight: "bold",
+              color: "white",
+              wordBreak: "break-word",
+              mt: 1,
+              ml: { xs: 4 },
+              height: { xs: 20, sm: 28 },
+              fontSize: { xs: 15, sm: 12 },
+            }}
+          />
         </Box>
       </Box>
       <Divider sx={{ mb: 3, borderColor: medicalColors.borderGray }} />
@@ -164,6 +164,11 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
                   label="Reason"
                   value={appointment.reason_for_visit}
                 />
+                {appointment.notes ? (
+                  <span>Notes: {appointment.notes}</span>
+                ) : (
+                  <em>No notes available</em>
+                )}
               </Stack>
             </Grid>
 
@@ -267,7 +272,10 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: medicalColors.slateGray,fontWeight:"600" }}
+                          sx={{
+                            color: medicalColors.slateGray,
+                            fontWeight: "600",
+                          }}
                         >
                           Diagnosis
                         </Typography>
@@ -276,7 +284,7 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
                     <Box textAlign="right"></Box>
                     <Typography
                       variant="caption"
-                      sx={{ color: medicalColors.slateGray,fontWeight:"600" }}
+                      sx={{ color: medicalColors.slateGray, fontWeight: "600" }}
                     >
                       Prescribed:{" "}
                       {new Date(presc.prescribed_date).toLocaleDateString()}
@@ -311,17 +319,21 @@ const AppointmentDetail = ({ appointment, goback }: Props) => {
                               ).toLocaleDateString()}
                             />
                           </Grid>
-                          <Grid size={{ xs: 4 ,sm:4}}>
-                            <DetailRow label="Dose" value={medicat.dosage} fontWeight="600"/>
+                          <Grid size={{ xs: 4, sm: 4 }}>
+                            <DetailRow
+                              label="Dose"
+                              value={medicat.dosage}
+                              fontWeight="600"
+                            />
                           </Grid>
-                          <Grid size={{ xs: 5,sm:4 }}>
+                          <Grid size={{ xs: 5, sm: 4 }}>
                             <DetailRow
                               label="Frequency"
                               value={`${medicat.frequency}`}
                               fontWeight="600"
                             />
                           </Grid>
-                          <Grid size={{ xs: 4 ,sm:4}}>
+                          <Grid size={{ xs: 4, sm: 4 }}>
                             <DetailRow
                               label="Duration"
                               value={`${medicat.duration}`}
