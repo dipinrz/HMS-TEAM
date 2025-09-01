@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import { getDeptAndDoc } from "../../services/patientApi";
 import { Card, CardHeader } from "../ui/CustomCards";
+import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 
 interface DoctorType {
   name: string;
@@ -62,70 +63,94 @@ const ListDoctorDept = () => {
           boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         }}
       >
-        <Typography variant="h5" fontWeight="bold" gutterBottom color="primary">
-          Meet Our Doctors
-        </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          Browse and connect with doctors currently available in our hospital.
-        </Typography>
-
-        {/* Department Tabs */}
-        <Tabs
-          value={departmentID}
-          onChange={handleChange}
-          textColor="primary"
-          indicatorColor="primary"
-          sx={{ mb: 3 }}
-          variant="scrollable"
-          scrollButtons="auto"
+        <Box
+          sx={{
+            p: 2,
+            textAlign: "center",
+            // border: "1px solid",
+          }}
         >
-          {data?.length == 0 ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "#f5f5f5",
-                borderRadius: 2,
-                border: "1px dashed #cbd5e1",
-                p: 3,
-                mt: 2,
-                width: "100%",
-              }}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 2,
+              textAlign: "center",
+            }}
+          >
+            <MedicalServicesIcon sx={{ color: "teal", fontSize: 26 }} />
+            <Typography
+              variant="h5"
+              fontWeight="bold"
+              gutterBottom
+              color="primary"
             >
-              <Grow in timeout={800}>
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  sx={{ fontStyle: "italic", fontWeight: 500 }}
-                  textAlign="center"
-                >
-                  No departments available
-                </Typography>
-              </Grow>
-            </Box>
-          ) : (
-            data?.map((dept: DepartmentType) => (
-              <Tab
-                key={dept.department_id}
-                value={dept.department_id}
-                label={dept.department_name}
+              Meet Our Doctors
+            </Typography>
+          </Box>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            Browse and connect with doctors currently available in our hospital.
+          </Typography>
+        </Box>
+        {/* Department Tabs */}
+        <Box sx={{ pt: 2 }}>
+          <Tabs
+            value={departmentID}
+            onChange={handleChange}
+            textColor="primary"
+            indicatorColor="primary"
+            sx={{ mb: 3 }}
+            variant="scrollable"
+            scrollButtons="auto"
+          >
+            {data?.length == 0 ? (
+              <Box
                 sx={{
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  fontSize: "0.9rem",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: 2,
+                  border: "1px dashed #cbd5e1",
+                  p: 3,
+                  mt: 2,
+                  width: "100%",
                 }}
-              />
-            ))
-          )}
-        </Tabs>
-
+              >
+                <Grow in timeout={800}>
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    sx={{ fontStyle: "italic", fontWeight: 500 }}
+                    textAlign="center"
+                  >
+                    No departments available
+                  </Typography>
+                </Grow>
+              </Box>
+            ) : (
+              data?.map((dept: DepartmentType) => (
+                <Tab
+                  key={dept.department_id}
+                  value={dept.department_id}
+                  label={dept.department_name.toUpperCase()}
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    fontSize: "0.9rem",
+                  }}
+                />
+              ))
+            )}
+          </Tabs>
+        </Box>
         <Box
           sx={{
             display: "flex",
             gap: 3,
             overflowX: "auto",
-            pb: 1,
+            pt: 1,
+            pb: 4,
             "&::-webkit-scrollbar": {
               height: 6,
             },
@@ -169,6 +194,7 @@ const ListDoctorDept = () => {
                     maxWidth: 280,
                     flexShrink: 0,
                     borderRadius: 3,
+                    p: 1,
                     boxShadow: "0 3px 8px rgba(0,0,0,0.12)",
                     transition: "transform 0.2s",
                     "&:hover": {

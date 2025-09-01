@@ -17,7 +17,6 @@ import { getPatientAppointments } from "../../services/patientApi";
 import { useAuthStore } from "../../store/useAuthStore";
 import AppointmentModal from "../../components/PATIENT/AppointmentModal";
 import { Card, CardContent } from "../../components/ui/CustomCards";
-import CalendarComponent from "../../components/PATIENT/CalendarComponent";
 import ListDoctorDept from "../../components/PATIENT/ListDoctorDept";
 
 const PatientDashboard = () => {
@@ -117,7 +116,7 @@ const PatientDashboard = () => {
         <Grid size={{ xs: 12, lg: 6 }}>
           <Box
             sx={{
-              backgroundColor: "#fff",
+              background: "linear-gradient(to right, #f9fafb, #f1f5f9)",
               borderRadius: "16px",
               marginTop: "20px",
               minWidth: "320px",
