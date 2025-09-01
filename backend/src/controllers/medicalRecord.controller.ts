@@ -2,10 +2,12 @@ import { Request, Response, NextFunction } from "express";
 import { getPatientById } from "../services/patient.services";
 import { ApiError } from "../utils/apiError";
 import {
+  extractMedicineCourse,
   getAppoinmentsByPatientId,
   getMedicalReportByPId,
   getPrescriptionsByAppoinment,
 } from "../services/medicalReport.services";
+import app from "../app";
 
 export interface MedicalRequest extends Request {
   user?: { userId: number };
@@ -42,6 +44,34 @@ export const fetchPatientMedicalRecordController = async (
     next(error);
   }
 };
+
+
+export const getPatientMedicineCourse = async (req: MedicalRequest, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user.userId;
+
+    const patient = await getPatientById(Number(userId));
+    if (!patient) throw new ApiError("Patient not found", 404);
+
+    const medicalReport = await getMedicalReportByPId(Number(userId));
+    if (!medicalReport) throw new ApiError("Medical record not found", 404);
+
+    const appointments = await getAppoinmentsByPatientId(Number(userId));
+
+    console.log("getPatientMedicineCourse Appoinments",appointments)
+
+    const medicineCourse = extractMedicineCourse(appointments);
+
+    res.status(200).json({
+      success: true,
+      message: "Medicine course fetched successfully",
+      data: medicineCourse,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 export const fetchPatientMedicalRecordControllerById = async (
   req: MedicalRequest,

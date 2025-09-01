@@ -7,7 +7,7 @@ export const updatePatientSchema = Joi.object({
     ...userDetailsSchema,
 
     blood_group: Joi.string()
-    .valid('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', null)
+    .valid('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-','a+', 'a-', 'b+', 'b-', 'ab+', 'ab-', 'o+', 'o-', null)
     .allow(null)
     .messages({
     "any.only": "Invalid blood group format",

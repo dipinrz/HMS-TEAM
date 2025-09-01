@@ -91,7 +91,7 @@ export const getPatientsByDoctorId = async (doctorId: number) => {
 
 
 export const fetchAllDoctors = async()=>{
-    const response = await doctorRepo.find({relations:['department','user']})
+    const response = await doctorRepo.find({relations:['department','user'],order:{doctor_id:'ASC'}})
     return instanceToPlain(response)
 }
 
