@@ -46,3 +46,7 @@ export const getPatientPaymentHistory=async()=>{
 export const getDeptAndDoc=async()=>{
   return await commonAPI("GET",`${baseURL}/department/departments-And-doctors`)
 }
+
+export const getMedications=async()=>{
+  return await commonAPI("GET",`${baseURL}/records/patient-medicines`)
+}

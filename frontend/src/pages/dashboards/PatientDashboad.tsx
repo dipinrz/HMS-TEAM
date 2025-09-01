@@ -18,6 +18,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import AppointmentModal from "../../components/PATIENT/AppointmentModal";
 import { Card, CardContent } from "../../components/ui/CustomCards";
 import ListDoctorDept from "../../components/PATIENT/ListDoctorDept";
+import TreatmentCourse from "../../components/PATIENT/TreatmentCourse";
 
 const PatientDashboard = () => {
   const [appointments, setAppointments] = useState<any[]>([]);
@@ -113,7 +114,7 @@ const PatientDashboard = () => {
       </Box>
 
       <Grid container spacing={4} sx={{ mt: 1 }}>
-        <Grid size={{ xs: 12, lg: 6 }}>
+        <Grid size={{ xs: 12, lg: 5 }}>
           <Box
             sx={{
               background: "linear-gradient(to right, #f9fafb, #f1f5f9)",
@@ -306,7 +307,7 @@ const PatientDashboard = () => {
           </Box>
         </Grid>
 
-        <Grid size={{ xs: 12, lg: 6 }}>
+        <Grid size={{ xs: 12, lg: 7 }}>
           {/* Future section like calendar or history */}
           {/* <CalendarComponent/> */}
           <Box
@@ -320,6 +321,17 @@ const PatientDashboard = () => {
             }}
           >
             <ListDoctorDept />
+          </Box>
+          <Box sx={{
+            border:"1px solid " ,
+              borderRadius: "16px",
+              marginRight: "10px",
+              borderColor: "divider",
+              marginTop:"20px",
+              height:240,
+            }}
+            >
+              <TreatmentCourse/>
           </Box>
         </Grid>
       </Grid>
