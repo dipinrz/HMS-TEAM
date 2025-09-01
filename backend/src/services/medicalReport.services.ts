@@ -10,6 +10,16 @@ const appoinmentRepo = AppDataSource.getRepository(Appointment)
 const prescriptionRepo = AppDataSource.getRepository(Prescription)
 const medicationRepo = AppDataSource.getRepository(Medication)
 
+interface Course {
+  medicine_name:string
+  dosage:string
+  frequency:number
+  duration:number
+  start_date:string
+  end_date:string
+
+}
+
 
 export const createMedicalReport = async (medicalReport: Partial<MedicalReport>) => {
 
@@ -57,6 +67,45 @@ export const getMedicalReportByPId = async (patientId: number) => {
 
 //     return results;
 // };
+
+
+// {
+//             "medicine_name": "Paracetamol",
+//             "dosage": "5",
+//             "frequency": 2,
+//             "duration": 5,
+//             "start_date": "2025-08-28",
+//             "end_date": "2025-09-02"
+//         }
+
+
+
+export const extractMedicineCourse = (appointments: any[]) => {
+  const courses: Course[] = [];
+
+  appointments.forEach((appointment) => {
+    appointment.prescriptions.forEach((prescription) => {
+      const prescribedDate = new Date(prescription.prescribed_date);
+
+      prescription.medications.forEach((med) => {
+        const startDate = prescribedDate;
+        const endDate = new Date(prescribedDate);
+        endDate.setDate(endDate.getDate() + med.duration); 
+
+        courses.push({
+          medicine_name: med.medicine.medicine_name,
+          dosage: med.dosage,
+          frequency: med.frequency,
+          duration: med.duration,
+          start_date: startDate.toISOString().split("T")[0],
+          end_date: endDate.toISOString().split("T")[0],
+        });
+      });
+    });
+  });
+
+  return courses;
+};
 
 
 export const getAppoinmentsByPatientId = async (patientId: number) => {

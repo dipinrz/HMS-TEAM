@@ -12,7 +12,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { DoctorsToolbar } from "../../components/ADMIN/doctors/DoctorsToolbar";
 import { DoctorsTable } from "../../components/ADMIN/doctors/DoctorsTable";
-import  DoctorsModal from "../../components/ADMIN/doctors/DoctorsModal";
+import DoctorsModal from "../../components/ADMIN/doctors/DoctorsModal";
 import { DeleteDialog } from "../../components/ADMIN/doctors/DeleteDialog";
 
 interface DoctorForm {
@@ -50,7 +50,6 @@ interface Doctor {
   years_of_experience: number;
   department?: Department;
 }
-
 
 const AdminDoctorsPage = () => {
   const [allDoctors, setAllDoctors] = useState([]);
@@ -105,15 +104,17 @@ const AdminDoctorsPage = () => {
   const downloadPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(16);
-    doc.text("Doctors List", 14, 15);
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    doc.text("Doctors List", pageWidth / 2, 20, { align: "center" });
 
     const tableColumn = [
       "No.",
       "Name",
       "Email",
-      "Specialization",
+      "Spec",
       "License No.",
-      "Department",
+      "Dept",
       "Created Date",
     ];
 

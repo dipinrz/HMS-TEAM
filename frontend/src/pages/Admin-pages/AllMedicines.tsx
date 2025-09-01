@@ -89,15 +89,15 @@ export const AllMedicines: React.FC = () => {
     const doc = new jsPDF();
 
     doc.setFontSize(16);
-    doc.text("Medicine List", 14, 15);
-
+    const pageWidth = doc.internal.pageSize.getWidth();
+    doc.text("Medicine List", pageWidth / 2, 20, { align: "center" });
     const tableColumn = ["ID", "Name", "Description", "Cost", "Expiry Date"];
 
     const tableRows = filteredMedicines.map((medicine) => [
       medicine.medicine_id,
       medicine.medicine_name,
       medicine.description || "No description",
-      `₹${medicine.cost}`,
+      `${medicine.cost} Rs`,
       medicine.expiry_date
         ? new Date(medicine.expiry_date).toLocaleDateString()
         : "N/A",
@@ -193,23 +193,18 @@ export const AllMedicines: React.FC = () => {
       }}
     >
       <Box
-  sx={{
-    position: "relative",
-    zIndex: 1,
-    backgroundColor: "#f8fafc", // page background
-    minHeight: "100vh",
-    pt: { xs: 10, sm: 8, md: 6 }, // responsive top padding under fixed navbar
-    px: 3, // horizontal padding
-  }}
->
-  <Typography
-    variant="h4"
-    fontWeight="bold"
-    textAlign="center"
-    mb={3} // spacing below heading
-  >
-    Medicine Management
-  </Typography>
+        sx={{
+          position: "relative",
+          zIndex: 1,
+          backgroundColor: "#f8fafc", // page background
+          minHeight: "100vh",
+          pt: { xs: 10, sm: 8, md: 6 }, // responsive top padding under fixed navbar
+          px: 3, // horizontal padding
+        }}
+      >
+        <Typography variant="h4" fontWeight="bold" textAlign="center" mb={3}>
+          Medicine Management
+        </Typography>
 
         <Box display="flex" gap={2} mb={3} alignItems="center">
           <TextField

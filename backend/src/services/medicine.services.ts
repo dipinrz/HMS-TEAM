@@ -26,7 +26,7 @@ export const createMedicineService = async (medicine: Partial<Medicine>) => {
 
 
 export const getAllMedicines = async () => {
-    return await medicineRepo.find({})
+    return await medicineRepo.find({order:{medicine_id:'ASC'}})
 }
 
 export const getMedicineById = async (medicineId: number) => {

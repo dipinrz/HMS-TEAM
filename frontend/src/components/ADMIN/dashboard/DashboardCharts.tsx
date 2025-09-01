@@ -20,7 +20,6 @@ import {
 } from "../../../services/adminAPi";
 import { toast } from "react-toastify";
 
-
 const departmentColors = [
   "#2563eb",
   "#059669",
@@ -39,19 +38,19 @@ interface Department {
 }
 
 interface RevenueItem {
-  month: string;        
-  total_amount: number; 
+  month: string;
+  total_amount: number;
 }
 
 interface RevenueChartData {
-  month: string;   
-  revenue: number; 
+  month: string;
+  revenue: number;
 }
 
 const formatRevenueData = (data: RevenueItem[]) => {
   return data.map((item) => {
-    const date = new Date(item.month + "-01"); 
-    const monthName = date.toLocaleString("default", { month: "short" }); 
+    const date = new Date(item.month + "-01");
+    const monthName = date.toLocaleString("default", { month: "short" });
     const year = date.getFullYear();
 
     return {
@@ -61,50 +60,55 @@ const formatRevenueData = (data: RevenueItem[]) => {
   });
 };
 
-const MemoizedBarChart = React.memo(({ data }: { data: RevenueChartData[] }) => (
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={data}>
-      <defs>
-        <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#020aa5ff" />
-          <stop offset="100%" stopColor="#0a036bff" />
-        </linearGradient>
-      </defs>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="month" />
-<YAxis 
-        domain={[0, 20000]} 
-        ticks={[5000, 10000, 15000, 20000]} 
-        tickFormatter={(value) => `₹${value.toLocaleString()}`} 
-      />      <Tooltip 
-        cursor={{ fill: 'transparent' }} 
-        content={({ active, payload }) => {
-          if (active && payload && payload.length) {
-            return (
-              <div style={{
-                background: '#fff',
-                border: '1px solid #ddd',
-                padding: '10px',
-                borderRadius: '4px',
-                boxShadow: '0 0 10px rgba(0,0,0,0.1)'
-              }}>
-                <p>{`${payload[0].payload.month}`}</p>
-                <p>{`Revenue: ₹${payload[0].value?.toLocaleString()}`}</p>
-              </div>
-            );
-          }
-          return null;
-        }}
-      />
-      <Bar
-        dataKey="revenue"
-        fill="url(#revenueGradient)"
-        radius={4}
-        barSize={50}
-      />
-    </BarChart>
-  </ResponsiveContainer>
-));
+const MemoizedBarChart = React.memo(
+  ({ data }: { data: RevenueChartData[] }) => (
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={data}>
+        <defs>
+          <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#020aa5ff" />
+            <stop offset="100%" stopColor="#0a036bff" />
+          </linearGradient>
+        </defs>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="month" />
+        <YAxis
+          domain={[0, 20000]}
+          ticks={[5000, 10000, 15000, 20000]}
+          tickFormatter={(value) => `₹${value.toLocaleString()}`}
+        />{" "}
+        <Tooltip
+          cursor={{ fill: "transparent" }}
+          content={({ active, payload }) => {
+            if (active && payload && payload.length) {
+              return (
+                <div
+                  style={{
+                    background: "#fff",
+                    border: "1px solid #ddd",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+                  }}
+                >
+                  <p>{`${payload[0].payload.month}`}</p>
+                  <p>{`Revenue: ₹${payload[0].value?.toLocaleString()}`}</p>
+                </div>
+              );
+            }
+            return null;
+          }}
+        />
+        <Bar
+          dataKey="revenue"
+          fill="url(#revenueGradient)"
+          radius={4}
+          barSize={50}
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  )
+);
 
 const DashboardCharts: React.FC = () => {
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -116,8 +120,8 @@ const DashboardCharts: React.FC = () => {
   const [monthlyRevenue, setMonthlyRevenue] = useState([]);
 
   useEffect(() => {
-  fetchMonthlyRevenue();
-}, []); 
+    fetchMonthlyRevenue();
+  }, []);
 
   const formattedRevenueData = useMemo(
     () => formatRevenueData(monthlyRevenue),
@@ -183,7 +187,7 @@ const DashboardCharts: React.FC = () => {
             title="Revenue & Patient Growth"
             subheader="Monthly revenue and patient statistics"
           />
-           <CardContent>
+          <CardContent>
             {formattedRevenueData.length > 0 ? (
               <MemoizedBarChart data={formattedRevenueData} />
             ) : (
@@ -230,7 +234,7 @@ const DashboardCharts: React.FC = () => {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value,__,props) => [
+                    formatter={(value, __, props) => [
                       `${props.payload.count} appointments (${value}%)`,
                       "Department",
                     ]}

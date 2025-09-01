@@ -183,7 +183,7 @@ const getStatusIcon = (status: string) => {
       <Grid container spacing={5} style={{ width: '100%' }}>
         {statsData.map((stat, index) => (
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
-            <Card elevation={2} sx={{ height: '100%', width: '100%' }}>
+            <Card animated={false} elevation={2} sx={{ height: '100%', width: '100%' }}>
               <CardContent>
                 <Box display="flex" alignItems="center" justifyContent="space-between">
                   <Box>
@@ -217,7 +217,7 @@ const getStatusIcon = (status: string) => {
         ))}
 
         <Grid container size={{ xs: 12, md: 8 }} width={'100%'}>
-          <Card sx={{ width: '100%' }}>
+          <Card animated={false} sx={{ width: '100%' }}>
             <CardHeader title="Today's Schedule" subheader={new Date().toLocaleDateString()} />
             <CardContent>
               {todayAppointments.length > 0 ? (
@@ -296,7 +296,7 @@ const getStatusIcon = (status: string) => {
           </Card>
         </Grid>
         <Grid container size={{ xs: 12, md: 4 }} display={'flex'}>
-          <Card sx={{ width: '100%' }}>
+          <Card animated={false} sx={{ width: '100%' }}>
             <CardHeader title="Calendar" subheader="Navigate your schedule" />
             <CardContent>
               <LocalizationProvider dateAdapter={AdapterDateFns} >
@@ -322,12 +322,12 @@ const getStatusIcon = (status: string) => {
         </Grid>
       </Grid>
       <Box mt={4}>
-        <Card sx={{ width: "100%" }}>
+        <Card animated={false} sx={{ width: "100%" }}>
           <CardHeader title="Recent Patients" subheader="Patients you have recently treated"></CardHeader>
           <Grid container spacing={5} padding={2}>
             {recentPatients.map((appointent) => (
               <Grid size={{ xs: 12, md: 4 }} key={appointent.patient.user_id}>
-                <Card variant="outlined" sx={{ width: "100%" }}>
+                <Card animated={false} variant="outlined" sx={{ width: "100%" }}>
                   <CardContent>
                     <Box display="flex" gap={2} mb={2} alignItems="center">
                       <Avatar>{getInitials(appointent.patient.first_name, appointent.patient.last_name)}</Avatar>

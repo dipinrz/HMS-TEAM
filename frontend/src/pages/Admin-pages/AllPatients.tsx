@@ -8,8 +8,7 @@ import PatientToolbar from "../../components/ADMIN/patients/PatientToolbar";
 import PatientTable from "../../components/ADMIN/patients/PatientTable";
 import PatientDeleteDialog from "../../components/ADMIN/patients/PatientDeleteDialog";
 
-
-interface User{
+interface User {
   first_name: string;
   last_name: string;
   email: string;
@@ -28,7 +27,9 @@ const AdminPatientsPage = () => {
   const [allPatients, setAllPatients] = useState<Patient[]>([]);
   const [filteredPatients, setFilteredPatients] = useState<any[]>([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(null);
+  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     fetchAllPatients();
@@ -81,7 +82,8 @@ const AdminPatientsPage = () => {
 
   const downloadPatientsPDF = () => {
     const doc = new jsPDF();
-    doc.text("Patient List", 14, 15);
+    const pageWidth = doc.internal.pageSize.getWidth();
+    doc.text("Patient List", pageWidth / 2, 15, { align: "center" });
     autoTable(doc, {
       startY: 25,
       head: [
@@ -101,21 +103,21 @@ const AdminPatientsPage = () => {
 
   return (
     <Box
-  sx={{
-    p: 3,
-    backgroundColor: "#f8fafc", // page background
-    minHeight: "100vh",
-    pt: { xs: 10, sm: 8, md: 6 }, // responsive top padding for navbar
-  }}
->
-  <Typography
-    variant="h4"
-    fontWeight="bold"
-    textAlign="center"
-    mb={3} // spacing below heading
-  >
-    Patient Management
-  </Typography>
+      sx={{
+        p: 3,
+        backgroundColor: "#f8fafc", // page background
+        minHeight: "100vh",
+        pt: { xs: 10, sm: 8, md: 6 }, // responsive top padding for navbar
+      }}
+    >
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        textAlign="center"
+        mb={3} // spacing below heading
+      >
+        Patient Management
+      </Typography>
 
       <PatientToolbar
         onSearchChange={handleSearchChange}

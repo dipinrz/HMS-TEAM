@@ -32,8 +32,6 @@ interface Department {
   head_doctor?: Doctor | null;
 }
 
-
-
 const AdminDepartmentsPage = () => {
   const [departments, setDepartments] = useState([]);
   const [allDoctors, setAllDoctors] = useState([]);
@@ -136,7 +134,8 @@ const AdminDepartmentsPage = () => {
 
   const downloadDepartmentsPDF = () => {
     const doc = new jsPDF();
-    doc.text("Department List", 14, 20);
+    const pageWidth = doc.internal.pageSize.getWidth();
+    doc.text("Department List", pageWidth / 2, 20, { align: "center" });
     autoTable(doc, {
       head: [
         [
@@ -151,7 +150,7 @@ const AdminDepartmentsPage = () => {
         i + 1,
         d.name,
         d.description,
-        `₹${d.consultation_fee}`,
+        `${d.consultation_fee} Rs`,
         d?.head_doctor?.user
           ? `${d.head_doctor.user.first_name} ${d.head_doctor.user.last_name}`
           : "N/A",
@@ -162,22 +161,23 @@ const AdminDepartmentsPage = () => {
   };
 
   return (
-   <Box
-  sx={{
-    p: 3,
-    backgroundColor: "#f8fafc", 
-    minHeight: "100vh",
-    pt: { xs: 10, sm: 8, md: 6 }, 
-  }}
->
-  <Typography
-    variant="h4"
-    fontWeight="bold"
-    textAlign="center"
-    mb={3}
-  >
-    Department Management
-  </Typography>
+    <Box
+      sx={{
+        p: 3,
+        backgroundColor: "#f8fafc",
+        minHeight: "100vh",
+        pt: { xs: 10, sm: 8, md: 6 },
+      }}
+    >
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        textAlign="center"
+        mb={3}
+        mt={3}
+      >
+        Department Management
+      </Typography>
 
       <DepartmentToolbar
         searchTerm={searchTerm}
@@ -217,4 +217,3 @@ const AdminDepartmentsPage = () => {
 };
 
 export default AdminDepartmentsPage;
-
