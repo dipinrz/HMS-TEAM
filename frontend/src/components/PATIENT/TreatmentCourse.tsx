@@ -39,8 +39,7 @@ const TreatmentCourse = () => {
   today.setHours(0, 0, 0);
   const filterMedicines = useMemo(() => {
     return medications?.filter((med: MedicineType) => {
-      return;
-      new Date(med.start_date) > today ? true : false;
+      return new Date(med.end_date) > today ? true : false;
     });
   }, [medications]);
   return (

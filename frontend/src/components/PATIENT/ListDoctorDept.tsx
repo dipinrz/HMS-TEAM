@@ -30,7 +30,7 @@ const ListDoctorDept = () => {
   const [data, setData] = useState<DepartmentType[] | null>(null);
   const [departmentID, setDepartmentId] = useState<number>(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setDepartmentId(newValue);
   };
   const fetching = async () => {
@@ -52,11 +52,11 @@ const ListDoctorDept = () => {
     const interval = setInterval(() => {
       if (scrollRef.current) {
         scrollRef.current.scrollBy({
-          left: 1, // scroll one card width
+          left: 1,
           behavior: "smooth",
         });
       }
-    }, 10); // every 3 seconds
+    }, 10); 
     return () => clearInterval(interval);
   }, []);
 
