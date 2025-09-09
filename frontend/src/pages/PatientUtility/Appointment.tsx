@@ -262,7 +262,7 @@ const TestBookAppointment: React.FC = () => {
       if (data.success) {
         console.log("data is success");
         try {
-          bookAppoinment(formData.doctor_id, formData); // notification
+          bookAppoinment(user?.user_id!, formData); // notification
         } catch (notifErr) {
           console.error("Socket emit failed:", notifErr);
         }
@@ -276,7 +276,6 @@ const TestBookAppointment: React.FC = () => {
             "Appointment booked successfully! You will receive a confirmation email shortly.",
         });
 
-        bookAppoinment(user?.user_id!, formData) //notification
         // Reset form
         setFormData(INITIAL_FORM_STATE);
         setSelectedDate("");

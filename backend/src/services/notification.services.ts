@@ -12,8 +12,7 @@ export const appointmentNotification = async (senderId, appointmentInfo) => {
         const message = `Reason: ${reason_for_visit || "N/A"}, Date: ${new Date(
             appointment_date
         ).toLocaleDateString()}, Time: ${new Date(appointment_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
-
-        notificationRepo.create()
+        // notificationRepo.create()
 
 
         const newNotification = notificationRepo.create({
