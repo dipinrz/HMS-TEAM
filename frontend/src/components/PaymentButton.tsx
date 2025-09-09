@@ -95,12 +95,13 @@ const PaymentButton: React.FC<BillPropType> = ({ billAmount, billId, onPaymentSu
                         onPaymentSuccess();
                         toast.success("Payment Completed")
 
+
                     } else {
                         toast.error("Payment Failed");
                     }
                 },
                 prefill: {
-                    name: user?.first_name,
+                    name: user?.first_name, 
                     email: user?.email,
                     contact: user?.phone_number,
                 },

@@ -12,6 +12,7 @@ import { Medicine } from "../entities/medicine.entity";
 import { Bill } from "../entities/bill.entity";
 import { BillItem } from "../entities/billItem.entity";
 import { Payment } from "../entities/payment.entity";
+import { Notification } from "../entities/notification.entity";
 
 dotenv.config();
 
@@ -24,7 +25,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true,
     logging: false,
-    entities: [User, Patient, Doctor, Department, Appointment, MedicalReport, Prescription, Medication, Medicine, Bill, BillItem, Payment],
+    entities: [User, Patient, Doctor, Department, Appointment, MedicalReport, Prescription, Medication, Medicine, Bill, BillItem, Payment,Notification],
 });
 
 
