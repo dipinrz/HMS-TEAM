@@ -14,6 +14,7 @@ import paymentRoutes from "./routes/payment.routes";
 import medicineRoutes from "./routes/medicine.routes";
 import medicalRecordRoutes from "./routes/medicalRecord.routes";
 import billRoutes from "./routes/bill.routes";
+import notificationRoutes from "./routes/notification.routes";
 
 dotenv.config();
 
@@ -36,16 +37,17 @@ app.use('/api/v1/prescription', prescriptionRoutes);
 app.use('/api/v1/appointment', appointmentRoutes);
 app.use('/api/v1/payment', paymentRoutes);
 app.use('/api/v1/medicine', medicineRoutes);
-app.use('/api/v1/records',medicalRecordRoutes);
-app.use('/api/v1/bill',billRoutes);
+app.use('/api/v1/records', medicalRecordRoutes);
+app.use('/api/v1/bill', billRoutes);
+app.use('/api/v1/notification', notificationRoutes);
 
 
 
 
 app.use(errorHandler)
 
-app.get('/health',(req:any,resp:any)=>{
-    resp.status(200).json({
+app.get('/health', (req: any, resp: any) => {
+  resp.status(200).json({
     status: 'ok',
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
