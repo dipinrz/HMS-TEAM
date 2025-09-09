@@ -34,6 +34,7 @@ import {
 import { fetchAllDepartments, getAllDoctors } from "../../services/adminAPi";
 import { addAppoinment } from "../../services/patientApi";
 import { bookAppoinment } from "../Auth/socketClient";
+import { useAuthStore } from "../../store/useAuthStore";
 
 interface Doctor {
   doctor_id: string;
@@ -103,6 +104,7 @@ const timeSlots = [
 
 const TestBookAppointment: React.FC = () => {
   const theme = useTheme();
+  const { user } = useAuthStore();
 
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -261,7 +263,7 @@ const TestBookAppointment: React.FC = () => {
             "Appointment booked successfully! You will receive a confirmation email shortly.",
         });
 
-        bookAppoinment(formData.doctor_id,formData) //notification
+        bookAppoinment(user?.user_id!, formData) //notification
         // Reset form
         setFormData(INITIAL_FORM_STATE);
         setSelectedDate("");
@@ -446,8 +448,8 @@ const TestBookAppointment: React.FC = () => {
                       !formData.department_id
                         ? "Select department first"
                         : formData.department_id && filteredDoctors.length === 0
-                        ? "No doctors available for selected department"
-                        : ""
+                          ? "No doctors available for selected department"
+                          : ""
                     }
                   >
                     <MenuItem value="">
@@ -608,10 +610,9 @@ const TestBookAppointment: React.FC = () => {
                       <Box display="flex" justifyContent="space-between">
                         <span>
                           {formData.reason_for_visit.length < 10 &&
-                          formData.reason_for_visit.length > 0
-                            ? `Need ${
-                                10 - formData.reason_for_visit.length
-                              } more characters`
+                            formData.reason_for_visit.length > 0
+                            ? `Need ${10 - formData.reason_for_visit.length
+                            } more characters`
                             : "Minimum 10 characters required"}
                         </span>
                         <span>{formData.reason_for_visit.length}/500</span>
