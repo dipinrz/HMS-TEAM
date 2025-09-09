@@ -1,16 +1,18 @@
 import { AppDataSource } from "../config/data-source"
 import { Notification } from "../entities/notification.entity"
+export const notificationRepo = AppDataSource.getRepository(Notification);
+
 
 export const appointmentNotification = async (senderId, appointmentInfo) => {
 
     try {
         const { doctor_id, appointment_date, reason_for_visit } = appointmentInfo;
 
-        const notificationRepo = AppDataSource.getRepository(Notification);
 
         const message = `Reason: ${reason_for_visit || "N/A"}, Date: ${new Date(
             appointment_date
         ).toLocaleDateString()}, Time: ${new Date(appointment_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+
         notificationRepo.create()
 
 
