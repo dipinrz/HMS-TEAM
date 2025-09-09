@@ -144,7 +144,7 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
                   aria-label="show notifications"
                   color="inherit"
                 >
-                  <Badge badgeContent={4} color="error">
+                  <Badge badgeContent={6} color="error">
                     <Bell size={20} />
                   </Badge>
                 </IconButton>
