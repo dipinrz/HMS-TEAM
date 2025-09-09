@@ -28,6 +28,9 @@ type NavBarPropsType = {
 
 export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorNotif, setAnchorNotif] = React.useState<null | HTMLElement>(
+    null
+  );
   const userRole = "admin";
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -52,6 +55,20 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
     setAnchorEl(null);
   };
 
+  const handleNotifMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorNotif(event.currentTarget);
+  };
+  const handleNotifClose = () => {
+    setAnchorNotif(null);
+  };
+
+  // Example notifications data
+  const notifications = [
+    "New appointment booked",
+    "Patient John updated profile",
+    "Doctor Smith added report",
+    "System maintenance scheduled",
+  ];
   const drawer = (
     <Box sx={{ width: 250 }}>
       <Box sx={{ p: 2, display: "flex", alignItems: "center" }}>
@@ -175,11 +192,28 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
                 size="large"
                 aria-label="show notifications"
                 color="inherit"
+                onClick={handleNotifMenu}
               >
-                <Badge badgeContent={4} color="error">
+                <Badge badgeContent={36} color="error">
                   <Bell size={20} />
                 </Badge>
               </IconButton>
+              <Menu
+                anchorEl={anchorNotif}
+                open={Boolean(anchorNotif)}
+                onClose={handleNotifClose}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+              >
+                {notifications.map((notif, index) => (
+                  <MenuItem key={index} onClick={handleNotifClose}>
+                    {notif}
+                  </MenuItem>
+                ))}
+                {notifications.length === 0 && (
+                  <MenuItem disabled>No new notifications</MenuItem>
+                )}
+              </Menu>
 
               <Box
                 sx={{

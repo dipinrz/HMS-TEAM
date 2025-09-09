@@ -29,7 +29,7 @@ export const initSocket = (server: any) => {
       const { user_id, appointmentInfo } = data
       appointmentNotification(user_id,appointmentInfo);
       console.log("hitted notification", appointmentInfo)
-      console.log("sender id", userId);
+console.log("sender id", userId);
 
 
       const doctorSocketId = connectedUsers.get(appointmentInfo.doctor_id)
