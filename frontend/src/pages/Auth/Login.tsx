@@ -27,6 +27,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/ui/CustomButton";
 import { toast } from "react-toastify";
+import { initSocket } from "./socketClient";
 
 const LoginPage: React.FC = () => {
   const theme = useTheme();
@@ -51,7 +52,6 @@ const LoginPage: React.FC = () => {
       [name]: value,
     }));
 
-    console.log(`${name} changed to:`, value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,6 +64,10 @@ const LoginPage: React.FC = () => {
       setFormData({ email: "", password: "" });
       console.log("Login response:", userData);
       toast.success("Login successful!");
+
+      const userId=userData?.user_id
+      initSocket(String(userId))
+
       if (userData?.role === "admin") {
         navigate("/admin/dashboard");
       } else if (userData?.role === "doctor") {

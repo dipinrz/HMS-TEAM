@@ -31,7 +31,7 @@ const PatientDashboard = () => {
     const fetchAppointments = async () => {
       try {
         const res = await getPatientAppointments();
-        console.log("All apoinments", res.data.appointments);
+        // console.log("All apoinments", res.data.appointments);
         const now = new Date();
         const upcoming = res.data.appointments
           .filter((appt: any) => new Date(appt.appointment_date) > now)
@@ -40,7 +40,7 @@ const PatientDashboard = () => {
               new Date(a.appointment_date).getTime() -
               new Date(b.appointment_date).getTime()
           );
-        console.log("Upcoming apoinments ", upcoming);
+        // console.log("Upcoming apoinments ", upcoming);
         setAppointments(upcoming);
       } catch (err) {
         toast.error("Failed to fetch appointments");

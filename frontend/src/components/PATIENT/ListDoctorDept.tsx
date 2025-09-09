@@ -37,7 +37,7 @@ const ListDoctorDept = () => {
     try {
       const response = await getDeptAndDoc();
       const { data }: { data: DepartmentType[] } = response.data;
-      console.log("The department and doctors data", data);
+      // console.log("The department and doctors data", data);
       setData(data);
       if (data.length > 0) {
         setDepartmentId(data[0].department_id);

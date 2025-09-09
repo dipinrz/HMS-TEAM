@@ -33,6 +33,7 @@ import {
 } from "@mui/icons-material";
 import { fetchAllDepartments, getAllDoctors } from "../../services/adminAPi";
 import { addAppoinment } from "../../services/patientApi";
+import { bookAppoinment } from "../Auth/socketClient";
 
 interface Doctor {
   doctor_id: string;
@@ -260,6 +261,7 @@ const TestBookAppointment: React.FC = () => {
             "Appointment booked successfully! You will receive a confirmation email shortly.",
         });
 
+        bookAppoinment(formData.doctor_id,formData) //notification
         // Reset form
         setFormData(INITIAL_FORM_STATE);
         setSelectedDate("");

@@ -58,7 +58,6 @@ export const getPatientMedicineCourse = async (req: MedicalRequest, res: Respons
 
     const appointments = await getAppoinmentsByPatientId(Number(userId));
 
-    console.log("getPatientMedicineCourse Appoinments",appointments)
 
     const medicineCourse = extractMedicineCourse(appointments);
 
