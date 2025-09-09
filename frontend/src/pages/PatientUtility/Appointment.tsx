@@ -64,6 +64,9 @@ export interface FormData {
 
 export interface ApiError {
   data?: {
+    data?: {
+      message?: string;
+    };
     message?: string;
   };
   response?: {
@@ -257,6 +260,16 @@ const TestBookAppointment: React.FC = () => {
       const data = response.data;
 
       if (data.success) {
+        console.log("data is success");
+        try {
+          bookAppoinment(formData.doctor_id, formData); // notification
+        } catch (notifErr) {
+          console.error("Socket emit failed:", notifErr);
+        }
+        // Reset form
+        setFormData(INITIAL_FORM_STATE);
+        setSelectedDate("");
+        setSelectedTime("");
         setFeedback({
           type: "success",
           message:
@@ -269,13 +282,14 @@ const TestBookAppointment: React.FC = () => {
         setSelectedDate("");
         setSelectedTime("");
       } else if (data.success == false) {
-        setFeedback({ type: "error", message: data.message });
+        setFeedback({ type: "error", message: data?.message });
       }
     } catch (err) {
       const apiError = err as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
         apiError?.data?.message ||
+        apiError?.data?.data?.message ||
         "Failed to book appointment. Please try again.";
       setFeedback({ type: "error", message: errorMessage });
     } finally {
