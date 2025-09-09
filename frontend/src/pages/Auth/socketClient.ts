@@ -19,6 +19,6 @@ export const initSocket = (userId: string) => {
   return socket;
 };
 
-export const bookAppoinment=(doctorId:string,appointmentInfo:any)=>{
-    socket.emit("book_appointments",{doctorId,appointmentInfo})
+export const bookAppoinment=(user_id:number,appointmentInfo:any)=>{
+    socket.emit("book_appointments",{user_id,appointmentInfo})
 }

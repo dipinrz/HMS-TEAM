@@ -2,41 +2,36 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeor
 
 enum Status {
     READ = "read",
-    UNREAD = 'unread'
+    UNREAD = "unread",
+}
 
-}
-enum Type {
-    APPOINTMENT = "appointment",
-    BILL = "bill",
-    NONE = 'none'
-}
 @Entity()
-
 export class Notification {
-
     @PrimaryGeneratedColumn()
-    id: number
-
-
-    @CreateDateColumn()
-    createdAt: Date
-
-    @Column({
-        type: 'enum',
-        enum: Status,
-        default: Status.UNREAD
-    })
-    status: Status
+    id: number;
 
     @Column()
-    title: string
+    senderId: number; // patient who booked
+
+    @Column()
+    receiverId: number; // doctor who receives notification
+
+    @CreateDateColumn()
+    createdAt: Date;
 
     @Column({
-        type: 'enum',
-        enum: Type,
-        default: Type.NONE
+        type: "enum",
+        enum: Status,
+        default: Status.UNREAD,
     })
-    type: Type
+    status: Status;
 
+    @Column()
+    title: string; // e.g. "New Appointment Scheduled"
 
+    @Column({ nullable: true })
+    message: string; // e.g. "Reason: Fever, Date: 10 Sep 2025, Time: 1:30 PM"
+
+    @Column({ nullable: true })
+    appointmentId: number; // link to the appointment
 }

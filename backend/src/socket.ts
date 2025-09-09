@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import { appointmentNotification } from "./services/notification.services";
 
 export let io: Server;
 export const connectedUsers = new Map<string, string>();
@@ -22,16 +23,21 @@ export const initSocket = (server: any) => {
     }
     console.log("arrays ", connectedUsers);
 
-    socket.on("book_appointments",(data)=>{
+    socket.on("book_appointments", (data) => {
 
-      const{doctorId,appointmentInfo}=data
-      console.log("hitted notification",doctorId,appointmentInfo)
-      
-      const doctorSocketId=connectedUsers.get(doctorId)
 
-      if(doctorId){
-        io.to(doctorSocketId).emit("appointment_notification",appointmentInfo)
-        console.log(`Notification sent to doctor ${doctorId}`)
+      const { user_id, appointmentInfo } = data
+      appointmentNotification(user_id,appointmentInfo);
+      console.log("hitted notification", appointmentInfo)
+      console.log("sender id", userId);
+
+
+      const doctorSocketId = connectedUsers.get(appointmentInfo.doctor_id)
+
+
+      if (appointmentInfo.doctor_id) {
+        io.to(doctorSocketId).emit("appointment_notification", appointmentInfo)
+        console.log(`Notification sent to doctor ${appointmentInfo.doctor_id}`)
       }
     })
 
