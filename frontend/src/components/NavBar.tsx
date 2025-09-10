@@ -249,21 +249,58 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
                   <MenuItem>No new notifications</MenuItem>
                 ) : (
                   notifications.map((notif) => (
-                    <MenuItem key={notif.id}>
-                      <div>
-                        <strong>{notif.title}</strong>
-                        <p
-                          style={{
-                            margin: 0,
-                            fontSize: "0.8rem",
-                            color: "gray",
-                          }}
-                        >
-                          {notif.message}
-                        </p>
-                        <span style={{ fontSize: "0.7rem", color: "#888" }}>
-                          {new Date(notif.createdAt).toLocaleString()}
-                        </span>
+                    <MenuItem
+                      key={notif.id}
+                      style={{
+                        backgroundColor:
+                          notif.status === "unread"
+                            ? "rgba(214, 214, 219, 0.54)"
+                            : "white",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <div>
+                          <strong
+                            style={{
+                              fontWeight:
+                                notif.status === "unread" ? "bold" : "normal",
+                            }}
+                          >
+                            {notif.title}
+                            {notif.status === "unread" && (
+                              <span
+                                style={{
+                                  width: "8px",
+                                  height: "8px",
+                                  borderRadius: "50%",
+                                  backgroundColor: "red",
+                                  display: "inline-block",
+                                  padding:2,
+                                  marginLeft:4,
+                                }}
+                              ></span>
+                            )}
+                          </strong>
+                          <p
+                            style={{
+                              margin: 0,
+                              fontSize: "0.8rem",
+                              color:
+                                notif.status === "UNREAD" ? "black" : "gray",
+                            }}
+                          >
+                            {notif.message}
+                          </p>
+                          <span style={{ fontSize: "0.7rem", color: "#888" }}>
+                            {new Date(notif.createdAt).toLocaleString()}
+                          </span>
+                        </div>
                       </div>
                     </MenuItem>
                   ))
