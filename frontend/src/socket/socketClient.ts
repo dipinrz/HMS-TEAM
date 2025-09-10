@@ -14,9 +14,9 @@ export const initSocket = (userId: string) => {
 
   // listen for appointment notifications from backend
   socket.on("appointment_notification", (appointmentInfo) => {
-    console.log("📢 New appointment notification:", appointmentInfo);
+    console.log("New appointment notification:", appointmentInfo);
     
-    // Option 2: trigger a re-fetch of notifications
+    // trigger a re-fetch of notifications
     // so Navbar count updates immediately
     window.dispatchEvent(new Event("refreshNotifications"));
   });

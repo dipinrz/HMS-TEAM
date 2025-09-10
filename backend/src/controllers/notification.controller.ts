@@ -39,9 +39,10 @@ export const updateStatus = async (
     if (!notification) {
       throw new ApiError("No notification found", 404);
     }
-    notification.status = Status.READ; // update the status
+    
+    notification.status = Status.READ; 
 
-    await notificationRepo.save(notification); // persist changes
+    await notificationRepo.save(notification); 
 
     return res.json({ success: true, data: notification });
   } catch (error) {

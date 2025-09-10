@@ -21,7 +21,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Bell, Stethoscope } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import { listNotifications } from "../services/allAPI";
+import { listNotifications, updateNotification } from "../services/allAPI";
 import { initSocket } from "../socket/socketClient";
 
 type NavBarPropsType = {
@@ -78,6 +78,21 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
     setAnchorNotif(null);
   };
 
+  const handleUpdateStatusNotif = async (notifID: number) => {
+    try {
+      const response = await updateNotification(notifID);
+      if (response.data.success) {
+        setNotifications((prev) =>
+          prev.map((notif) =>
+            notif.id === notifID ? { ...notif, status: "read" } : notif
+          )
+        );
+        setCount((prev)=>count!-1)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const fetchNotification = async () => {
     try {
       const response = await listNotifications();
@@ -257,6 +272,11 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
                             ? "rgba(214, 214, 219, 0.54)"
                             : "white",
                       }}
+                      onClick={() => {
+                        if (notif.status === "unread") {
+                          handleUpdateStatusNotif(notif.id);
+                        }
+                      }}
                     >
                       <div
                         style={{
@@ -281,8 +301,8 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
                                   borderRadius: "50%",
                                   backgroundColor: "red",
                                   display: "inline-block",
-                                  padding:2,
-                                  marginLeft:4,
+                                  padding: 2,
+                                  marginLeft: 4,
                                 }}
                               ></span>
                             )}
