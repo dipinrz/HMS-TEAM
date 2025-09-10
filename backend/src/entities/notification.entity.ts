@@ -4,6 +4,11 @@ export enum Status {
     READ = "read",
     UNREAD = "unread",
 }
+enum Type {
+    BILL = "bill",
+    APPOINTMENT = 'appointment',
+    NONE='none'
+}
 
 @Entity()
 export class Notification {
@@ -26,12 +31,20 @@ export class Notification {
     })
     status: Status;
 
+    @Column({
+        type: 'enum',
+        enum: Type,
+        default:Type.NONE
+    })
+
+    type: Type
+
+
     @Column()
     title: string; // e.g. "New Appointment Scheduled"
 
     @Column({ nullable: true })
     message: string; // e.g. "Reason: Fever, Date: 10 Sep 2025, Time: 1:30 PM"
 
-    @Column({ nullable: true })
-    appointmentId: number; // link to the appointment
+    
 }

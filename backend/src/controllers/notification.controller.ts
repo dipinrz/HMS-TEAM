@@ -18,6 +18,7 @@ export const fetchNotification = async (
     const data = await notificationRepo.find({
       where: { receiverId: userId },
     });
+    
 
     res
       .status(200)
