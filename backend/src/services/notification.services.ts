@@ -36,3 +36,9 @@ export const appointmentNotification = async (senderId, appointmentInfo) => {
 
 
 }
+
+export const getNotificationById=async(notifId:number)=>{
+    return await notificationRepo.findOne({
+    where:{id:notifId}
+  })
+}

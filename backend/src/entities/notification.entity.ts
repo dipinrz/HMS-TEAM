@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-enum Status {
+export enum Status {
     READ = "read",
     UNREAD = "unread",
 }
