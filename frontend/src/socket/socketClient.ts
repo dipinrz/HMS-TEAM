@@ -31,3 +31,7 @@ export const initSocket = (userId: string) => {
 export const bookAppoinment = (user_id: number, appointmentInfo: any) => {
   socket.emit("book_appointments", { user_id, appointmentInfo });
 };
+
+export const billComplete = (user_id: number, appointment_id: string) => {
+  socket.emit("bill", { user_id, appointment_id });
+}
