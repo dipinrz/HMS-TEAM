@@ -27,7 +27,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/ui/CustomButton";
 import { toast } from "react-toastify";
-import { initSocket } from "./socketClient";
+import { initSocket } from "../../socket/socketClient";
 
 const LoginPage: React.FC = () => {
   const theme = useTheme();
@@ -51,7 +51,6 @@ const LoginPage: React.FC = () => {
       ...prev,
       [name]: value,
     }));
-
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,8 +64,8 @@ const LoginPage: React.FC = () => {
       console.log("Login response:", userData);
       toast.success("Login successful!");
 
-      const userId=userData?.user_id
-      initSocket(String(userId))
+      const userId = userData?.user_id;
+      initSocket(String(userId));
 
       if (userData?.role === "admin") {
         navigate("/admin/dashboard");
@@ -331,9 +330,8 @@ const LoginPage: React.FC = () => {
               </Typography>
               <Typography variant="body2" textAlign="center" mt={3}>
                 Forgot Password?{" "}
-
                 <MuiLink component={Link} to="/forgot-pass">
-                 Send Email
+                  Send Email
                 </MuiLink>
               </Typography>
 

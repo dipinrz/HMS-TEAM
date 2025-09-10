@@ -33,7 +33,7 @@ import {
 } from "@mui/icons-material";
 import { fetchAllDepartments, getAllDoctors } from "../../services/adminAPi";
 import { addAppoinment } from "../../services/patientApi";
-import { bookAppoinment } from "../Auth/socketClient";
+import { bookAppoinment } from "../../socket/socketClient";
 import { useAuthStore } from "../../store/useAuthStore";
 
 interface Doctor {
@@ -461,8 +461,8 @@ const TestBookAppointment: React.FC = () => {
                       !formData.department_id
                         ? "Select department first"
                         : formData.department_id && filteredDoctors.length === 0
-                          ? "No doctors available for selected department"
-                          : ""
+                        ? "No doctors available for selected department"
+                        : ""
                     }
                   >
                     <MenuItem value="">
@@ -623,9 +623,10 @@ const TestBookAppointment: React.FC = () => {
                       <Box display="flex" justifyContent="space-between">
                         <span>
                           {formData.reason_for_visit.length < 10 &&
-                            formData.reason_for_visit.length > 0
-                            ? `Need ${10 - formData.reason_for_visit.length
-                            } more characters`
+                          formData.reason_for_visit.length > 0
+                            ? `Need ${
+                                10 - formData.reason_for_visit.length
+                              } more characters`
                             : "Minimum 10 characters required"}
                         </span>
                         <span>{formData.reason_for_visit.length}/500</span>
