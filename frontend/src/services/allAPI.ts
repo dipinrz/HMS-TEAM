@@ -28,3 +28,7 @@ export const resetPassword = async (token: any, password:string) => {
 export const listNotifications=async()=>{
     return await commonAPI("GET",`${baseURL}/notification`)
 }
+
+export const updateNotification=async(notifID:number)=>{
+    return await commonAPI('PUT',`${baseURL}/notification/update/${notifID}`)
+}

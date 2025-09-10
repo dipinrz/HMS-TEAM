@@ -157,8 +157,8 @@ const getStatusIcon = (status: string) => {
       bgcolor: "secondary"
     }
   ];
-  const handleAddPrescription = (id: number) => {
-    navigate(`/doctor/prescription/${id}`)
+  const handleAddPrescription = (id: number, p_id: number) => {
+    navigate(`/doctor/prescription/${id}/${p_id}`)
   }
   const handleGetReport=()=>{
     navigate('/doctor/patients');
@@ -274,7 +274,7 @@ const getStatusIcon = (status: string) => {
                             {(appointment.status === 'scheduled' || appointment.status ===  'progress') &&(
                               <CustomButton
                                 variant="contained"
-                                onClick={() => handleAddPrescription(appointment.appointment_id)}
+                                onClick={() => handleAddPrescription(appointment.appointment_id, appointment.patient.user_id)}
                                 size="small"
                                 label={appointment.status === "scheduled" ? "Start" : "Continue"}
                               />
