@@ -24,3 +24,7 @@ export const forgotPassword = async (email: any) => {
 export const resetPassword = async (token: any, password:string) => {
     return await commonAPI('POST', `${baseURL}/auth/reset-password`, { token, password });
 }
+
+export const listNotifications=async()=>{
+    return await commonAPI("GET",`${baseURL}/notification`)
+}

@@ -21,16 +21,32 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Bell, Stethoscope } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
+import { listNotifications } from "../services/allAPI";
+import { initSocket } from "../pages/Auth/socketClient";
 
 type NavBarPropsType = {
   handleDrawerToggle: () => void;
 };
-
+interface Notification {
+  id: number;
+  senderId: number;
+  receiverId: number;
+  createdAt: string;
+  status: string;
+  title: string;
+  message: string;
+  appointmentId: null | number;
+}
 export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [anchorNotif, setAnchorNotif] = React.useState<null | HTMLElement>(
     null
   );
+
+  const [notifications, setNotifications] = React.useState<Notification[] | []>(
+    []
+  );
+  const [count, setCount] = React.useState<null | number>(null);
   const userRole = "admin";
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -62,13 +78,30 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
     setAnchorNotif(null);
   };
 
-  // Example notifications data
-  const notifications = [
-    "New appointment booked",
-    "Patient John updated profile",
-    "Doctor Smith added report",
-    "System maintenance scheduled",
-  ];
+  const fetchNotification = async () => {
+    try {
+      const response = await listNotifications();
+      if (response.data.success) {
+        setNotifications(response.data.data);
+        const count = response.data.data.filter((notif: Notification) => {
+          return notif.status == "unread" ? true : false;
+        }).length;
+        setCount(count);
+      }
+    } catch (error) {
+      console.log("Error in fetching", error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchNotification();
+    // SOCKET CONNECT EVERY REFRESH
+    const user = JSON.parse(localStorage.getItem("authUser")!);
+    if (user?.user_id) {
+      initSocket(user?.user_id);
+    }
+  }, []);
+
   const drawer = (
     <Box sx={{ width: 250 }}>
       <Box sx={{ p: 2, display: "flex", alignItems: "center" }}>
@@ -194,7 +227,7 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
                 color="inherit"
                 onClick={handleNotifMenu}
               >
-                <Badge badgeContent={36} color="error">
+                <Badge badgeContent={count} color="error">
                   <Bell size={20} />
                 </Badge>
               </IconButton>
@@ -205,13 +238,28 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
-                {notifications.map((notif, index) => (
-                  <MenuItem key={index} onClick={handleNotifClose}>
-                    {notif}
-                  </MenuItem>
-                ))}
-                {notifications.length === 0 && (
-                  <MenuItem disabled>No new notifications</MenuItem>
+                {notifications.length === 0 ? (
+                  <MenuItem>No new notifications</MenuItem>
+                ) : (
+                  notifications.map((notif) => (
+                    <MenuItem key={notif.id}>
+                      <div>
+                        <strong>{notif.title}</strong>
+                        <p
+                          style={{
+                            margin: 0,
+                            fontSize: "0.8rem",
+                            color: "gray",
+                          }}
+                        >
+                          {notif.message}
+                        </p>
+                        <span style={{ fontSize: "0.7rem", color: "#888" }}>
+                          {new Date(notif.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+                    </MenuItem>
+                  ))
                 )}
               </Menu>
 

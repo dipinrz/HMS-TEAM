@@ -24,28 +24,28 @@ export const initSocket = (server: any) => {
     console.log("arrays ", connectedUsers);
 
     socket.on("book_appointments", (data) => {
-
-
-      const { user_id, appointmentInfo } = data
-      appointmentNotification(user_id,appointmentInfo);
-      console.log("hitted notification", appointmentInfo)
+      const { user_id, appointmentInfo } = data;
+      appointmentNotification(user_id, appointmentInfo);
+      console.log("hitted notification", appointmentInfo);
       console.log("sender id", userId);
 
-
-      const doctorSocketId = connectedUsers.get(appointmentInfo.doctor_id)
-
+      const doctorSocketId = connectedUsers.get(appointmentInfo.doctor_id);
 
       if (appointmentInfo.doctor_id) {
-        io.to(doctorSocketId).emit("appointment_notification", appointmentInfo)
-        console.log(`Notification sent to doctor ${appointmentInfo.doctor_id}`)
+        io.to(doctorSocketId).emit("appointment_notification", appointmentInfo);
+        console.log(`Notification sent to doctor ${appointmentInfo.doctor_id}`);
       }
-    })
+    });
 
     socket.on("disconnect", () => {
-      for (const [userId, socketId] of connectedUsers.entries()) {
-        if (socketId === socket.id) {
-          connectedUsers.delete(userId);
-          console.log(`User ${userId} disconnected`);
+      // check if this socket is still the active one
+      for (const [uid, sid] of connectedUsers.entries()) {
+        if (sid === socket.id) {
+          // only remove if this was the latest socket for that user
+          if (connectedUsers.get(uid) === socket.id) {
+            connectedUsers.delete(uid);
+            console.log(`User ${uid} disconnected (no active socket)`);
+          }
         }
       }
     });
