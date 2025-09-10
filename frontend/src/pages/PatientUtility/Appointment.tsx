@@ -262,6 +262,7 @@ const TestBookAppointment: React.FC = () => {
       if (data.success) {
         console.log("data is success");
         try {
+
           bookAppoinment(user?.user_id!, formData); // notification
         } catch (notifErr) {
           console.error("Socket emit failed:", notifErr);

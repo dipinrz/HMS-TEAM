@@ -25,7 +25,9 @@ export const initSocket = (server: any) => {
 
     socket.on("book_appointments", (data) => {
       const { user_id, appointmentInfo } = data;
-      appointmentNotification(user_id, appointmentInfo);
+      const type = 'appointment';
+      const title = "Appointment Scheduled"
+      appointmentNotification(user_id, appointmentInfo,type,title);
       console.log("hitted notification", appointmentInfo);
       console.log("sender id", userId);
 
