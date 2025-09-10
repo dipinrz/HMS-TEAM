@@ -22,7 +22,7 @@ import { Bell, Stethoscope } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { listNotifications } from "../services/allAPI";
-import { initSocket } from "../pages/Auth/socketClient";
+import { initSocket } from "../socket/socketClient";
 
 type NavBarPropsType = {
   handleDrawerToggle: () => void;
@@ -100,6 +100,13 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
     if (user?.user_id) {
       initSocket(user?.user_id);
     }
+    // custom event to refresh notifications when socket pushes new one
+    const refreshHandler = () => fetchNotification();
+    window.addEventListener("refreshNotifications", refreshHandler);
+
+    return () => {
+      window.removeEventListener("refreshNotifications", refreshHandler);
+    };
   }, []);
 
   const drawer = (
