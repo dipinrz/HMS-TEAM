@@ -1,22 +1,17 @@
 import { AppDataSource } from "../config/data-source"
-import { Notification } from "../entities/notification.entity"
+import { Notification, Type } from "../entities/notification.entity"
 import { getUserById } from "./user.services";
 export const notificationRepo = AppDataSource.getRepository(Notification);
 
 
-export const appointmentNotification = async (senderId, appointmentInfo, type, title) => {
+export const createNotification = async (senderId ,receiverId, type:Type, title, appointment_date?: any) => {
 
     try {
 
-        const { doctor_id, appointment_date } = appointmentInfo;
 
 
         const user = await getUserById(senderId);
-        const dateStr = new Date(appointment_date).toLocaleDateString();
-        const timeStr = new Date(appointment_date).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-        });
+
 
 
         let sender: number;
@@ -25,17 +20,26 @@ export const appointmentNotification = async (senderId, appointmentInfo, type, t
 
 
         if (type == 'appointment') {
+
+            const dateStr = new Date(appointment_date).toLocaleDateString();
+            const timeStr = new Date(appointment_date).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+            });
+
             sender = senderId;
-            receiver = doctor_id;
+            receiver = receiverId;
             message = `${user.first_name} booked an appointment on ${dateStr} at ${timeStr}.`;
 
 
 
         }
         else if (type == 'bill') {
-            sender = doctor_id;
-            receiver = senderId;
-            message = `Your  bill has been generated for your appointment on ${dateStr} at ${timeStr}.`;
+            sender = senderId;
+
+
+            receiver = receiverId;
+            message = `Your  bill has been generated for your appointment on .`;
 
         }
 
@@ -49,7 +53,7 @@ export const appointmentNotification = async (senderId, appointmentInfo, type, t
         });
 
         await notificationRepo.save(newNotification);
-        
+
         console.log("saved the contents in the notification entity");
 
 
@@ -64,8 +68,8 @@ export const appointmentNotification = async (senderId, appointmentInfo, type, t
 
 }
 
-export const getNotificationById=async(notifId:number)=>{
+export const getNotificationById = async (notifId: number) => {
     return await notificationRepo.findOne({
-    where:{id:notifId}
-  })
+        where: { id: notifId }
+    })
 }

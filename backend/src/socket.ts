@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
-import { appointmentNotification } from "./services/notification.services";
+import { createNotification } from "./services/notification.services";
+import { Type } from "./entities/notification.entity";
 
 export let io: Server;
 export const connectedUsers = new Map<string, string>();
@@ -25,9 +26,9 @@ export const initSocket = (server: any) => {
 
     socket.on("book_appointments", (data) => {
       const { user_id, appointmentInfo } = data;
-      const type = 'appointment';
-      const title = "Appointment Scheduled"
-      appointmentNotification(user_id, appointmentInfo,type,title);
+      const type = Type.APPOINTMENT;
+      const title = "Appointment Scheduled";
+      createNotification(user_id,appointmentInfo.doctor_id, type, title,appointmentInfo.appointment_date);
       console.log("hitted notification", appointmentInfo);
       console.log("sender id", userId);
 
@@ -38,6 +39,17 @@ export const initSocket = (server: any) => {
         console.log(`Notification sent to doctor ${appointmentInfo.doctor_id}`);
       }
     });
+    socket.on("bill", (data) => {
+      const type = Type.BILL;
+      const title = 'Bill Created';
+      const { user_id, appointmentId } = data;
+
+      createNotification(user_id, appointmentId, type, title);
+
+      const patientSocketId = connectedUsers.get
+
+
+    })
 
     socket.on("disconnect", () => {
       // check if this socket is still the active one

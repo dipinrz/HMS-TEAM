@@ -4,7 +4,7 @@ export enum Status {
     READ = "read",
     UNREAD = "unread",
 }
-enum Type {
+export enum Type {
     BILL = "bill",
     APPOINTMENT = 'appointment',
     NONE='none'

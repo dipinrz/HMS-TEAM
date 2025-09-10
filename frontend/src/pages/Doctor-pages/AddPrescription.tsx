@@ -7,10 +7,13 @@ import { CheckCircle, DeleteIcon } from "lucide-react";
 import { AddCircleOutline, SaveAlt } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { billComplete } from "../../socket/socketClient";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const AddPrescription = () => {
-  const { medicines, fetchMedicines } = useDoctorStore()
-  
+  const { medicines, fetchMedicines } = useDoctorStore();
+  const { user } = useAuthStore();
+
   const { appointmentId } = useParams<{ appointmentId: string }>();
 
   const [errors, setErrors] = useState<{
@@ -60,70 +63,73 @@ const AddPrescription = () => {
     setFormData({ ...formData, medications: updated });
   };
 
- const handleSubmit = async () => {
-  const newErrors: typeof errors = {
-    medications: [],
-  };
+  const handleSubmit = async () => {
+    const newErrors: typeof errors = {
+      medications: [],
+    };
 
-  let hasError = false;
+    let hasError = false;
 
-  // Validate diagnosis
-  if (!formData.diagnosis.trim()) {
-    newErrors.diagnosis = 'Diagnosis is required';
-    hasError = true;
-  }
-
-  // Validate medications
-  formData.medications.forEach((med) => {
-    const medErrors: {
-      medicine_id?: string;
-      dosage?: string;
-      frequency?: string;
-      duration?: string;
-    } = {};
-    if (!med.medicine_id) {
-      medErrors.medicine_id = 'Medicine is required';
+    // Validate diagnosis
+    if (!formData.diagnosis.trim()) {
+      newErrors.diagnosis = 'Diagnosis is required';
       hasError = true;
     }
-    if (!med.dosage) {
-      medErrors.dosage = 'Dosage is required';
-      hasError = true;
-    }
-    if (!med.frequency) {
-      medErrors.frequency = 'Frequency is required';
-      hasError = true;
-    }
-    if (!med.duration) {
-      medErrors.duration = 'Duration is required';
-      hasError = true;
-    }
-    newErrors.medications.push(medErrors);
-  });
 
-  setErrors(newErrors);
-
-  if (hasError) return;
-
-  try {
-    await createPrescription(formData);
-    toast.success('Prescription created');
-    setFormData({
-      appointment_id: Number(appointmentId),
-      diagnosis: '',
-      medications: [{ medicine_id: '', dosage: '', frequency: '', duration: '' }],
+    // Validate medications
+    formData.medications.forEach((med) => {
+      const medErrors: {
+        medicine_id?: string;
+        dosage?: string;
+        frequency?: string;
+        duration?: string;
+      } = {};
+      if (!med.medicine_id) {
+        medErrors.medicine_id = 'Medicine is required';
+        hasError = true;
+      }
+      if (!med.dosage) {
+        medErrors.dosage = 'Dosage is required';
+        hasError = true;
+      }
+      if (!med.frequency) {
+        medErrors.frequency = 'Frequency is required';
+        hasError = true;
+      }
+      if (!med.duration) {
+        medErrors.duration = 'Duration is required';
+        hasError = true;
+      }
+      newErrors.medications.push(medErrors);
     });
-    setErrors({ medications: [{}] }); // reset errors
-  } catch (error) {
-    console.error('Error creating prescription', error);
-    toast.error('Failed to add prescription');
-  }
-};
+
+    setErrors(newErrors);
+
+    if (hasError) return;
+
+    try {
+      await createPrescription(formData);
+      toast.success('Prescription created');
+      setFormData({
+        appointment_id: Number(appointmentId),
+        diagnosis: '',
+        medications: [{ medicine_id: '', dosage: '', frequency: '', duration: '' }],
+      });
+      setErrors({ medications: [{}] }); // reset errors
+    } catch (error) {
+      console.error('Error creating prescription', error);
+      toast.error('Failed to add prescription');
+    }
+  };
 
 
   const handleStatusCompleted = async () => {
     try {
-      await updatePrescritptionStatus({ appointment_id: Number(appointmentId) })
+      await updatePrescritptionStatus({ appointment_id: Number(appointmentId) });
       toast.success('Completed');
+   
+      billComplete(user?.user_id!, appointmentId!);
+
     } catch (error: any) {
       console.log(error);
       toast.error("Faild to completed");
@@ -138,7 +144,7 @@ const AddPrescription = () => {
       <Paper elevation={3} sx={{ p: 4, borderRadius: 3, bgcolor: '#fdfdff' }}>
         <Grid container spacing={3}>
           {/* Diagnosis */}
-          <Grid size={{xs:12}}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="h6" fontWeight={600} mb={1}>
               Diagnosis
             </Typography>
@@ -156,7 +162,7 @@ const AddPrescription = () => {
           </Grid>
 
           {/* Medications Section Header */}
-          <Grid size={{xs:12}}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="h6" fontWeight={600} mb={1}>
               Medications
             </Typography>
@@ -167,7 +173,7 @@ const AddPrescription = () => {
           {formData.medications.map((med, index) => (
             <Grid
               container
-              size={{xs:12}}
+              size={{ xs: 12 }}
               spacing={2}
               key={index}
               sx={{
@@ -178,13 +184,13 @@ const AddPrescription = () => {
                 boxShadow: 1,
               }}
             >
-              <Grid size={{xs:12,md:3}}>
+              <Grid size={{ xs: 12, md: 3 }}>
                 <TextField
                   select
                   fullWidth
                   label="Medicine"
                   value={med.medicine_id}
-                  onChange={(e) =>handleMedChange(index, 'medicine_id', e.target.value)}
+                  onChange={(e) => handleMedChange(index, 'medicine_id', e.target.value)}
                   error={!!errors.medications[index]?.medicine_id}
                   helperText={errors.medications[index]?.medicine_id}
                 >
@@ -195,7 +201,7 @@ const AddPrescription = () => {
                   ))}
                 </TextField>
               </Grid>
-              <Grid size={{xs:6, md:2}} >
+              <Grid size={{ xs: 6, md: 2 }} >
                 <TextField
                   fullWidth
                   label="Dosage"
@@ -207,7 +213,7 @@ const AddPrescription = () => {
                   helperText={errors.medications[index]?.dosage}
                 />
               </Grid>
-              <Grid size={{xs:6, md:2}}>
+              <Grid size={{ xs: 6, md: 2 }}>
                 <TextField
                   fullWidth
                   label="Frequency"
@@ -219,7 +225,7 @@ const AddPrescription = () => {
                   helperText={errors.medications[index]?.frequency}
                 />
               </Grid>
-              <Grid size={{xs:6, md:2}}>
+              <Grid size={{ xs: 6, md: 2 }}>
                 <TextField
                   fullWidth
                   label="Duration"
@@ -231,7 +237,7 @@ const AddPrescription = () => {
                   helperText={errors.medications[index]?.duration}
                 />
               </Grid>
-              <Grid size={{xs:6, md:1}}>
+              <Grid size={{ xs: 6, md: 1 }}>
                 <IconButton
                   color="error"
                   onClick={() => removeMedicationRow(index)}
@@ -243,7 +249,7 @@ const AddPrescription = () => {
           ))}
 
           {/* Add Medicine Button */}
-          <Grid size={{xs:12}}>
+          <Grid size={{ xs: 12 }}>
             <Button
               startIcon={<AddCircleOutline />}
               variant="outlined"
@@ -255,7 +261,7 @@ const AddPrescription = () => {
           </Grid>
 
           {/* Action Buttons */}
-          <Grid size={{xs:12}}>
+          <Grid size={{ xs: 12 }}>
             <Stack direction="row" spacing={2}>
               <Button
                 variant="contained"
