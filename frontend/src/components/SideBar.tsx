@@ -16,7 +16,6 @@ import {
   Paper,
   Chip,
   Button,
-
 } from "@mui/material";
 
 import {
@@ -28,14 +27,21 @@ import {
   Description as PrescriptionIcon,
   MedicalServices as DoctorIcon,
   Person as PersonIcon,
-  Description as MedicalReportIcon,   
-   ReceiptLong as PaymentIcon
+  Description as MedicalReportIcon,
+  ReceiptLong as PaymentIcon,
 } from "@mui/icons-material";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong"
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { Calendar, CreditCard, LogOutIcon, Stethoscope, User } from "lucide-react";
+import {
+  Calendar,
+  CreditCard,
+  LogOutIcon,
+  Stethoscope,
+  User,
+} from "lucide-react";
 import { useDoctorStore } from "../store/doctorStore";
+import { socket } from "../socket/socketClient";
 
 const drawerWidth = 280;
 
@@ -51,7 +57,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   handleDrawerToggle,
 }) => {
   const { user, logout } = useAuthStore();
-  const { fetchHeadDoctor, isHeadDoctor } = useDoctorStore()
+  const { fetchHeadDoctor, isHeadDoctor } = useDoctorStore();
   const location = useLocation();
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("sm")
@@ -62,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-    if(user?.role === 'doctor'){
+    if (user?.role === "doctor") {
       fetchHeadDoctor();
     }
     return () => clearInterval(timer);
@@ -93,7 +99,11 @@ const Sidebar: React.FC<SidebarProps> = ({
           icon: <MedicationIcon />,
         },
         { path: "/admin/doctors", name: "Doctors", icon: <DoctorIcon /> },
-        {path:"/admin/payments", name:"Payments", icon:<ReceiptLongIcon/>}
+        {
+          path: "/admin/payments",
+          name: "Payments",
+          icon: <ReceiptLongIcon />,
+        },
       ],
       doctor: [
         {
@@ -109,7 +119,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {
           path: "/doctor/patients",
           name: "Patients",
-          icon: <User />
+          icon: <User />,
         },
       ],
       patient: [
@@ -118,11 +128,22 @@ const Sidebar: React.FC<SidebarProps> = ({
           name: "Book Appointments",
           icon: <CalendarIcon />,
         },
-        { path: "/patient/medical-record", name: "Medical Records", icon: <MedicalReportIcon /> },
-        { path: "/patient/appointments", name: "Appointments", icon: <Calendar /> },
+        {
+          path: "/patient/medical-record",
+          name: "Medical Records",
+          icon: <MedicalReportIcon />,
+        },
+        {
+          path: "/patient/appointments",
+          name: "Appointments",
+          icon: <Calendar />,
+        },
         { path: "/patient/bills", name: "Bills", icon: <CreditCard /> },
-        { path: "/patient/payment-history", name: "Payments", icon: <PaymentIcon /> },
-
+        {
+          path: "/patient/payment-history",
+          name: "Payments",
+          icon: <PaymentIcon />,
+        },
       ],
     };
 
@@ -134,14 +155,15 @@ const Sidebar: React.FC<SidebarProps> = ({
       });
     }
     return [...commonLinks, ...(roleSpecificLinks[role] || [])];
-
   };
-
 
   const allLinks = getLinksForRole(user?.role as UserRole);
 
   const handleLogout = () => {
     logout();
+    if (socket) {
+      socket.disconnect();
+    }
   };
 
   const getRoleColor = (role: string) => {
@@ -221,16 +243,20 @@ const Sidebar: React.FC<SidebarProps> = ({
         <Typography
           variant="body2"
           color="text.secondary"
-          component='div'
+          component="div"
           sx={{ mt: 0.5, fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
         >
-          <Box style={{ textAlign: "center" }}>{currentTime.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}</Box>{" "}
-          <Box style={{ textAlign: "center" }}>{currentTime.toLocaleTimeString("en-US")}</Box>
+          <Box style={{ textAlign: "center" }}>
+            {currentTime.toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </Box>{" "}
+          <Box style={{ textAlign: "center" }}>
+            {currentTime.toLocaleTimeString("en-US")}
+          </Box>
         </Typography>
         <br />
 
@@ -366,19 +392,19 @@ const Sidebar: React.FC<SidebarProps> = ({
             zIndex: (theme) => theme.zIndex.drawer,
             ...(isMobile
               ? {
-                // Mobile drawer
-                height: "100vh",
-                position: "fixed",
-                top: 0,
-                left: 0,
-              }
+                  // Mobile drawer
+                  height: "100vh",
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                }
               : {
-                // Desktop drawer
-                position: "fixed",
-                height: "100vh",
-                top: 0,
-                left: 0,
-              }),
+                  // Desktop drawer
+                  position: "fixed",
+                  height: "100vh",
+                  top: 0,
+                  left: 0,
+                }),
           },
         }}
       >

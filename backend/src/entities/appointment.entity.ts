@@ -8,6 +8,7 @@ import {
 import { User } from './user.entity';
 import { Department } from './department.entity';
 import { MedicalReport } from './medicalReport.entity';
+import { boolean } from 'joi';
 
 export enum AppointmentStatus {
   SCHEDULED = 'scheduled',
@@ -52,4 +53,7 @@ export class Appointment {
 
   @Column({ type: 'text', nullable: true })
   notes: string;
+
+  @Column({type:'boolean',default:false})
+  reminder_send:boolean;
 }
