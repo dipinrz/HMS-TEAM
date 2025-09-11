@@ -1,7 +1,7 @@
 import type { FormData } from "../pages/PatientUtility/Appointment";
 import commonAPI from "./commonAPI";
 
-export const baseURL = "http://localhost:5000/api/v1";
+export const baseURL =import.meta.env.VITE_BASE_URL ;
 
 export const addAppoinment = async (formData: FormData) => {
   return commonAPI("POST", `${baseURL}/appointment`, formData);
