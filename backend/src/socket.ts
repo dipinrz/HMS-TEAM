@@ -39,6 +39,7 @@ export const initSocket = (server: any) => {
         console.log(`Notification sent to doctor ${appointmentInfo.doctor_id}`);
       }
     });
+    
     socket.on("bill", (data) => {
 
       const type = Type.BILL;

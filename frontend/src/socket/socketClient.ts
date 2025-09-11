@@ -40,5 +40,4 @@ export const bookAppoinment = (user_id: number, appointmentInfo: any) => {
 
 export const billComplete = (user_id: number, patientId: string) => {
   socket.emit("bill", { user_id, patientId });
-  alert("bill emited");
 }
