@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, type TextFieldProps, Box } from '@mui/material';
+import { TextField, type TextFieldProps } from '@mui/material';
 
 export type CustomInputProps = TextFieldProps & {
   label: string | number;

@@ -8,11 +8,11 @@ import PatientDashboard from "../pages/dashboards/PatientDashboad";
 const Test = () => {
   return (
     <div>
-      <Navbar />
+      <Navbar handleDrawerToggle={() => { }} />
       <AdminDashboard />
       <DoctorDashboard />
       <PatientDashboard />
-      <LoginPage/>
+      <LoginPage />
     </div>
   );
 };
