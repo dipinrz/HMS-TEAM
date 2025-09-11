@@ -15,11 +15,17 @@ export const initSocket = (userId: string) => {
   // listen for appointment notifications from backend
   socket.on("appointment_notification", (appointmentInfo) => {
     console.log("New appointment notification:", appointmentInfo);
-    
+
     // trigger a re-fetch of notifications
     // so Navbar count updates immediately
     window.dispatchEvent(new Event("refreshNotifications"));
   });
+  socket.on("bill_notification", (data) => {
+    console.log("connected", data);
+    window.dispatchEvent(new Event("refreshNotifications"));
+
+
+  })
 
   socket.on("disconnect", () => {
     console.log(" Socket disconnected");
@@ -32,6 +38,7 @@ export const bookAppoinment = (user_id: number, appointmentInfo: any) => {
   socket.emit("book_appointments", { user_id, appointmentInfo });
 };
 
-export const billComplete = (user_id: number, appointment_id: string) => {
-  socket.emit("bill", { user_id, appointment_id });
+export const billComplete = (user_id: number, patientId: string) => {
+  socket.emit("bill", { user_id, patientId });
+  alert("bill emited");
 }

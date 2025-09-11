@@ -16,7 +16,7 @@ AppDataSource.initialize()
             console.log(`server running at ${PORT}`);
         })
         
-        scheduleAutoCancelAppointments();
+        // scheduleAutoCancelAppointments();
 
     })
     .catch((err) => {
