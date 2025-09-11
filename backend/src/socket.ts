@@ -8,7 +8,7 @@ export const connectedUsers = new Map<string, string>();
 export const initSocket = (server: any) => {
   io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: process.env.FRONTEND_URL,
       methods: ["GET", "POST"],
     },
   });
@@ -46,7 +46,7 @@ export const initSocket = (server: any) => {
         console.log(`Notification sent to doctor ${appointmentInfo.doctor_id}`);
       }
     });
-    
+
     socket.on("bill", (data) => {
       const type = Type.BILL;
       const title = "Bill Created";
