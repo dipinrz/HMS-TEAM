@@ -14,7 +14,7 @@ const AddPrescription = () => {
   const { medicines, fetchMedicines } = useDoctorStore();
   const { user } = useAuthStore();
 
-  const { appointmentId } = useParams<{ appointmentId: string }>();
+  const { appointmentId, patientId } = useParams<{ appointmentId: string, patientId: string }>();
 
   const [errors, setErrors] = useState<{
     diagnosis?: string;
@@ -127,8 +127,9 @@ const AddPrescription = () => {
     try {
       await updatePrescritptionStatus({ appointment_id: Number(appointmentId) });
       toast.success('Completed');
-   
-      billComplete(user?.user_id!, appointmentId!);
+
+      billComplete(user?.user_id!, patientId!);
+      
 
     } catch (error: any) {
       console.log(error);
