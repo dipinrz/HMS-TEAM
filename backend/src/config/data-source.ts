@@ -16,17 +16,18 @@ import { Notification } from "../entities/notification.entity";
 
 dotenv.config();
 
-export const AppDataSource = new DataSource({
-    type: "postgres",
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT || "5432"),
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    synchronize: true,
-    logging: false,
-    entities: [User, Patient, Doctor, Department, Appointment, MedicalReport, Prescription, Medication, Medicine, Bill, BillItem, Payment,Notification],
-});
+// export const AppDataSource = new DataSource({
+//     type: "postgres",
+//     host: process.env.DB_HOST,
+//     port: parseInt(process.env.DB_PORT || "5432"),
+//     username: process.env.DB_USERNAME,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME,
+//     synchronize: true,
+//     logging: false,
+
+//     entities: [User, Patient, Doctor, Department, Appointment, MedicalReport, Prescription, Medication, Medicine, Bill, BillItem, Payment,Notification],
+// });
 
 
 // NeonDB
@@ -49,29 +50,16 @@ export const AppDataSource = new DataSource({
 
 // dotenv.config();
 
-// export const AppDataSource = new DataSource({
-//   type: "postgres",
-//   url: process.env.DATABASE_URL,
-//   synchronize: true,
-//   logging: false,
-//   ssl: true,
-//   extra: {
-//     ssl: {
-//       rejectUnauthorized: false,
-//     },
-//   },
-//   entities: [
-//     User,
-//     Patient,
-//     Doctor,
-//     Department,
-//     Appointment,
-//     MedicalReport,
-//     Prescription,
-//     Medication,
-//     Medicine,
-//     Bill,
-//     BillItem,
-//     Payment
-//   ],
-// });
+export const AppDataSource = new DataSource({
+    type: "postgres",
+    url: process.env.DATABASE_URL,
+    synchronize: true,
+    logging: false,
+    ssl: true,
+    extra: {
+        ssl: {
+            rejectUnauthorized: false,
+        },
+    },
+    entities: [User, Patient, Doctor, Department, Appointment, MedicalReport, Prescription, Medication, Medicine, Bill, BillItem, Payment, Notification],
+});
