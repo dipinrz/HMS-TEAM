@@ -1,5 +1,6 @@
 export const generateResetPasswordEmail = (name: string, resetLink: string): string => {
-    return `
+  return `
+     this is the reset link ${resetLink}
     <div style="font-family: Arial, sans-serif;">
       <h3>Password Reset Request</h3>
       <p>Hi ${name || 'User'},</p>
