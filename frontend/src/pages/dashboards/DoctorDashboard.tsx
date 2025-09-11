@@ -58,31 +58,31 @@ const DoctorDashboard = () => {
     }
   }, [])
 
-const getBorderColor = (status: string) => {
-  switch (status) {
-    case 'scheduled':
-      return 'primary.main';
-    case 'completed':
-      return 'success.main';
-    case 'cancelled':
-      return 'error.main';
-    default:
-      return 'grey.500';
-  }
-};
+  const getBorderColor = (status: string) => {
+    switch (status) {
+      case 'scheduled':
+        return 'primary.main';
+      case 'completed':
+        return 'success.main';
+      case 'cancelled':
+        return 'error.main';
+      default:
+        return 'grey.500';
+    }
+  };
 
-const getStatusIcon = (status: string) => {
-  switch (status) {
-    case 'scheduled':
-      return <CalendarToday fontSize="small" color="primary" />;
-    case 'completed':
-      return <CheckCircle fontSize="small" color="success" />;
-    case 'cancelled':
-      return <Cancel fontSize="small" color="error" />;
-    default:
-      return <InfoOutlined fontSize="small" color="action" />;
-  }
-};
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'scheduled':
+        return <CalendarToday fontSize="small" color="primary" />;
+      case 'completed':
+        return <CheckCircle fontSize="small" color="success" />;
+      case 'cancelled':
+        return <Cancel fontSize="small" color="error" />;
+      default:
+        return <InfoOutlined fontSize="small" color="action" />;
+    }
+  };
 
   const getStatusChipColor = (status: string) => {
     switch (status) {
@@ -160,7 +160,7 @@ const getStatusIcon = (status: string) => {
   const handleAddPrescription = (id: number, p_id: number) => {
     navigate(`/doctor/prescription/${id}/${p_id}`)
   }
-  const handleGetReport=()=>{
+  const handleGetReport = () => {
     navigate('/doctor/patients');
   }
   return (
@@ -172,7 +172,7 @@ const getStatusIcon = (status: string) => {
           <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: "0.875rem", sm: "1rem" }, mt: 0.5 }}>You have {appointments.length} appointments scheduled for today</Typography>
         </Box>
         <Box display="flex" gap={2}>
-          <CustomButton onClick={()=>handleGetReport()} startIcon={<Description />} sx={{
+          <CustomButton onClick={() => handleGetReport()} startIcon={<Description />} sx={{
             backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
             border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
           }} label="View Reports"></CustomButton>
@@ -221,7 +221,7 @@ const getStatusIcon = (status: string) => {
             <CardHeader title="Today's Schedule" subheader={new Date().toLocaleDateString()} />
             <CardContent>
               {todayAppointments.length > 0 ? (
-                todayAppointments.slice(0,5).map((appointment) => (
+                todayAppointments.slice(0, 5).map((appointment) => (
                   <Box
                     key={appointment.appointment_id}
                     borderLeft={4}
@@ -234,7 +234,7 @@ const getStatusIcon = (status: string) => {
                   >
                     <Grid container spacing={2} alignItems="center">
                       {/* Avatar + Name + Reason */}
-                      <Grid size={{xs:8, sm:9}} >
+                      <Grid size={{ xs: 8, sm: 9 }} >
                         <Stack direction="row" spacing={2} alignItems="center">
                           <Avatar sx={{ bgcolor: 'primary.light', color: 'white' }}>
                             {getInitials(appointment.patient.first_name, appointment.patient.last_name)}
@@ -253,35 +253,37 @@ const getStatusIcon = (status: string) => {
                         </Stack>
                       </Grid>
 
+
+
                       {/* Time and Status */}
-                      <Grid size={{xs:4 ,sm:3}} textAlign="right">
-                        <Stack direction="column" alignItems="flex-end" spacing={1}>
+                      <Grid size={{ xs: 4, sm: 3 }} textAlign={{ xs: 'left', sm: 'right' }}>
+                        <Stack direction="column" alignItems={{ xs: 'flex-start', sm: 'flex-end' }} spacing={1}>
                           <Stack direction="row" spacing={0.5} alignItems="center">
                             <AccessTime fontSize="small" color="action" />
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant="body2" color="text.secondary" noWrap>
                               {formatTime12hr(appointment.appointment_date)}
                             </Typography>
                           </Stack>
 
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            {getStatusIcon(appointment.status)}
+                          <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
                             <Chip
                               label={appointment.status}
                               size="small"
                               color={getStatusChipColor(appointment.status)}
                               variant="outlined"
                             />
-                            {(appointment.status === 'scheduled' || appointment.status ===  'progress') &&(
+                            {(appointment.status === 'scheduled' || appointment.status === 'progress') && (
                               <CustomButton
                                 variant="contained"
                                 onClick={() => handleAddPrescription(appointment.appointment_id, appointment.patient.user_id)}
                                 size="small"
-                                label={appointment.status === "scheduled" ? "Start" : "Continue"}
+                                label={appointment.status === 'scheduled' ? 'Start' : 'Continue'}
                               />
                             )}
                           </Stack>
                         </Stack>
                       </Grid>
+
                     </Grid>
                   </Box>
                 ))) : (
