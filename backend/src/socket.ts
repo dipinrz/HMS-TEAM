@@ -8,7 +8,7 @@ export const connectedUsers = new Map<string, string>();
 export const initSocket = (server: any) => {
   io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL,
+      origin: 'https://hms-team.onrender.com',
       methods: ["GET", "POST"],
     },
   });
