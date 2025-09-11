@@ -19,8 +19,7 @@ import { getStatusColor } from "../../utility/DoctorUtility";
 import { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import { Cake, CancelPresentation, Email, EmailOutlined, LocationCity, Person, Phone } from "@mui/icons-material";
-import { LocationEditIcon } from "lucide-react";
+import { Cake, CancelPresentation, Email, LocationCity, Person, Phone } from "@mui/icons-material";
 
 
 const PatientReport = () => {

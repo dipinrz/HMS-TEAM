@@ -15,29 +15,29 @@ import EventNoteIcon from "@mui/icons-material/EventNote";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
-interface Prescription {
-  id: number;
-  patientName: string;
-  patientAvatar?: string;
-  medicine: string;
-  dosage: string;
-  date: string;
-  status: "active" | "completed" | "expired";
-}
+// interface Prescription {
+//   id: number;
+//   patientName: string;
+//   patientAvatar?: string;
+//   medicine: string;
+//   dosage: string;
+//   date: string;
+//   status: "active" | "completed" | "expired";
+// }
 
 
-const getStatusColor = (status: Prescription["status"]) => {
-  switch (status) {
-    case "active":
-      return "success";
-    case "completed":
-      return "primary";
-    case "expired":
-      return "error";
-    default:
-      return "default";
-  }
-};
+// const getStatusColor = (status: Prescription["status"]) => {
+//   switch (status) {
+//     case "active":
+//       return "success";
+//     case "completed":
+//       return "primary";
+//     case "expired":
+//       return "error";
+//     default:
+//       return "default";
+//   }
+// };
 
 const DoctorPriscriptions = () => {
   const { prescriptons, fetchPrescriptions, loading, error } = useDoctorStore();

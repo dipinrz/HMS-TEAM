@@ -1,6 +1,6 @@
 
 import { Avatar, Box, Chip, Divider, Grid, Stack, Typography, useTheme } from "@mui/material";
-import { AccessTime, CalendarToday, Cancel, CheckCircle, Description, EventBusy, Group, Healing, InfoOutlined } from "@mui/icons-material";
+import { AccessTime, CalendarToday, Description, EventBusy, Group, Healing,  } from "@mui/icons-material";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
 import { useEffect, useState } from "react";
@@ -71,18 +71,18 @@ const DoctorDashboard = () => {
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'scheduled':
-        return <CalendarToday fontSize="small" color="primary" />;
-      case 'completed':
-        return <CheckCircle fontSize="small" color="success" />;
-      case 'cancelled':
-        return <Cancel fontSize="small" color="error" />;
-      default:
-        return <InfoOutlined fontSize="small" color="action" />;
-    }
-  };
+  // const getStatusIcon = (status: string) => {
+  //   switch (status) {
+  //     case 'scheduled':
+  //       return <CalendarToday fontSize="small" color="primary" />;
+  //     case 'completed':
+  //       return <CheckCircle fontSize="small" color="success" />;
+  //     case 'cancelled':
+  //       return <Cancel fontSize="small" color="error" />;
+  //     default:
+  //       return <InfoOutlined fontSize="small" color="action" />;
+  //   }
+  // };
 
   const getStatusChipColor = (status: string) => {
     switch (status) {
