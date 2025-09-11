@@ -22,7 +22,7 @@ import { Bell, Stethoscope } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { listNotifications, updateNotification } from "../services/allAPI";
-import { initSocket } from "../socket/socketClient";
+import { initSocket, socket } from "../socket/socketClient";
 
 type NavBarPropsType = {
   handleDrawerToggle: () => void;
@@ -87,7 +87,7 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
             notif.id === notifID ? { ...notif, status: "read" } : notif
           )
         );
-        setCount((prev)=>count!-1)
+        setCount(() => count! - 1);
       }
     } catch (error) {
       console.log(error);
@@ -113,7 +113,9 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
     // SOCKET CONNECT EVERY REFRESH
     const user = JSON.parse(localStorage.getItem("authUser")!);
     if (user?.user_id) {
-      initSocket(user?.user_id);
+      if (!socket || !socket.connected) {
+        initSocket(String(user.user_id));
+      }
     }
     // custom event to refresh notifications when socket pushes new one
     const refreshHandler = () => fetchNotification();

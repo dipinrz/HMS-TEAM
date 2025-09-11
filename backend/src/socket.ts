@@ -15,7 +15,7 @@ export const initSocket = (server: any) => {
 
   io.on("connection", (socket) => {
     //  get userId from handshake auth (frontend sends this)
-    const userId = String(socket.handshake.auth.userId );
+    const userId = String(socket.handshake.auth.userId);
 
     console.log("User connected:", socket.id, "userId:", userId);
 
@@ -28,39 +28,39 @@ export const initSocket = (server: any) => {
       const { user_id, appointmentInfo } = data;
       const type = Type.APPOINTMENT;
       const title = "Appointment Scheduled";
-      createNotification(user_id, appointmentInfo.doctor_id, type, title, appointmentInfo.appointment_date);
+      createNotification(
+        user_id,
+        appointmentInfo.doctor_id,
+        type,
+        title,
+        appointmentInfo.appointment_date
+      );
       console.log("hitted notification", appointmentInfo);
       console.log("sender id", userId);
 
-      const doctorSocketId = connectedUsers.get(String(appointmentInfo.doctor_id));
-
+      const doctorSocketId = connectedUsers.get(
+        String(appointmentInfo.doctor_id)
+      );
       if (appointmentInfo.doctor_id) {
         io.to(doctorSocketId).emit("appointment_notification", appointmentInfo);
         console.log(`Notification sent to doctor ${appointmentInfo.doctor_id}`);
       }
     });
     socket.on("bill", (data) => {
-
       const type = Type.BILL;
-      const title = 'Bill Created';
+      const title = "Bill Created";
       const { user_id, patientId } = data;
-
 
       createNotification(user_id, patientId, type, title);
 
       const patientSocketId = connectedUsers.get(String(patientId));
       console.log("this is the conected users", connectedUsers);
 
-
       if (patientId) {
         io.to(patientSocketId).emit("bill_notification", "connected");
         console.log("bill emitted", patientSocketId, patientId);
-
-
       }
-
-
-    })
+    });
 
     socket.on("disconnect", () => {
       // check if this socket is still the active one
