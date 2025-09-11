@@ -3,7 +3,7 @@ import { io, Socket } from "socket.io-client";
 export let socket: Socket;
 
 export const initSocket = (userId: string) => {
-  socket = io('https://hms-team.onrender.com', {
+  socket = io(import.meta.env.VITE_SOCKET_URL, {
     auth: { userId },
   });
 
