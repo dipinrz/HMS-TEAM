@@ -165,6 +165,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
         const token = generatePassordResetToken(payload, user.password)
 
         const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+        
         console.log('Frontend URL:', process.env.FRONTEND_URL);
 
 
