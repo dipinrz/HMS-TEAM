@@ -64,7 +64,7 @@ export const getBillsByPatientId = async (
 
   return await billRepo.find({
     where,
-    relations: ["appointment"],
+    relations: ["appointment",'appointment.doctor'],
     order: { billing_date: "DESC" },
   });
 };

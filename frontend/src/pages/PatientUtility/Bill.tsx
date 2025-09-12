@@ -654,6 +654,8 @@ import PaymentButton from "../../components/PaymentButton";
 import CustomModal from "../../components/ui/CustomModal";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { bookAppoinment } from "../../socket/socketClient";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export interface Bill {
     bill_id: number;
@@ -670,6 +672,11 @@ export interface Bill {
         status: string;
         reason_for_visit: string;
         notes: string;
+        doctor:{
+            address?:string;
+            email?:string;
+            user_id:number;
+        }
     };
 
     billitem: {
@@ -702,6 +709,7 @@ interface BillsResponse {
 }
 
 function Bill() {
+    const {user}=useAuthStore()
     const [billsData, setBillsData] = useState<BillsResponse>({
         allBills: [],
         consultationBills: [],
@@ -732,7 +740,6 @@ function Bill() {
     const viewBills = async () => {
         try {
             const res = await viewAllBills();
-            console.log("Bills feteched successfully", res.data)
             setBillsData(res.data);
         } catch (error) {
             console.error("Error fetching bills:", error);
@@ -761,7 +768,7 @@ function Bill() {
         return true;
     });
 
-    const handlePaymentSuccess = (billId: number) => {
+    const handlePaymentSuccess = (billId: number,appointmentInfo:any,billType:string) => {
         setBillsData((prev) => ({
             ...prev,
             allBills: prev.allBills.map((bill) =>
@@ -774,7 +781,9 @@ function Bill() {
                 bill.bill_id === billId ? { ...bill, payment_status: "paid" } : bill
             )
         }));
-    };
+       if(billType==='consultation')
+            bookAppoinment(user?.user_id!,appointmentInfo)
+        };
 
     const handleDownload = () => {
         if (!selectedBill) return;
@@ -1077,7 +1086,7 @@ function Bill() {
                                                 <PaymentButton
                                                     billAmount={bill.total_amount}
                                                     billId={bill.bill_id}
-                                                    onPaymentSuccess={() => handlePaymentSuccess(bill.bill_id)}
+                                                    onPaymentSuccess={() => handlePaymentSuccess(bill.bill_id,bill.appointment,bill.bill_type)}
                                                 />
                                             ) : (
                                                 <Box sx={{
