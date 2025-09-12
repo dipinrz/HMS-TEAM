@@ -11,6 +11,7 @@ import { MedicalReport } from './medicalReport.entity';
 import { boolean } from 'joi';
 
 export enum AppointmentStatus {
+  INITIATED = 'initiated', 
   SCHEDULED = 'scheduled',
   PROGRESS = 'progress',
   COMPLETED = 'completed',
@@ -44,7 +45,7 @@ export class Appointment {
   @Column({
     type: 'enum',
     enum: AppointmentStatus,
-    default: AppointmentStatus.SCHEDULED,
+    default: AppointmentStatus.INITIATED,
   })
   status: AppointmentStatus;
 

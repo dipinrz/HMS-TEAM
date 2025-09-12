@@ -1,6 +1,6 @@
 import { AppDataSource } from "../config/data-source";
 import { Appointment, AppointmentStatus } from "../entities/appointment.entity";
-import { Between } from 'typeorm';
+import { Between, In } from 'typeorm';
 
 const appointmentRepo = AppDataSource.getRepository(Appointment);
 
@@ -24,9 +24,20 @@ export const isAppointmentExistsSameDay = async (doctor_id: number, patient_id: 
         doctor: { user_id: doctor_id },
         patient: { user_id: patient_id },
         appointment_date: Between(startOfDay, endOfDay),
-        status: AppointmentStatus.SCHEDULED
+        status: AppointmentStatus.INITIATED
         },
     });
+
+    console.log("existingAppointment",existingAppointment )
+
+//     const existingAppointment = await appointmentRepo.findOne({
+//   where: {
+//     doctor: { user_id: doctor_id },
+//     patient: { user_id: patient_id },
+//     appointment_date: Between(startOfDay, endOfDay),
+//     status: In([AppointmentStatus.INITIATED, AppointmentStatus.SCHEDULED])
+//   },
+// });
 
     return !!existingAppointment;
 };

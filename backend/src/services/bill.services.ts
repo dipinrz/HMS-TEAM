@@ -16,30 +16,59 @@ export const createBill = async (bill: Partial<Bill>) => {
 export const getBillById = async (billId: number) => {
     return await billRepo.findOne({
         where: { bill_id: billId },
+        relations:['appointment']
     })
 }
 
 
-export const getBillsByPatientId = async (patientId: number, isPaid?: boolean) => {
+// export const getBillsByPatientId = async (patientId: number, isPaid?: boolean) => {
     
-    const where: any = {
-        patient: { user_id: patientId }
-    };
+//     const where: any = {
+//         patient: { user_id: patientId }
+//     };
 
-    if (isPaid === true) {
-        where.payment_status = 'paid';
-    } else if (isPaid === false) {
-        where.payment_status = 'unpaid';
-    }
+//     if (isPaid === true) {
+//         where.payment_status = 'paid';
+//     } else if (isPaid === false) {
+//         where.payment_status = 'unpaid';
+//     }
 
-    return await billRepo.find({
-        where,
-        relations: ['appointment'],
-        order: {
-        billing_date: 'DESC',
-        },
-    });
+//     return await billRepo.find({
+//         where,
+//         relations: ['appointment'],
+//         order: {
+//         billing_date: 'DESC',
+//         },
+//     });
+// };
+
+// bill.services.ts
+
+
+export const getBillsByPatientId = async (
+  patientId: number,
+  isPaid?: boolean,
+  billType?: "consultation" | "medication"
+) => {
+  const where: any = {
+    patient: { user_id: patientId },
+  };
+
+  // filter by payment status
+  if (isPaid === true) where.payment_status = "paid";
+  else if (isPaid === false) where.payment_status = "unpaid";
+
+  // filter by bill type
+  if (billType === "consultation") where.bill_type = "consultation";
+  else if (billType === "medication") where.bill_type = "medication";
+
+  return await billRepo.find({
+    where,
+    relations: ["appointment"],
+    order: { billing_date: "DESC" },
+  });
 };
+
 
 
 export const updateBillById = async (billId: number, updatedData: Partial<Bill>) => {
