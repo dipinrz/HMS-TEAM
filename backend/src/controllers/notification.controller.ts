@@ -17,8 +17,9 @@ export const fetchNotification = async (
 
     const data = await notificationRepo.find({
       where: { receiverId: userId },
+      order: { createdAt: "DESC" },
+      take: 5,
     });
-    
 
     res
       .status(200)
@@ -39,10 +40,10 @@ export const updateStatus = async (
     if (!notification) {
       throw new ApiError("No notification found", 404);
     }
-    
-    notification.status = Status.READ; 
 
-    await notificationRepo.save(notification); 
+    notification.status = Status.READ;
+
+    await notificationRepo.save(notification);
 
     return res.json({ success: true, data: notification });
   } catch (error) {
