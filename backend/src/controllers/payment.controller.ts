@@ -6,6 +6,9 @@ import { ApiError } from '../utils/apiError';
 import { Payment } from '../entities/payment.entity';
 import { AuthRequest } from './doctor.controller';
 import { instanceToPlain } from 'class-transformer';
+import { updateAppointmentStatus } from '../services/appointment.services';
+import { BillType } from '../entities/bill.entity';
+import { AppointmentStatus } from '../entities/appointment.entity';
 
 export const createRazorpayOrder = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -34,50 +37,99 @@ export const createRazorpayOrder = async (req: Request, res: Response, next: Nex
 };
 
 
-export const verifyRazorpayPayment = async (req: Request, res: Response, next: NextFunction) => {
+// export const verifyRazorpayPayment = async (req: Request, res: Response, next: NextFunction) => {
     
+//     try {
+//         const {
+//         razorpay_order_id,
+//         razorpay_payment_id,
+//         razorpay_signature,
+//         amount_paid,
+//         bill_id
+//         } = req.body;
+
+//         const bill = await getBillById(bill_id);
+        
+//         if(!bill){
+//             throw new ApiError('Bill not found', 404);
+//         }
+
+//         const payment = await razorpay.payments.fetch(razorpay_payment_id);
+        
+//         const paymentData = {
+//             payment_method: payment.method,
+//             email: payment.email,
+//             contact: String(payment.contact),
+//             amount_paid: amount_paid/100,
+//             bill_id: bill_id
+//         }
+
+//         const isValid = verifySignature(razorpay_order_id, razorpay_payment_id, razorpay_signature, paymentData);
+
+//         if (!isValid) {
+//             return res.status(400).json({ success: false, message: 'Invalid signature' });
+//         }
+
+//         const billPaid = await markBillAsPaid(bill);
+
+//         if(!billPaid){
+//             throw new ApiError('Failed to mark as paid', 404);
+//         }
+
+//         res.status(200).json({ success: true, message: 'Payment verified successfully' });
+//     } catch (err) {
+//         next(err);
+//     }
+// };
+
+
+export const verifyRazorpayPayment = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const {
-        razorpay_order_id,
-        razorpay_payment_id,
-        razorpay_signature,
-        amount_paid,
-        bill_id
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature,
+            amount_paid,
+            bill_id
         } = req.body;
 
         const bill = await getBillById(bill_id);
-        
-        if(!bill){
-            throw new ApiError('Bill not found', 404);
-        }
+        if (!bill) throw new ApiError('Bill not found', 404);
+
+        console.log("Bill from payment controller",bill)
 
         const payment = await razorpay.payments.fetch(razorpay_payment_id);
-        
+        if (!payment) throw new ApiError('Payment not found in Razorpay', 404);
+
         const paymentData = {
             payment_method: payment.method,
             email: payment.email,
             contact: String(payment.contact),
-            amount_paid: amount_paid/100,
+            amount_paid: amount_paid / 100, 
             bill_id: bill_id
-        }
+        };
 
         const isValid = verifySignature(razorpay_order_id, razorpay_payment_id, razorpay_signature, paymentData);
-
-        if (!isValid) {
-            return res.status(400).json({ success: false, message: 'Invalid signature' });
-        }
+        if (!isValid) return res.status(400).json({ success: false, message: 'Invalid signature' });
 
         const billPaid = await markBillAsPaid(bill);
+        if (!billPaid) throw new ApiError('Failed to mark bill as paid', 500);
 
-        if(!billPaid){
-            throw new ApiError('Failed to mark as paid', 404);
+        if (bill.bill_type === BillType.CONSULTATION && bill.appointment) {
+            await updateAppointmentStatus(bill.appointment.appointment_id, AppointmentStatus.SCHEDULED);
         }
 
-        res.status(200).json({ success: true, message: 'Payment verified successfully' });
+        res.status(200).json({
+            success: true,
+            message: 'Payment verified and processed successfully',
+            bill_id: bill.bill_id,
+            appointment_id: bill.appointment?.appointment_id || null
+        });
     } catch (err) {
         next(err);
     }
 };
+
 
 export const getMonthWiseBilling = async (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -109,3 +109,5 @@ export const fetchPaymentByIdService = async(id:number)=>{
         where:{payment_id:id},
         relations:['bill','bill.patient']})
 }
+
+

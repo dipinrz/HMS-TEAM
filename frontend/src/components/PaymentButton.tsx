@@ -17,19 +17,17 @@ let token = ''
 if (accessTokenString) {
     const authUser = JSON.parse(accessTokenString);
     token = authUser.token;
-
 }
+
 interface BillPropType {
     billAmount: number,
     billId: number,
     onPaymentSuccess: () => void,
 
-
 }
 
+
 const PaymentButton: React.FC<BillPropType> = ({ billAmount, billId, onPaymentSuccess }) => {
-
-
 
     const loadRazorpayScript = () => {
         return new Promise((resolve) => {
@@ -45,7 +43,7 @@ const PaymentButton: React.FC<BillPropType> = ({ billAmount, billId, onPaymentSu
 
 
     const handlePayment = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation(); // ✅ prevents Card click event (modal open)
+        e.stopPropagation(); 
 
         const res = await loadRazorpayScript();
         if (!res) {

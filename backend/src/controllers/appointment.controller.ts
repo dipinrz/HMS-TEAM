@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AppointmentStatus } from "../entities/appointment.entity";
-import { PaymentStatus } from "../entities/bill.entity";
+import { BillType, PaymentStatus } from "../entities/bill.entity";
 import { getUserById } from "../services/user.services";
 import { getDepartmentByDoctorId, getDepartmentById } from "../services/department.services";
 import { getMedicalReportByPId } from "../services/medicalReport.services";
@@ -15,89 +15,159 @@ export interface AuthRequest extends Request {
   user?: { userId: number; role: string };
 }
 
+// export const addAppointment = async (req: AuthRequest, res: Response, next: NextFunction) => {
+
+//     const patient_id = req.user.userId;
+
+//     try {
+//         const {
+//             doctor_id,
+//             department_id,
+//             appointment_date,
+//             status = AppointmentStatus.SCHEDULED,
+//             reason_for_visit,
+//             notes,
+//         } = req.body;
+
+//         const patient = await getUserById(patient_id);
+//         const doctor = await getUserById(doctor_id);
+//         const department = await getDepartmentById(department_id);
+//         const medicalReport = await getMedicalReportByPId(patient_id);
+
+//         if(!doctor || !department){
+//             throw new ApiError("Doctor and Department cannot be empty");
+//         }
+
+//         const departmentDoctor = await getDepartmentByDoctorId(doctor_id);
+//         if(departmentDoctor.department_id !== department_id){
+//             throw new ApiError('Doctor does not exist on this department');
+//         }
+
+//         if (!patient) throw new ApiError("Patient not found", 404);
+//         if (!doctor) throw new ApiError("Doctor not found", 404);
+//         if (!department) throw new ApiError("Department not found", 404);
+//         if (!medicalReport) throw new ApiError("Medical report not found", 404);
+
+//         const exists = await isAppointmentExistsSameDay(doctor_id, patient_id, new Date(appointment_date));
+//         if (exists) {
+//         throw new ApiError("An appointment already exists for this doctor and patient on the same day", 409);
+//         }
+
+//         const anotherAppoinmentFound = await anotherAppointmentExistsService(doctor_id,new Date(appointment_date)) 
+//         if (anotherAppoinmentFound) {
+//         throw new ApiError("The appoinment slot is already filled. Please choose another slot", 409);
+//         }
+
+//         const appointment = await createAppointment({
+//             patient,
+//             doctor,
+//             department,
+//             appointment_date,
+//             medical_report_id: medicalReport,
+//             status,
+//             reason_for_visit,
+//             notes,
+//         });
+
+//         const consultationFee = Number(department.consultation_fee);
+//         const tax = parseFloat((consultationFee * 0.18).toFixed(2));
+//         const total = parseFloat((consultationFee + tax).toFixed(2));
+
+//         const bill = await createBill({
+//             patient,
+//             appointment,
+//             tax_amount: tax,
+//             total_amount: total,
+//             payment_status: PaymentStatus.UNPAID,
+//         });
+
+//         const bill_item = await createBillItem({
+//             bill,
+//             fee_type: FeeType.CONSULTATION_FEE,
+//             amount: consultationFee,
+//         });
+
+//         const bill_amount = bill_item.amount
+
+//         res.status(201).json({
+//         success: true,
+//         message: "Appointment and bill created successfully",
+//         // data: { bill, bill_amount },
+//         });
+//     } catch (error) {
+//         next(error);
+//     }
+// };
+
 export const addAppointment = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  const patient_id = req.user.userId;
 
-    const patient_id = req.user.userId;
+  try {
+    const {
+      doctor_id,
+      department_id,
+      appointment_date,
+      reason_for_visit,
+      notes,
+    } = req.body;
 
-    try {
-        const {
-            doctor_id,
-            department_id,
-            appointment_date,
-            status = AppointmentStatus.SCHEDULED,
-            reason_for_visit,
-            notes,
-        } = req.body;
+    const patient = await getUserById(patient_id);
+    const doctor = await getUserById(doctor_id);
+    const department = await getDepartmentById(department_id);
+    const medicalReport = await getMedicalReportByPId(patient_id);
 
-        const patient = await getUserById(patient_id);
-        const doctor = await getUserById(doctor_id);
-        const department = await getDepartmentById(department_id);
-        const medicalReport = await getMedicalReportByPId(patient_id);
+    if (!doctor || !department) throw new ApiError("Doctor and Department cannot be empty");
+    if (!patient) throw new ApiError("Patient not found", 404);
+    if (!medicalReport) throw new ApiError("Medical report not found", 404);
 
-        if(!doctor || !department){
-            throw new ApiError("Doctor and Department cannot be empty");
-        }
+    const exists = await isAppointmentExistsSameDay(doctor_id, patient_id, new Date(appointment_date));
+    if (exists) throw new ApiError("Appointment already exists for this doctor and patient on the same day", 409);
 
-        const departmentDoctor = await getDepartmentByDoctorId(doctor_id);
-        if(departmentDoctor.department_id !== department_id){
-            throw new ApiError('Doctor does not exist on this department');
-        }
+    const anotherAppointmentFound = await anotherAppointmentExistsService(doctor_id, new Date(appointment_date));
+    if (anotherAppointmentFound) throw new ApiError("Appointment slot is already filled. Please choose another slot", 409);
 
-        if (!patient) throw new ApiError("Patient not found", 404);
-        if (!doctor) throw new ApiError("Doctor not found", 404);
-        if (!department) throw new ApiError("Department not found", 404);
-        if (!medicalReport) throw new ApiError("Medical report not found", 404);
+    const appointment = await createAppointment({
+      patient,
+      doctor,
+      department,
+      appointment_date,
+      medical_report_id: medicalReport,
+      status: AppointmentStatus.INITIATED, 
+      reason_for_visit,
+      notes,
+    });
 
-        const exists = await isAppointmentExistsSameDay(doctor_id, patient_id, new Date(appointment_date));
-        if (exists) {
-        throw new ApiError("An appointment already exists for this doctor and patient on the same day", 409);
-        }
+    const consultationFee = Number(department.consultation_fee);
 
-        const anotherAppoinmentFound = await anotherAppointmentExistsService(doctor_id,new Date(appointment_date)) 
-        if (anotherAppoinmentFound) {
-        throw new ApiError("The appoinment slot is already filled. Please choose another slot", 409);
-        }
+    const tax = 0;
+    const total = consultationFee;
 
-        const appointment = await createAppointment({
-            patient,
-            doctor,
-            department,
-            appointment_date,
-            medical_report_id: medicalReport,
-            status,
-            reason_for_visit,
-            notes,
-        });
+    const bill = await createBill({
+      patient,
+      appointment,
+      tax_amount: tax,
+      total_amount: total,
+      payment_status: PaymentStatus.UNPAID,
+      bill_type: BillType.CONSULTATION
+    });
 
-        const consultationFee = Number(department.consultation_fee);
-        const tax = parseFloat((consultationFee * 0.18).toFixed(2));
-        const total = parseFloat((consultationFee + tax).toFixed(2));
+    await createBillItem({
+      bill,
+      fee_type: FeeType.CONSULTATION_FEE,
+      amount: consultationFee,
+    });
 
-        const bill = await createBill({
-            patient,
-            appointment,
-            tax_amount: tax,
-            total_amount: total,
-            payment_status: PaymentStatus.UNPAID,
-        });
+    res.status(201).json({
+      success: true,
+      message: "Appointment created and consultation bill generated. Payment pending.",
+      data: { appointment_id: appointment.appointment_id, bill_id: bill.bill_id },
+    });
 
-        const bill_item = await createBillItem({
-            bill,
-            fee_type: FeeType.CONSULTATION_FEE,
-            amount: consultationFee,
-        });
-
-        const bill_amount = bill_item.amount
-
-        res.status(201).json({
-        success: true,
-        message: "Appointment and bill created successfully",
-        // data: { bill, bill_amount },
-        });
-    } catch (error) {
-        next(error);
-    }
+  } catch (error) {
+    next(error);
+  }
 };
+
 
 export const cancelAppointmentHandler = async (req: Request, res: Response, next: NextFunction) => {
 
