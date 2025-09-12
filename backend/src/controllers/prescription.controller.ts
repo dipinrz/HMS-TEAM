@@ -28,7 +28,6 @@ import { request } from "http";
 import { BillType, PaymentStatus } from "../entities/bill.entity";
 import { FeeType } from "../entities/billItem.entity";
 
-
 // export const addPrescription = async (
 //   req: Request,
 //   res: Response,
@@ -135,31 +134,49 @@ import { FeeType } from "../entities/billItem.entity";
 //   }
 // };
 
-
-export const addPrescription = async (req: Request, res: Response, next: NextFunction) => {
+export const addPrescription = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { appointment_id, medications, diagnosis } = req.body;
+    const allowedStatuses = [
+      AppointmentStatus.SCHEDULED,
+      AppointmentStatus.PROGRESS,
+    ];
 
     const appointment = await getAppointmentById(appointment_id);
     if (!appointment) throw new ApiError("Appointment ID doesn't exist", 404);
 
-     if (appointment.status !== AppointmentStatus.SCHEDULED) {
-      throw new ApiError("Prescription can only be added for appointments that are SCHEDULED (consultation paid).", 400);
+    if (!allowedStatuses.includes(appointment.status)) {
+      throw new ApiError(
+        "Prescription can only be added for appointments that are SCHEDULED (consultation paid).",
+        400
+      );
     }
-
     const appointmentDate = new Date(appointment.appointment_date);
     const now = new Date();
     const windowEnd = new Date(appointmentDate.getTime() + 30 * 60 * 1000);
 
-    if (now < appointmentDate || now > windowEnd || now.toDateString() !== appointmentDate.toDateString()) {
-      throw new ApiError("Prescription can only be created during the appointment time slot (within 30 minutes).", 400);
+    if (
+      now < appointmentDate ||
+      now > windowEnd ||
+      now.toDateString() !== appointmentDate.toDateString()
+    ) {
+      throw new ApiError(
+        "Prescription can only be created during the appointment time slot (within 30 minutes).",
+        400
+      );
     }
 
     // 1️⃣ Validate medications
     const medicineIds = medications.map((m: any) => m.medicine_id);
     const foundMedicines = await getMedicinesByIds(medicineIds);
     if (foundMedicines.length !== medicineIds.length) {
-      const invalidIds = medicineIds.filter((id: number) => !foundMedicines.some(m => m.medicine_id === id));
+      const invalidIds = medicineIds.filter(
+        (id: number) => !foundMedicines.some((m) => m.medicine_id === id)
+      );
       throw new ApiError(`Invalid medicine IDs: ${invalidIds.join(", ")}`, 400);
     }
 
@@ -170,13 +187,25 @@ export const addPrescription = async (req: Request, res: Response, next: NextFun
 
     // 3️⃣ Create medication records
     const newMedicationsData = medications.map((m: any) => {
-      const medicine = foundMedicines.find(med => med.medicine_id === m.medicine_id);
-      return { prescription, medicine, dosage: m.dosage, frequency: m.frequency, duration: m.duration, instructions: m.instructions };
+      const medicine = foundMedicines.find(
+        (med) => med.medicine_id === m.medicine_id
+      );
+      return {
+        prescription,
+        medicine,
+        dosage: m.dosage,
+        frequency: m.frequency,
+        duration: m.duration,
+        instructions: m.instructions,
+      };
     });
     const newMedications = await createManyMedications(newMedicationsData);
 
     // 4️⃣ Create separate medication bill
-    const medTotalAmount = newMedications.reduce((acc, med) => acc + med.duration * med.frequency * med.medicine.cost, 0);
+    const medTotalAmount = newMedications.reduce(
+      (acc, med) => acc + med.duration * med.frequency * med.medicine.cost,
+      0
+    );
     const medTax = parseFloat((medTotalAmount * 0.18).toFixed(2));
     const medicationBill = await createBill({
       patient: appointment.patient,
@@ -190,7 +219,12 @@ export const addPrescription = async (req: Request, res: Response, next: NextFun
     // 5️⃣ Add bill items for medications
     for (const med of newMedications) {
       const amount = med.duration * med.frequency * med.medicine.cost;
-      await createBillItem({ bill: medicationBill, medication: med, fee_type: FeeType.MEDICATION_FEE, amount });
+      await createBillItem({
+        bill: medicationBill,
+        medication: med,
+        fee_type: FeeType.MEDICATION_FEE,
+        amount,
+      });
     }
 
     res.status(200).json({
@@ -200,12 +234,10 @@ export const addPrescription = async (req: Request, res: Response, next: NextFun
       medication_bill: medicationBill,
       medications: newMedications,
     });
-
   } catch (error) {
     next(error);
   }
 };
-
 
 export const updateAppoinmentStatus = async (req: Request, res: Response) => {
   try {

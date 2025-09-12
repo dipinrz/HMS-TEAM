@@ -30,7 +30,7 @@ export const initSocket = (server: any) => {
       const title = "Appointment Scheduled";
       createNotification(
         user_id,
-        appointmentInfo.doctor_id,
+        appointmentInfo.doctor.user_id,
         type,
         title,
         appointmentInfo.appointment_date
@@ -39,9 +39,9 @@ export const initSocket = (server: any) => {
       console.log("sender id", userId);
 
       const doctorSocketId = connectedUsers.get(
-        String(appointmentInfo.doctor_id)
+        String(appointmentInfo.doctor.user_id)
       );
-      if (appointmentInfo.doctor_id) {
+      if (appointmentInfo.doctor.user_id) {
         io.to(doctorSocketId).emit("appointment_notification", appointmentInfo);
         console.log(`Notification sent to doctor ${appointmentInfo.doctor_id}`);
       }

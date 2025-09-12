@@ -35,6 +35,7 @@ import { fetchAllDepartments, getAllDoctors } from "../../services/adminAPi";
 import { addAppoinment } from "../../services/patientApi";
 import { bookAppoinment } from "../../socket/socketClient";
 import { useAuthStore } from "../../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 interface Doctor {
   doctor_id: string;
@@ -124,6 +125,8 @@ const TestBookAppointment: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+
+  const navigate=useNavigate()
 
   // Selected department details from formData.department
   const selectedDepartment = useMemo(() => {
@@ -233,7 +236,7 @@ const TestBookAppointment: React.FC = () => {
     const selectedMinutes = selectedDateTime.getMinutes();
 
     if (selectedDateTime <= today)
-      return `Please select another time slot for today ; selected time slot ${selectedHour}:00 is booked`;
+      return `Please select another time slot for today ; selected time slot ${selectedHour}:00 is Not available`;
 
     if (
       selectedHour < 9 ||
@@ -263,7 +266,8 @@ const TestBookAppointment: React.FC = () => {
         console.log("data is success");
         try {
 
-          bookAppoinment(user?.user_id!, formData); // notification
+          // bookAppoinment(user?.user_id!, formData); // notification
+          navigate("/patient/bills")
         } catch (notifErr) {
           console.error("Socket emit failed:", notifErr);
         }
