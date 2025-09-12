@@ -17,6 +17,9 @@ AppDataSource.initialize()
         httpServer.listen(PORT, () => {
             console.log(`server running at ${PORT}`);
         })
+        
+        // scheduleAutoCancelAppointments();
+
         scheduleAutoCancelAppointments();
         scheduleAppointmentReminders();
     })
