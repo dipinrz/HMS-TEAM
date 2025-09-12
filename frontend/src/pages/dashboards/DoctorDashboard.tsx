@@ -1,6 +1,6 @@
 
 import { Avatar, Box, Chip, Divider, Grid, Stack, Typography, useTheme } from "@mui/material";
-import { AccessTime, CalendarToday, Description, EventBusy, Group, Healing,  } from "@mui/icons-material";
+import { AccessTime, CalendarToday, Description, EventBusy, Group, Healing, } from "@mui/icons-material";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
 import { useEffect, useState } from "react";
@@ -166,20 +166,61 @@ const DoctorDashboard = () => {
   return (
     <Box sx={{ p: 2 }}>
 
-      <Box mb={4} display={"flex"} justifyContent="space-between" alignItems={"center"}>
+      <Box
+        mb={4}
+        display="flex"
+        flexDirection={{ xs: "column", sm: "row" }}
+        justifyContent="space-between"
+        alignItems={{ xs: "flex-start", sm: "center" }}
+        gap={2} // adds spacing between items in column layout
+      >
         <Box>
-          <Typography variant="h4" color="text.primary" fontWeight={600} sx={{ fontSize: { xs: "1.75rem", sm: "2.125rem" } }}>Good morning, Dr {user?.first_name}</Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: "0.875rem", sm: "1rem" }, mt: 0.5 }}>You have {appointments.length} appointments scheduled for today</Typography>
+          <Typography
+            variant="h4"
+            color="text.primary"
+            fontWeight={600}
+            sx={{
+              fontSize: { xs: "1.75rem", sm: "2.125rem" },
+              textAlign: { xs: "left", sm: "inherit" },
+            }}
+          >
+            Good morning, Dr {user?.first_name}
+          </Typography>
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{
+              fontSize: { xs: "0.875rem", sm: "1rem" },
+              mt: 0.5,
+              textAlign: { xs: "left", sm: "inherit" },
+            }}
+          >
+            You have {appointments.length} appointments scheduled for today
+          </Typography>
         </Box>
-        <Box display="flex" gap={2}>
-          <CustomButton onClick={() => handleGetReport()} startIcon={<Description />} sx={{
-            backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
-            border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
-          }} label="View Reports"></CustomButton>
-          {/* <CustomButton startIcon={<Stethoscope />} label="Start Consultation"></CustomButton> */}
 
+        <Box
+          display="flex"
+          gap={2}
+          sx={{ flexWrap: "wrap", justifyContent: { xs: "flex-start", sm: "flex-end" } }}
+        >
+          <CustomButton
+            onClick={handleGetReport}
+            startIcon={<Description />}
+            sx={{
+              backgroundColor: theme.palette.common.white,
+              color: theme.palette.text.primary,
+              border: "1px solid #ddd",
+              "&:hover": {
+                backgroundColor: "#f5f5f5",
+              },
+            }}
+            label="View Reports"
+          />
+          {/* Add more buttons here if needed */}
         </Box>
       </Box>
+
       <Grid container spacing={5} style={{ width: '100%' }}>
         {statsData.map((stat, index) => (
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>

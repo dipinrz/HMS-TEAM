@@ -18,7 +18,7 @@ export const scheduleAppointmentReminders = async () => {
         try {
             const appointments = await appointmentRepo.find({
                 where: {
-                    appointment_date: Between(startTime, endTime),
+                    // appointment_date: Between(startTime, endTime),
                     status: AppointmentStatus.SCHEDULED,
                     reminder_send: false,
                 },
