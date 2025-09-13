@@ -5,7 +5,7 @@ import { Bill } from '../entities/bill.entity';
 import { Brackets } from 'typeorm';
 
 export const scheduleAutoCancelAppointments = () => {
-  cron.schedule('0 18 * * *', async () => {
+  cron.schedule('* * * * *', async () => {
     console.log('Running auto-cancel for expired appointments');
 
     try {
