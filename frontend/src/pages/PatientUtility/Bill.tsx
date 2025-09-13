@@ -265,15 +265,15 @@ function Bill() {
                         }}
                     >
                         <Tab 
-                            label={`All Bills (${billsData.allBills.length})`} 
+                            label={`All Bills (${billsData.allBills?.length})`} 
                             sx={{ color: 'text.primary' }}
                         />
                         <Tab 
-                            label={`Consultation (${billsData.consultationBills.length})`}
+                            label={`Consultation (${billsData.consultationBills?.length})`}
                             sx={{ color: 'text.primary' }}
                         />
                         <Tab 
-                            label={`Medication (${billsData.medicationBills.length})`}
+                            label={`Medication (${billsData.medicationBills?.length})`}
                             sx={{ color: 'text.primary' }}
                         />
                     </Tabs>

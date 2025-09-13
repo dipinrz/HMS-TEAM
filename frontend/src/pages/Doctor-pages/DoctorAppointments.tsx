@@ -50,8 +50,8 @@ const DoctorAppointments = () => {
         }
     }, [user?.user_id]);
 
-    const handleAddPrescription=(id:number)=>{
-        navigate(`/doctor/prescription/${id}`)    
+    const handleAddPrescription=(id:number,pid:number)=>{
+        navigate(`/doctor/prescription/${id}/${pid}`)    
     }
 
     useEffect(() => {
@@ -122,7 +122,7 @@ const DoctorAppointments = () => {
                                         size="small"
                                     />
                                     {(appointment.status === "scheduled" || appointment.status === "progress") && formatted===appointment.appointment_date.split(' ')[0]&& (
-                                        <CustomButton size="small" onClick={()=>handleAddPrescription(appointment.appointment_id) } label={appointment.status==="progress"? "Continue" :"Start"} />
+                                        <CustomButton size="small" onClick={()=>handleAddPrescription(appointment.appointment_id,appointment.patient.user_id) } label={appointment.status==="progress"? "Continue" :"Start"} />
                                     )}
                                 </Box>
                                 
