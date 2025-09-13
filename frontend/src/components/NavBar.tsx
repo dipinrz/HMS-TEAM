@@ -213,15 +213,89 @@ export const Navbar: React.FC<NavBarPropsType> = ({ handleDrawerToggle }) => {
 
             {isSmallScreen && (
               <Box sx={{ display: "flex", alignItems: "center" }}>
-                <IconButton
+                  <IconButton
                   size="large"
                   aria-label="show notifications"
                   color="inherit"
+                  onClick={handleNotifMenu}
                 >
-                  <Badge badgeContent={6} color="error">
+                  <Badge badgeContent={count} color="error">
                     <Bell size={20} />
                   </Badge>
                 </IconButton>
+                <Menu
+                  anchorEl={anchorNotif}
+                  open={Boolean(anchorNotif)}
+                  onClose={handleNotifClose}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                >
+                  {notifications.length === 0 ? (
+                    <MenuItem>No new notifications</MenuItem>
+                  ) : (
+                    notifications.map((notif) => (
+                      <MenuItem
+                        key={notif.id}
+                        style={{
+                          backgroundColor:
+                            notif.status === "unread"
+                              ? "rgba(214, 214, 219, 0.54)"
+                              : "white",
+                        }}
+                        onClick={() => {
+                          if (notif.status === "unread") {
+                            handleUpdateStatusNotif(notif.id);
+                          }
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <div>
+                            <strong
+                              style={{
+                                fontWeight:
+                                  notif.status === "unread" ? "bold" : "normal",
+                              }}
+                            >
+                              {notif.title}
+                              {notif.status === "unread" && (
+                                <span
+                                  style={{
+                                    width: "8px",
+                                    height: "8px",
+                                    borderRadius: "50%",
+                                    backgroundColor: "red",
+                                    display: "inline-block",
+                                    padding: 2,
+                                    marginLeft: 4,
+                                  }}
+                                ></span>
+                              )}
+                            </strong>
+                            <p
+                              style={{
+                                margin: 0,
+                                fontSize: "0.8rem",
+                                color:
+                                  notif.status === "UNREAD" ? "black" : "gray",
+                              }}
+                            >
+                              {notif.message}
+                            </p>
+                            <span style={{ fontSize: "0.7rem", color: "#888" }}>
+                              {new Date(notif.createdAt).toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                      </MenuItem>
+                    ))
+                  )}
+                </Menu>
                 <IconButton
                   size="large"
                   aria-label="account of current user"

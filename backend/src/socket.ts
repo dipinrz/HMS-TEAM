@@ -35,9 +35,6 @@ export const initSocket = (server: any) => {
         title,
         appointmentInfo.appointment_date
       );
-      console.log("hitted notification", appointmentInfo);
-      console.log("sender id", userId);
-
       const doctorSocketId = connectedUsers.get(
         String(appointmentInfo.doctor.user_id)
       );

@@ -5,16 +5,17 @@ import { createPrescription, updatePrescritptionStatus } from "../../services/do
 import { Box, Button, Divider, Grid, IconButton, MenuItem, Paper, Stack, TextField, Typography } from "@mui/material";
 import { CheckCircle, DeleteIcon } from "lucide-react";
 import { AddCircleOutline, SaveAlt } from "@mui/icons-material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { billComplete } from "../../socket/socketClient";
 import { useAuthStore } from "../../store/useAuthStore";
 
 const AddPrescription = () => {
-  const { medicines, fetchMedicines } = useDoctorStore();
+  const { medicines, fetchMedicines,appointments,fetchAppointments } = useDoctorStore();
   const { user } = useAuthStore();
-
+  const navigate=useNavigate()
   const { appointmentId, patientId } = useParams<{ appointmentId: string, patientId: string }>();
+  console.log(appointments)
 
   const [errors, setErrors] = useState<{
     diagnosis?: string;
@@ -37,6 +38,7 @@ const AddPrescription = () => {
   });
   useEffect(() => {
     fetchMedicines();
+    fetchAppointments();
   }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,12 +131,24 @@ const AddPrescription = () => {
       toast.success('Completed');
 
       billComplete(user?.user_id!, patientId!);
-      
+      navigate('/doctor/appointments')
 
     } catch (error: any) {
       console.log(error);
       toast.error("Faild to completed");
     }
+  }
+  const currentAppt = appointments?.find(
+    (appt) => appt.appointment_id === Number(appointmentId)
+  );
+
+  if (!currentAppt) {
+    return <p>Loading appointment...{appointmentId} {currentAppt}{appointments.map((apt)=>(
+      <li>{apt.appointment_id}</li>
+    ))}</p>;
+  }
+  if(currentAppt.status==='completed'){
+    navigate('/doctor/appointments')
   }
   return (
     <Box p={{ xs: 2, md: 4 }}>
