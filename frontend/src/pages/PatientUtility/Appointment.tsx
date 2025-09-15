@@ -33,8 +33,6 @@ import {
 } from "@mui/icons-material";
 import { fetchAllDepartments, getAllDoctors } from "../../services/adminAPi";
 import { addAppoinment } from "../../services/patientApi";
-import { bookAppoinment } from "../../socket/socketClient";
-import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 
 interface Doctor {
@@ -108,7 +106,6 @@ const timeSlots = [
 
 const TestBookAppointment: React.FC = () => {
   const theme = useTheme();
-  const { user } = useAuthStore();
 
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
