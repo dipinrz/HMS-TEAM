@@ -83,7 +83,7 @@ const PaymentButton: React.FC<BillPropType> = ({ billAmount, billId, onPaymentSu
                     };
 
                     // 2. Send verification request to backend
-                    const verifyRes = await axios.post<VerifyResponse>('http://localhost:5000/api/v1/payment/verify', data, {
+                    const verifyRes = await axios.post<VerifyResponse>(`${import.meta.env.VITE_BASE_URL}/payment/verify`, data, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
