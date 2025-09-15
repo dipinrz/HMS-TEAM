@@ -14,7 +14,7 @@ import { BillItem } from "../entities/billItem.entity";
 import { Payment } from "../entities/payment.entity";
 import { Notification } from "../entities/notification.entity";
 
-dotenv.config();
+// dotenv.config();
 
 // export const AppDataSource = new DataSource({
 //     type: "postgres",
@@ -48,7 +48,7 @@ dotenv.config();
 // import { BillItem } from "../entities/billItem.entity";
 // import { Payment } from "../entities/payment.entity";
 
-// dotenv.config();
+dotenv.config();
 
 export const AppDataSource = new DataSource({
     type: "postgres",
