@@ -3,7 +3,7 @@ import { createNotification } from "./services/notification.services";
 import { Type } from "./entities/notification.entity";
 
 export let io: Server;
-export const connectedUsers = new Map<string, string>();
+export const connectedUsers = new Map<string, Set<string>>();
 
 export const initSocket = (server: any) => {
   io = new Server(server, {
@@ -20,9 +20,12 @@ export const initSocket = (server: any) => {
     console.log("User connected:", socket.id, "userId:", userId);
 
     if (userId) {
-      connectedUsers.set(userId, socket.id);
+      if (!connectedUsers.has(userId)) {
+        connectedUsers.set(userId, new Set());
+      }
+      connectedUsers.get(userId)!.add(socket.id);
     }
-    console.log("arrays ", connectedUsers);
+    console.log("connectedUsers:", connectedUsers);
 
     socket.on("book_appointments", (data) => {
       const { user_id, appointmentInfo } = data;
@@ -35,12 +38,18 @@ export const initSocket = (server: any) => {
         title,
         appointmentInfo.appointment_date
       );
-      const doctorSocketId = connectedUsers.get(
+
+      const doctorSocketIds = connectedUsers.get(
         String(appointmentInfo.doctor.user_id)
       );
-      if (appointmentInfo.doctor.user_id) {
-        io.to(doctorSocketId).emit("appointment_notification", appointmentInfo);
-        console.log(`Notification sent to doctor ${appointmentInfo.doctor_id}`);
+
+      if (doctorSocketIds) {
+        doctorSocketIds.forEach((sid) => {
+          io.to(sid).emit("appointment_notification", appointmentInfo);
+        });
+        console.log(
+          `Notification sent to doctor ${appointmentInfo.doctor.user_id}`
+        );
       }
     });
 
@@ -51,23 +60,29 @@ export const initSocket = (server: any) => {
 
       createNotification(user_id, patientId, type, title);
 
-      const patientSocketId = connectedUsers.get(String(patientId));
-      console.log("this is the conected users", connectedUsers);
+      const patientSocketIds = connectedUsers.get(String(patientId));
+      console.log("connectedUsers:", connectedUsers);
 
-      if (patientId) {
-        io.to(patientSocketId).emit("bill_notification", "connected");
-        console.log("bill emitted", patientSocketId, patientId);
+      if (patientSocketIds) {
+        patientSocketIds.forEach((sid) => {
+          io.to(sid).emit("bill_notification", "connected");
+        });
+        console.log("bill emitted to patient", patientId);
       }
     });
 
     socket.on("disconnect", () => {
       // check if this socket is still the active one
-      for (const [uid, sid] of connectedUsers.entries()) {
-        if (sid === socket.id) {
-          // only remove if this was the latest socket for that user
-          if (connectedUsers.get(uid) === socket.id) {
+      for (const [uid, socketSet] of connectedUsers.entries()) {
+        if (socketSet.has(socket.id)) {
+          socketSet.delete(socket.id);
+          if (socketSet.size === 0) {
             connectedUsers.delete(uid);
-            console.log(`User ${uid} disconnected (no active socket)`);
+            console.log(`User ${uid} disconnected (no active sockets)`);
+          } else {
+            console.log(
+              `Socket ${socket.id} removed, user ${uid} still has active sockets`
+            );
           }
         }
       }
