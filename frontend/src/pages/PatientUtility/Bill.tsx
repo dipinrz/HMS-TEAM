@@ -158,6 +158,7 @@ function Bill() {
         if (!selectedBill) return;
 
         const bill = selectedBill;
+        console.log("download",bill)
         const doc = new jsPDF();
 
         // 🔹 HEADER (Hospital Info)
@@ -201,7 +202,7 @@ function Bill() {
         autoTable(doc, {
             startY: 87,
             head: [["sno", "Fee Type", "Medication", "Amount "]],
-            body: bill.billitem.map((item, index) => [
+            body: bill.billitem?.map((item, index) => [
                 index + 1,
                 item.fee_type,
                 item.medication ? item.medication.medicine.medicine_name : "N/A",
