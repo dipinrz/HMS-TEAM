@@ -308,14 +308,13 @@ export const AllMedicines: React.FC = () => {
             }}
           >
             <Table stickyHeader>
-              <TableHead>
-                <TableRow
-                  sx={{
+              <TableHead  sx={{
                     "& .MuiTableCell-head": {
-                      backgroundColor: "rgba(25, 118, 210, 0.08)",
+                      backgroundColor: "rgba(202, 225, 247, 0.99)",
                       borderBottom: "2px solid rgba(25, 118, 210, 0.1)",
                     },
-                  }}
+                  }}>
+                <TableRow
                 >
                   {headCells.map((headCell) => (
                     <TableCell

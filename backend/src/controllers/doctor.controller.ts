@@ -13,9 +13,12 @@ import { updateUser } from "../services/user.services";
 import { instanceToPlain } from "class-transformer";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { AppointmentStatus } from "../entities/appointment.entity";
+import { Appointment, AppointmentStatus } from "../entities/appointment.entity";
 import { getPrescriptionByIds } from "../services/prescription.services";
 import { getDoctorsByDepartmentId } from "../services/department.services";
+import { In } from "typeorm";
+import { AppDataSource } from "../config/data-source";
+import { Prescription } from "../entities/prescription.entity";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -23,6 +26,9 @@ dayjs.extend(timezone);
 export interface AuthRequest extends Request {
   user?: { userId: number; role: string };
 }
+
+const appointmentRepo = AppDataSource.getRepository(Appointment)
+const prescriptionRepo = AppDataSource.getRepository(Prescription)
 
 export const getDoctorAppointmentsHandler = async (
   req: Request,
@@ -298,6 +304,7 @@ export const getDoctorPrescriptionHandler = async (req: AuthRequest, res: Respon
     next(error);
   }
 }
+
 
 export const isHeadDoctorHandler = async (req: AuthRequest, res: Response, next: NextFunction) => {
 

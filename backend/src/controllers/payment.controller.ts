@@ -136,7 +136,7 @@ export const getMonthWiseBilling = async (req: Request, res: Response, next: Nex
         const payments = await getMonthlyRevenue();
 
         if (!payments.length) {
-        throw new ApiError("Payment data not found", 404);
+        throw new ApiError("No payments done", 404);
         }
 
         const monthlyData = payments.reduce((acc, payment) => {

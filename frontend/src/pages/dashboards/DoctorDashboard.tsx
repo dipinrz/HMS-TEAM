@@ -49,7 +49,6 @@ const DoctorDashboard = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const navigate = useNavigate()
 
-
   useEffect(() => {
     if (user?.user_id) {
       fetchAppointments();

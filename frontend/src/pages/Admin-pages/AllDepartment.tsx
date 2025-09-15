@@ -103,21 +103,24 @@ const AdminDepartmentsPage = () => {
     setDeleteDialogOpen(true);
   };
 
-  const handleSubmit = async () => {
-    try {
-      if (isEditMode && editDeptId) {
-        await updateDepartmentById(editDeptId, formData);
-        toast.success("Department updated");
-      } else {
-        await addDept(formData);
-        toast.success("Department added");
-      }
-      loadDepartments();
-      setIsModalOpen(false);
-    } catch {
-      toast.error(isEditMode ? "Update failed" : "Add failed");
+const handleSubmit = async () => {
+  try {
+    if (isEditMode && editDeptId) {
+      await updateDepartmentById(editDeptId, formData);
+      toast.success("Department updated");
+    } else {
+      await addDept(formData);
+      toast.success("Department added");
     }
-  };
+
+    loadDepartments();
+    setIsModalOpen(false);
+  } catch (error: any) {
+   
+    toast.error(error.data.message);
+  }
+};
+
 
   const handleDelete = async () => {
     if (!selectedDeptId) return;

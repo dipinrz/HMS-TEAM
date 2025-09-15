@@ -19,10 +19,10 @@ interface Props {
 }
 
 interface DepartmentData {
-   name: string,
-    description: string,
-    consultation_fee:number,
-    head_doctor: number,
+  name: string;
+  description: string;
+  consultation_fee: number;
+  head_doctor: number;
 }
 
 type DepartmentFormErrors = Partial<Record<keyof DepartmentData, string>>;
@@ -65,8 +65,9 @@ export default function DepartmentModal({
       newErrors.description = "Description is missing";
     if (!formData.consultation_fee)
       newErrors.consultation_fee = "Consultation fee is missing";
-    if (!formData.head_doctor || formData.head_doctor === 0)
-      newErrors.head_doctor = "Head doctor is missing";
+    if (isEditMode && (!formData.head_doctor || formData.head_doctor === 0)) {
+  newErrors.head_doctor = "Head doctor is missing";
+}
 
     setErrors(newErrors);
 
@@ -142,7 +143,7 @@ export default function DepartmentModal({
               helperText={errors.consultation_fee}
             />
 
-            <TextField
+            {/* <TextField
               select
               name="head_doctor"
               label="HOD"
@@ -160,7 +161,29 @@ export default function DepartmentModal({
                   {doc.user.first_name} {doc.user.last_name}
                 </option>
               ))}
-            </TextField>
+            </TextField> */}
+
+            {isEditMode && (
+              <TextField
+                select
+                name="head_doctor"
+                label="HOD"
+                fullWidth
+                size="small"
+                value={formData.head_doctor}
+                onChange={handleChange}
+                SelectProps={{ native: true }}
+                error={!!errors.head_doctor}
+                helperText={errors.head_doctor}
+              >
+                <option value={0}>Select Head Doctor</option>
+                {doctors.map((doc) => (
+                  <option key={doc.doctor_id} value={doc.doctor_id}>
+                    {doc.user.first_name} {doc.user.last_name}
+                  </option>
+                ))}
+              </TextField>
+            )}
           </Stack>
         </Box>
 

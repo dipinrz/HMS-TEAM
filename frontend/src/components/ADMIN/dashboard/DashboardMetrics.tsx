@@ -3,7 +3,6 @@ import { Box, Grid, Typography, Avatar } from "@mui/material";
 import { Users, Calendar, DollarSign, Stethoscope } from "lucide-react";
 import { Card, CardContent } from "../../ui/CustomCards";
 import { useAdminStore } from "../../../store/adminStore";
-import { toast } from "react-toastify";
 import { getMonthlyRevenue } from "../../../services/adminAPi";
 
 const DashboardMetrics: React.FC = () => {
@@ -18,6 +17,8 @@ const DashboardMetrics: React.FC = () => {
 
   const [monthRevenue, setMonthRevenue] = useState<number>(0);
   const [monthName, setMonthName] = useState<string>("");
+
+  
 
   useEffect(() => {
     fetchPatients();
@@ -49,8 +50,7 @@ const DashboardMetrics: React.FC = () => {
         setMonthName(formatMonth(currentMonthKey));
       }
     } catch (error) {
-      toast.error("Cannot fetch monthly revenue");
-      console.error("Error fetching monthly revenue", error);
+      console.log("Error in fetching revenue",error)
     }
   };
 

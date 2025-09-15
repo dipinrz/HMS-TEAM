@@ -33,13 +33,12 @@ interface DoctorsModalProps {
 }
 
 interface DepartmentData {
-  department_id:number,
-   name: string,
-    description: string,
-    consultation_fee:number,
-    head_doctor: number,
+  department_id: number;
+  name: string;
+  description: string;
+  consultation_fee: number;
+  head_doctor: number;
 }
-
 
 const DoctorsModal = ({
   handleCloseModal,
@@ -62,6 +61,8 @@ const DoctorsModal = ({
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.password && !isEditMode)
       newErrors.password = "Password is required";
+    if (!formData.department_id)
+  newErrors.department_id = "Department is required";
     if (!formData.specialization)
       newErrors.specialization = "Specialization is required";
     if (!formData.qualification)
@@ -195,39 +196,74 @@ const DoctorsModal = ({
               >
                 Professional Information
               </Typography>
-            {/* When editing: show Department + Specialization */}
-{isEditMode ? (
-  <Stack direction="row" spacing={2}>
-    <TextField
-      select
-      name="department_id"
-      label="Department"
-      fullWidth
-      size="small"
-      value={formData.department_id}
-      onChange={handleChange}
-      error={!!errors.department_id}
-      helperText={errors.department_id}
-    >
-      {departments.map((dept) => (
-        <MenuItem key={dept.department_id} value={dept.department_id}>
-          {dept.name}
-        </MenuItem>
-      ))}
-    </TextField>
-    <TextField
-      name="specialization"
-      label="Specialization"
-      fullWidth
-      size="small"
-      value={formData.specialization}
-      onChange={handleChange}
-      error={!!errors.specialization}
-      helperText={errors.specialization}
-    />
-  </Stack>
-) : (
-  // When creating: show only Specialization
+              {/* When editing: show Department + Specialization */}
+              {/* {isEditMode ? (
+                <Stack direction="row" spacing={2}>
+                  <TextField
+                    select
+                    name="department_id"
+                    label="Department"
+                    fullWidth
+                    size="small"
+                    value={formData.department_id}
+                    onChange={handleChange}
+                    error={!!errors.department_id}
+                    helperText={errors.department_id}
+                  >
+                    {departments.map((dept) => (
+                      <MenuItem
+                        key={dept.department_id}
+                        value={dept.department_id}
+                      >
+                        {dept.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    name="specialization"
+                    label="Specialization"
+                    fullWidth
+                    size="small"
+                    value={formData.specialization}
+                    onChange={handleChange}
+                    error={!!errors.specialization}
+                    helperText={errors.specialization}
+                  />
+                </Stack>
+              ) : (
+                // When creating: show only Specialization
+                <TextField
+                  name="specialization"
+                  label="Specialization"
+                  fullWidth
+                  size="small"
+                  value={formData.specialization}
+                  onChange={handleChange}
+                  error={!!errors.specialization}
+                  helperText={errors.specialization}
+                />
+              )} */}
+              <Stack direction="row" spacing={2}>
+  <TextField
+    select
+    name="department_id"
+    label="Department"
+    fullWidth
+    size="small"
+    value={formData.department_id}
+    onChange={handleChange}
+    error={!!errors.department_id}
+    helperText={errors.department_id}
+  >
+    {departments.map((dept) => (
+      <MenuItem
+        key={dept.department_id}
+        value={dept.department_id}
+      >
+        {dept.name}
+      </MenuItem>
+    ))}
+  </TextField>
   <TextField
     name="specialization"
     label="Specialization"
@@ -238,7 +274,9 @@ const DoctorsModal = ({
     error={!!errors.specialization}
     helperText={errors.specialization}
   />
-)}
+</Stack>
+
+
 
               <Stack direction="row" spacing={2}>
                 <TextField
