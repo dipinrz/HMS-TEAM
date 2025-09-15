@@ -161,10 +161,9 @@ const DashboardCharts: React.FC = () => {
   const fetchMonthlyRevenue = async () => {
     try {
       const response = await getMonthlyRevenue();
-      console.log("Monthly revenue------", response.data.data);
       setMonthlyRevenue(response.data.data);
-    } catch (error) {
-      toast.error("Couldn't fetch monthly revenue");
+    } catch (error:any) {
+      toast.error(error.data.message)
       console.log("Error in fetching revenue", error);
     }
   };

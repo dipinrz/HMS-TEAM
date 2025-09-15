@@ -41,12 +41,15 @@ export const getPrescriptionsByPatientId = async (patientId: number) => {
 }
 
 export const getPrescriptionByIds = async (appointmentIds: number[]) => {
-
     return await prescriptionRepo.find({
         where: {
             appointment: { appointment_id: In(appointmentIds) }
         },
-        relations: ['appointment', 'appointment.patient']
+        relations: [
+            'appointment', 
+            'appointment.patient',
+            'medications',
+            'medications.medicine'
+        ]
     });
 }
-

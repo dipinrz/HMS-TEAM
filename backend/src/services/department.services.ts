@@ -61,6 +61,22 @@ export const getDoctorsByDepartmentId = async (id: number) => {
   });
 };
 
+export const getDepartmentByHeadDoctor = async (doctorId: number) => {
+  return await deptRepo.findOne({
+    where: { head_doctor: { doctor_id: doctorId } }, 
+    relations: ["head_doctor"], 
+  });
+};
+
+export const getDoctorWithDepartment = async (doctorId: number) => {
+  return doctorRepo.findOne({
+    where: { doctor_id: doctorId },
+    relations: ["department"],
+  });
+};
+
+
+
 export const getDepartmentsWithAppointmentCountService = async () => {
   const departments = await deptRepo.find();
 

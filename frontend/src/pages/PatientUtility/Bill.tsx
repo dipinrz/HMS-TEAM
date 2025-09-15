@@ -119,7 +119,6 @@ function Bill() {
         viewBills();
     }, []);
 
-    // Get current bills based on selected tab
     const getCurrentBills = () => {
         switch (billTypeTab) {
             case 1:
