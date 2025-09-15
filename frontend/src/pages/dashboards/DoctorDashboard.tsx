@@ -114,6 +114,11 @@ const DoctorDashboard = () => {
     return upcoming.length > 0 ? upcoming[0] : null;
   }
 
+  const getProgressAppointment=(appointments:Appointment[])=>{
+    const progress=appointments.filter(appointment=>appointment.status==='progress')
+    return progress.length
+  }
+
   const formatTime12hr = (dateStr: string): string => {
     const date = new Date(dateStr);
     return date.toLocaleTimeString('en-US', {
@@ -124,7 +129,8 @@ const DoctorDashboard = () => {
   };
 
   const nextAppointment = getUpcomingAppointment(appointments);
-  console.log(nextAppointment)
+  const progressAppointment=getProgressAppointment(appointments);
+  
   const statsData: TodayStats[] = [
     {
       title: "Today's Appointments",
@@ -141,8 +147,8 @@ const DoctorDashboard = () => {
       bgcolor: "success"
     },
     {
-      title: 'Pending Reports',
-      value: '12',
+      title: 'Appointment InProgress',
+      value: `${progressAppointment}`,
       subtitle: 'Require your review',
       icon: <Description color="warning" />,
       bgcolor: "warning"
@@ -152,7 +158,7 @@ const DoctorDashboard = () => {
       value: nextAppointment?.appointment_date
         ? formatTime12hr(nextAppointment.appointment_date)
         : 'No upcoming',
-      subtitle: `${nextAppointment?.patient.first_name}`,
+      subtitle: nextAppointment?.patient.first_name ?nextAppointment?.patient.first_name:'No Patient',
       icon: <AccessTime color="secondary" />,
       bgcolor: "secondary"
     }
@@ -350,7 +356,7 @@ const DoctorDashboard = () => {
                   sx={{ width: "100%" }}
                 />
               </LocalizationProvider>
-              <Box mt={2} display="flex" flexDirection="column" gap={1}>
+              {/* <Box mt={2} display="flex" flexDirection="column" gap={1}>
                 <CustomButton variant="outlined" label="View Full Schedule" sx={{
                   backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
                   border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
@@ -359,7 +365,7 @@ const DoctorDashboard = () => {
                   backgroundColor: theme.palette.common.white, color: theme.palette.text.primary,
                   border: '1px solid #ddd', '&:hover': { backgroundColor: '#f5f5f5', },
                 }} startIcon={<AccessTime />}></CustomButton>
-              </Box>
+              </Box> */}
             </CardContent>
           </Card>
         </Grid>
