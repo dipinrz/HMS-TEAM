@@ -3,6 +3,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import CustomButton from "../../components/ui/CustomButton";
 import { useState } from "react";
 import { sendingOTP, VerifiyingOTp } from "../../services/allAPI";
+import { toast } from "react-toastify";
 
 export type EmailData = {
   email: string;
@@ -41,8 +42,8 @@ function EmailOtp({ setIsOtpVerify, setVerifiedEmail }: Props) {
           email: getValues("email"),
           otp: data.otp,
         });
-        alert("otp verified");
         setIsOtpVerify(true);
+        toast.success("OTP Verified");
 
         if (response.status == 200) {
           setVerifiedEmail(getValues("email")); // send email back to parent
@@ -62,7 +63,7 @@ function EmailOtp({ setIsOtpVerify, setVerifiedEmail }: Props) {
       <form onSubmit={handleSubmit(onSubmit)}>
         {!isSendOtp && (
           <CustomInput
-          fullWidth
+            fullWidth
             label="Email Address"
             {...register("email", { required: "Email is Required" })}
             error={!!errors.email}
