@@ -48,10 +48,7 @@ dotenv.config();
 // import { BillItem } from "../entities/billItem.entity";
 // import { Payment } from "../entities/payment.entity";
 
-<<<<<<< Updated upstream
 // dotenv.config();
-=======
->>>>>>> Stashed changes
 
 export const AppDataSource = new DataSource({
     type: "postgres",
