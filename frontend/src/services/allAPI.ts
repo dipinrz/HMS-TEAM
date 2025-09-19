@@ -1,3 +1,4 @@
+import type { EmailData } from "../pages/Auth/EmailOtp";
 import commonAPI from "./commonAPI"
 
 export const baseURL =import.meta.env.VITE_BASE_URL ;
@@ -31,4 +32,12 @@ export const listNotifications=async()=>{
 
 export const updateNotification=async(notifID:number)=>{
     return await commonAPI('PUT',`${baseURL}/notification/update/${notifID}`)
+}
+
+export const sendingOTP=async(formData:EmailData)=>{
+    return commonAPI("POST",`${baseURL}/auth/send-otp`,formData)
+}
+
+export const VerifiyingOTp=async(formData:EmailData)=>{
+    return commonAPI("POST",`${baseURL}/auth/verify-otp`,formData)
 }

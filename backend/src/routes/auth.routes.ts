@@ -1,6 +1,6 @@
 
 import express from 'express'
-import { forgotPassword, loginUser, refreshToken, registerPatient, resetPassword, } from '../controllers/auth.controller'
+import { forgotPassword, loginUser, refreshToken, registerPatient, resetPassword, sendOTP, verifyOTP, } from '../controllers/auth.controller'
 import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from '../validations/auth.validations'
 import { validateBody } from '../middlewares/body.validator.middleware'
 
@@ -23,6 +23,9 @@ router.route("/forgot-password")
 router.route("/reset-password")
     .post(validateBody(resetPasswordSchema), resetPassword)
 
+router.route("/send-otp").post(sendOTP)
+
+router.route("/verify-otp").post(verifyOTP)
 
 
 export default router
