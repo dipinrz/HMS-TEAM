@@ -9,6 +9,8 @@ import { sendEmail } from "../utils/email";
 import jwt from 'jsonwebtoken'
 import { createPatient } from "../services/patient.services";
 import { createMedicalReport } from "../services/medicalReport.services";
+import { generateOTP } from "../utils/otp";
+import redis from "../utils/redisClient";
 
 
 export const registerPatient = async (req: Request, res: Response, next: NextFunction) => {
@@ -232,4 +234,59 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
         next(error)
     }
 
+}
+
+export const sendOTP =async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const {email}=req.body;
+        const user=await getUserByEmail(email)
+        if(user){
+            throw new ApiError("User exits",409)
+        }
+        if(!email) {
+           throw new ApiError("No Email found",400)
+        }
+        const otp =generateOTP();
+
+        await redis.set(`otp:${email}`,otp,{ex:300})
+        await sendEmail(
+            email,
+            "YOUR VERIFICATI OTP",
+            `Your OTP is ${otp}`,
+            `<p>Your OTP is <b>${otp}</b></p>`
+
+        )
+         res.status(200).json({
+            success: true,
+            status: 200,
+            message: "OTP Send successful",
+        });
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const verifyOTP=async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        console.log("hit here")
+        const{email,otp}=req.body;
+        console.log(email,otp)
+        if(!email || !otp){
+            throw new ApiError("NO email or OTP ",400);
+        }
+        const storedOTp:any= await redis.get(`otp:${email}`);
+
+        if(
+            storedOTp && storedOTp === Number(otp)
+        ){
+            console.log(" veirified")
+            // await redis.del(`otp:${email}`);
+            return res.json({ success: true, message: "OTP verified successfully" });
+        }
+        console.log(" not verified")
+        throw new ApiError("OTP Not Verified",400)
+    } catch (error) {
+        next(error)
+    }
 }
