@@ -2,8 +2,8 @@
 import { Avatar, Box, Chip, Divider, Grid, Stack, Typography, useTheme } from "@mui/material";
 import { AccessTime, CalendarToday, Description, EventBusy, Group, Healing, } from "@mui/icons-material";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider, StaticDatePicker } from '@mui/x-date-pickers';
-import { useEffect, useState } from "react";
+import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
+import { useEffect } from "react";
 
 import CustomButton from "../../components/ui/CustomButton";
 import { Card, CardContent, CardHeader } from "../../components/ui/CustomCards";
@@ -46,7 +46,7 @@ const DoctorDashboard = () => {
 
   const theme = useTheme();
   const { user } = useAuthStore()
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const date=new Date()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -348,12 +348,13 @@ const DoctorDashboard = () => {
             <CardHeader title="Calendar" subheader="Navigate your schedule" />
             <CardContent>
               <LocalizationProvider dateAdapter={AdapterDateFns} >
-                <StaticDatePicker
+                {/* <StaticDatePicker
                   displayStaticWrapperAs="desktop"
                   value={selectedDate}
-                  onChange={(newValue: Date | null) => setSelectedDate(newValue)}
+                  // onChange={(newValue: Date | null) => setSelectedDate(newValue)}
                   sx={{ width: "100%" }}
-                />
+                /> */}
+                <DateCalendar sx={{ width: "100%" }} value={date}/>
               </LocalizationProvider>
               {/* <Box mt={2} display="flex" flexDirection="column" gap={1}>
                 <CustomButton variant="outlined" label="View Full Schedule" sx={{

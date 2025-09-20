@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import { billComplete } from "../../socket/socketClient";
 import { useAuthStore } from "../../store/useAuthStore";
 
+
+
 const AddPrescription = () => {
   const { medicines, fetchMedicines,appointments,fetchAppointments } = useDoctorStore();
   const { user } = useAuthStore();
@@ -111,16 +113,19 @@ const AddPrescription = () => {
 
     try {
       await createPrescription(formData);
-      toast.success('Prescription created');
+      
+      toast.success('Prescription created',{toastId:'Pres1'});
       setFormData({
         appointment_id: Number(appointmentId),
         diagnosis: '',
         medications: [{ medicine_id: '', dosage: '', frequency: '', duration: '' }],
       });
       setErrors({ medications: [{}] }); // reset errors
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error creating prescription', error);
-      toast.error('Failed to add prescription');
+      const message=error?.data?.message
+      
+      toast.error(message,{toastId:`Api-error-${message}`});
     }
   };
 
@@ -128,7 +133,7 @@ const AddPrescription = () => {
   const handleStatusCompleted = async () => {
     try {
       await updatePrescritptionStatus({ appointment_id: Number(appointmentId) });
-      toast.success('Completed');
+      toast.success('Completed',{toastId:'com1'});
 
       billComplete(user?.user_id!, patientId!);
       navigate('/doctor/appointments')
