@@ -22,6 +22,16 @@ export interface Appointment {
   department:{name:string}
   patient: Patient;
   prescriptions: Prescription[];
+  
+}
+
+export interface medication{
+  medication_id:number;
+  dosage:string;
+  frequency:number;
+  duration:number;
+  instructions:string;
+  medicine:Medicine;
 }
 
 export interface Prescription{
@@ -29,6 +39,7 @@ export interface Prescription{
   diagnosis: string;
   prescribed_date: string;
   appointment: Appointment;  
+  medications:medication[];
 }
 
 export interface Medicine {

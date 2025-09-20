@@ -17,7 +17,9 @@ let token = ''
 if (accessTokenString) {
     const authUser = JSON.parse(accessTokenString);
     token = authUser.token;
+    console.log(token)
 }
+
 
 interface BillPropType {
     billAmount: number,
