@@ -111,7 +111,7 @@ export const scheduleAppointmentReminders = async () => {
                             <!-- Footer -->
                             <tr>
                                 <td style="background-color: #f4f4f4; text-align: center; padding: 20px; font-size: 12px; color: #888;">
-                                HMS Clinic, 123 Wellness St., Healthy City<br/>
+                                HMS Clinic, Trivandrum, Healthy City<br/>
                                 <a href="#" style="color: #888; text-decoration: none;">Unsubscribe</a>
                                 </td>
                             </tr>

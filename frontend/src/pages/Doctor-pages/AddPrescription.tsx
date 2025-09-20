@@ -17,6 +17,7 @@ const AddPrescription = () => {
   const { user } = useAuthStore();
   const navigate=useNavigate()
   const { appointmentId, patientId } = useParams<{ appointmentId: string, patientId: string }>();
+  const [loading,setLoading]=useState<boolean>(false)
   console.log(appointments)
 
   const [errors, setErrors] = useState<{
@@ -28,7 +29,7 @@ const AddPrescription = () => {
       duration?: string;
     }[];
   }>({
-    medications: [{ medicine_id: '', dosage: '', frequency: '', duration: '' }],
+    medications: [{ }],
   });
 
   const [formData, setFormData] = useState({
@@ -68,6 +69,7 @@ const AddPrescription = () => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true)
     const newErrors: typeof errors = {
       medications: [],
     };
@@ -109,7 +111,10 @@ const AddPrescription = () => {
 
     setErrors(newErrors);
 
-    if (hasError) return;
+    if (hasError){
+      setLoading(false);
+      return;
+    };
 
     try {
       await createPrescription(formData);
@@ -126,6 +131,8 @@ const AddPrescription = () => {
       const message=error?.data?.message
       
       toast.error(message,{toastId:`Api-error-${message}`});
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -140,7 +147,8 @@ const AddPrescription = () => {
 
     } catch (error: any) {
       console.log(error);
-      toast.error("Faild to completed");
+      const message=error?.data?.message
+      toast.error(message,{toastId:`Api-error-${message}`});
     }
   }
   const currentAppt = appointments?.find(
@@ -286,10 +294,11 @@ const AddPrescription = () => {
               <Button
                 variant="contained"
                 color="primary"
+                disabled={loading}
                 startIcon={<SaveAlt />}
                 onClick={handleSubmit}
               >
-                Save Prescription
+                {loading ? "Saving..." : "Save Prescription"}
               </Button>
               <Button
                 variant="contained"
