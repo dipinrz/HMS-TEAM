@@ -241,7 +241,7 @@ export const sendOTP =async(req: Request, res: Response, next: NextFunction)=>{
         const {email}=req.body;
         const user=await getUserByEmail(email)
         if(user){
-            throw new ApiError("User exits",409)
+            throw new ApiError("User exists",409)
         }
         if(!email) {
            throw new ApiError("No Email found",400)
@@ -251,7 +251,7 @@ export const sendOTP =async(req: Request, res: Response, next: NextFunction)=>{
         await redis.set(`otp:${email}`,otp,{ex:300})
         await sendEmail(
             email,
-            "YOUR VERIFICATI OTP",
+            "YOUR VERIFICATION OTP",
             `Your OTP is ${otp}`,
             `<p>Your OTP is <b>${otp}</b></p>`
 
