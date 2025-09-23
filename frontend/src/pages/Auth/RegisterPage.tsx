@@ -139,11 +139,15 @@ const RegisterPage: React.FC = () => {
               <Typography variant="h5" fontWeight={600}>
                 MedCare HMS
               </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Healthcare Management System
+              </Typography>
             </Box>
           )}
 
           <Card
             elevation={0}
+            animated={false}
             sx={{
               backdropFilter: "blur(6px)",
               bgcolor: "rgba(248, 248, 248, 0.8)",
@@ -167,7 +171,7 @@ const RegisterPage: React.FC = () => {
               />
             )}
 
-            <CardContent sx={{minHeight:300,minWidth:400}}>
+            <CardContent sx={{ minHeight: 300, minWidth: 400 }}>
               {!isOtpVerify ? (
                 <EmailOtp
                   setIsOtpVerify={setIsOtpVerify}

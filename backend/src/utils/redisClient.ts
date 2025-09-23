@@ -1,8 +1,10 @@
 import { Redis } from '@upstash/redis';
+import dotenv from "dotenv";
 
+dotenv.config()
 const redis = new Redis({
-  url: 'https://stable-porpoise-5763.upstash.io',
-  token: 'ARaDAAImcDIxOTIxNDdkZDBjZDY0NTJiYjQyMTk3MzI4M2I1NTg4Y3AyNTc2Mw',
+  url: process.env.REDIS_URL,
+  token: process.env.REDIS_TOKEN,
 })
 
 export default redis;
