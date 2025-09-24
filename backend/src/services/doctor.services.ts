@@ -12,7 +12,6 @@ const departmentRepo = AppDataSource.getRepository(Department);
 
 
 export const createDoctor = async (doctor: Partial<Doctor>) => {
-    console.log(`doctor====================${doctor}`);
 
     const newDoctor = doctorRepo.create(doctor)
 
@@ -30,6 +29,13 @@ export const getDoctorById = async (doctorId: number) => {
     })
 }
 
+export const getDepartmentHeadDoctorByDoctorIdService = async (id: number) => {
+  const department = await departmentRepo.findOne({
+    where: { head_doctor: { doctor_id: id } },
+    relations: ["head_doctor"],
+  });
+  return department;
+};
 
 export const getDoctorAppointments = async (doctorId: number, dateRange?: { from: string; to: string }) => {
 

@@ -5,6 +5,7 @@ import {
   findMedicineById,
   findMedicineByName,
   getAllMedicines,
+  getAllMedicinesForDoctors,
   updateMedicineById,
 } from "../services/medicine.services";
 import { ApiError } from "../utils/apiError";
@@ -50,6 +51,22 @@ export const fetchAllMedicines = async (
 ) => {
   try {
     const response = await getAllMedicines();
+    res.status(201).json({
+      success: true,
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const fetchAllMedicinesForDoctors = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const response = await getAllMedicinesForDoctors();
     res.status(201).json({
       success: true,
       data: response,

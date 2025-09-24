@@ -47,7 +47,7 @@ interface Doctor {
   specialization: string;
   qualification: string;
   license_number: string;
-  years_of_experience: number;
+  years_of_experience: number|null;
   department?: Department;
 }
 
@@ -62,6 +62,7 @@ const AdminDoctorsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  
 
   const [formData, setFormData] = useState<DoctorForm>({
     first_name: "",
@@ -93,13 +94,24 @@ const AdminDoctorsPage = () => {
     });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "years_of_experience" ? Number(value) : value,
-    }));
-  };
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target;
+
+  if (
+    ["first_name", "last_name", "specialization", "qualification"].includes(name)
+  ) {
+    const regex = /^[A-Za-z\s]*$/;
+    if (!regex.test(value)) {
+      return; 
+    }
+  }
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]: name === "years_of_experience" ? Number(value) : value,
+  }));
+};
+
 
   const downloadPDF = () => {
     const doc = new jsPDF();
@@ -157,8 +169,12 @@ const AdminDoctorsPage = () => {
       setLoading(true);
 
       if (isEditMode && selectedDoctor) {
-        await updateDoctorById(selectedDoctor.doctor_id, formData);
-        toast.success("Doctor updated successfully!");
+       const response= await updateDoctorById(selectedDoctor.doctor_id, formData);
+        if(response.success){
+          toast.success("Doctor updated successfully!");
+        }else{
+          toast.error(response.error)
+        }
       } else {
         await registerDoctor(formData);
         toast.success("Doctor registered successfully!");

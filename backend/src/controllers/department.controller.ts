@@ -64,7 +64,7 @@ export const addDepartmentHandler = async (
 
 
 
-export const fetchAllDepartmentHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchAllDepartmentHandler = async (req: Request, res: Response, next: NextFunction) =>{
     
     try {
         
@@ -87,6 +87,45 @@ export const fetchAllDepartmentHandler = async (req: Request, res: Response, nex
     }
 
 } 
+
+// export const fetchAllDepartmentHandler = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const cachedDept = await redisCache.get("department:all");
+//     let depts;
+//     if (cachedDept) {
+//       depts = JSON.parse(cachedDept);
+//       console.log("Fetched dept from cache");
+//     } else {
+//       depts = await getAllDepartments();
+//       if (!depts) {
+//         throw new ApiError("Department data not found", 404);
+//       }
+//       await redisCache.set(
+//         "department:all",
+//         JSON.stringify(depts),
+//         "EX",
+//         3600
+//       );
+//       console.log("Fetched departemnt from DB and cached in Redis");
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Departments fetched successfully",
+//       data: {
+//         departments: depts,
+//       },
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+
 
 export const removeDepartmentHandler = async (req: Request, res: Response, next: NextFunction) => {
 

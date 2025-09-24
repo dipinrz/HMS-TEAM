@@ -106,8 +106,14 @@ const AdminDepartmentsPage = () => {
 const handleSubmit = async () => {
   try {
     if (isEditMode && editDeptId) {
-      await updateDepartmentById(editDeptId, formData);
+      
+      const res= await updateDepartmentById(editDeptId, formData);
+      if(res.success){
       toast.success("Department updated");
+      }
+      else{
+        toast.error(res.error)
+      }
     } else {
       await addDept(formData);
       toast.success("Department added");

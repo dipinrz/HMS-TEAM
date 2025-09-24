@@ -147,10 +147,8 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
 
     try {
 
-        console.log(req.body);
 
         const { email } = req.body;
-        console.log(email);
 
 
 
@@ -168,7 +166,6 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
 
         const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
         
-        console.log('Frontend URL:', process.env.FRONTEND_URL);
 
 
         const html = generateResetPasswordEmail(`${user.first_name + " " + user.last_name}`, resetLink)
@@ -269,9 +266,7 @@ export const sendOTP =async(req: Request, res: Response, next: NextFunction)=>{
 
 export const verifyOTP=async(req: Request, res: Response, next: NextFunction)=>{
     try {
-        console.log("hit here")
         const{email,otp}=req.body;
-        console.log(email,otp)
         if(!email || !otp){
             throw new ApiError("NO email or OTP ",400);
         }
@@ -280,11 +275,9 @@ export const verifyOTP=async(req: Request, res: Response, next: NextFunction)=>{
         if(
             storedOTp && storedOTp === Number(otp)
         ){
-            console.log(" veirified")
             // await redis.del(`otp:${email}`);
             return res.json({ success: true, message: "OTP verified successfully" });
         }
-        console.log(" not verified")
         throw new ApiError("OTP Not Verified",400)
     } catch (error) {
         next(error)

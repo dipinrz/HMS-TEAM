@@ -27,7 +27,7 @@ export const getDoctorPriscriptions=async()=>{
 };
 
 export const getAllMedicens=async()=>{
-    const response=await commonAPI('GET',`${baseURL}/medicine/fetchAll`);
+    const response=await commonAPI('GET',`${baseURL}/medicine/fetchAll/doctors`);
     return response;
 }
 
