@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import {
   fetchAllDoctors,
   findHeadDoctorDepartment,
+  getDepartmentHeadDoctorByDoctorIdService,
   getDoctorAppointments,
   getDoctorById,
   getPatientsByDoctorId,
@@ -27,8 +28,8 @@ export interface AuthRequest extends Request {
   user?: { userId: number; role: string };
 }
 
-const appointmentRepo = AppDataSource.getRepository(Appointment)
-const prescriptionRepo = AppDataSource.getRepository(Prescription)
+const appointmentRepo = AppDataSource.getRepository(Appointment);
+const prescriptionRepo = AppDataSource.getRepository(Prescription);
 
 export const getDoctorAppointmentsHandler = async (
   req: Request,
@@ -41,7 +42,6 @@ export const getDoctorAppointmentsHandler = async (
     const { date, from, to, today } = req.query;
 
     let dateRange: { from: string; to: string } | undefined;
-    console.log(req.query);
 
     if (today === "true") {
       const start = dayjs().startOf("day").format();
@@ -209,10 +209,15 @@ export const updateDoctorProfileById = async (
 ) => {
   try {
     const doctor_id = Number(req.params.id);
-    const response = await getDoctorById(Number(doctor_id));
+    const response = await getDoctorById(doctor_id);
     if (!response) {
       throw new ApiError("Doctor not found", 404);
     }
+
+          const departmentHead = await getDepartmentHeadDoctorByDoctorIdService(
+      doctor_id
+    );
+
     const {
       first_name,
       last_name,
@@ -227,6 +232,18 @@ export const updateDoctorProfileById = async (
       years_of_experience,
       department_id,
     } = req.body;
+
+    // Prevent changing department if doctor is head
+    if (
+      departmentHead &&
+      department_id &&
+      department_id !== departmentHead.department_id
+    ) {
+      throw new ApiError(
+        "Cannot change department. This doctor is the head of a department.",
+        400
+      );
+    }
 
     const updatedUserFields = {
       first_name,
@@ -247,7 +264,6 @@ export const updateDoctorProfileById = async (
     };
 
     await updateUser(doctor_id, updatedUserFields);
-
     const updatedDoctor = await updateDoctorById(
       doctor_id,
       updatedDoctorFields
@@ -261,6 +277,7 @@ export const updateDoctorProfileById = async (
     next(error);
   }
 };
+
 
 export const getAllDoctors = async (
   req: AuthRequest,
@@ -279,45 +296,80 @@ export const getAllDoctors = async (
   }
 };
 
-export const getDoctorPrescriptionHandler = async (req: AuthRequest, res: Response, next: NextFunction) => {
 
+
+// export const getAllDoctors = async (
+//   req: AuthRequest,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const cachedDoctors = await redisCache.get("doctors:all");
+//     let doctors;
+
+//     if (cachedDoctors) {
+//       doctors = JSON.parse(cachedDoctors);
+//       console.log("Fetched doctors from Redis cache");
+//     } else {
+//       doctors = await fetchAllDoctors();
+
+//       await redisCache.set("doctors:all", JSON.stringify(doctors), "EX", 3600);
+//       console.log("Fetched doctors from DB and cached in Redis");
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Data fetched successfully",
+//       data: doctors,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+
+export const getDoctorPrescriptionHandler = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const doctor_id = req.user.userId;
 
-  if(isNaN(doctor_id)){
-    throw new ApiError('Invalid Doctor Id', 400);
+  if (isNaN(doctor_id)) {
+    throw new ApiError("Invalid Doctor Id", 400);
   }
 
-  try{
-    
+  try {
     const appointments = await getDoctorAppointments(doctor_id);
-    const appointmentIds = appointments.map(a => a.appointment_id);
+    const appointmentIds = appointments.map((a) => a.appointment_id);
 
     const prescriptions = await getPrescriptionByIds(appointmentIds);
 
     res.json({
       success: true,
-      message: 'Prescriptions fetched successfully',
-      prescriptions
-    })
-
-  } catch(error){
+      message: "Prescriptions fetched successfully",
+      prescriptions,
+    });
+  } catch (error) {
     next(error);
   }
-}
+};
 
-
-export const isHeadDoctorHandler = async (req: AuthRequest, res: Response, next: NextFunction) => {
-
-  try{
+export const isHeadDoctorHandler = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
     const head_doctor_id = Number(req.user.userId);
     let department = await findHeadDoctorDepartment(head_doctor_id);
-    
-    if(department === null){
+
+    if (department === null) {
       return res.json({
         success: true,
         message: "No Department found as head doctor",
         is_head_doctor: false,
-      })
+      });
     }
 
     const doctors = await getDoctorsByDepartmentId(department.department_id);
@@ -327,11 +379,9 @@ export const isHeadDoctorHandler = async (req: AuthRequest, res: Response, next:
       message: "Department fetched successfully",
       is_head_doctor: true,
       department,
-      doctors
-    })
-  } catch(error){
+      doctors,
+    });
+  } catch (error) {
     next(error);
   }
-
-
-}
+};

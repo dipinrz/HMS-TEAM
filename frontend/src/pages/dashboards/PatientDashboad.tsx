@@ -27,28 +27,56 @@ const PatientDashboard = () => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
 
+  // useEffect(() => {
+  //   const fetchAppointments = async () => {
+  //     try {
+  //       const res = await getPatientAppointments();
+  //       const now = new Date();
+  //       const upcoming = res.data.appointments
+  //         .filter((appt: any) => new Date(appt.appointment_date) > now)
+  //         .sort(
+  //           (a: any, b: any) =>
+  //             new Date(a.appointment_date).getTime() -
+  //             new Date(b.appointment_date).getTime()
+  //         );
+  //       setAppointments(upcoming);
+  //     } catch (err) {
+  //       toast.error("Failed to fetch appointments");
+  //       console.error(err);
+  //     }
+  //   };
+  //   fetchAppointments();
+  // }, []);
+
+
   useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const res = await getPatientAppointments();
-        // console.log("All apoinments", res.data.appointments);
-        const now = new Date();
-        const upcoming = res.data.appointments
-          .filter((appt: any) => new Date(appt.appointment_date) > now)
-          .sort(
-            (a: any, b: any) =>
-              new Date(a.appointment_date).getTime() -
-              new Date(b.appointment_date).getTime()
-          );
-        // console.log("Upcoming apoinments ", upcoming);
-        setAppointments(upcoming);
-      } catch (err) {
-        toast.error("Failed to fetch appointments");
-        console.error(err);
-      }
-    };
-    fetchAppointments();
-  }, []);
+  const fetchAppointments = async () => {
+    try {
+      const res = await getPatientAppointments();
+      const now = new Date();
+
+      const upcoming = res.data.appointments
+        .filter(
+          (appt: any) =>
+            new Date(appt.appointment_date) > now &&
+            appt.status !== "cancelled"
+        )
+        .sort(
+          (a: any, b: any) =>
+            new Date(a.appointment_date).getTime() -
+            new Date(b.appointment_date).getTime()
+        );
+
+      setAppointments(upcoming);
+    } catch (err) {
+      toast.error("Failed to fetch appointments");
+      console.error(err);
+    }
+  };
+
+  fetchAppointments();
+}, []);
+
 
   const handleViewClick = (appointment: any) => {
     setSelectedAppointment(appointment);

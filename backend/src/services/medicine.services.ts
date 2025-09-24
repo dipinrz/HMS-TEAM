@@ -1,4 +1,4 @@
-import { In } from "typeorm";
+import { In, MoreThan } from "typeorm";
 import { AppDataSource } from "../config/data-source";
 import { Medicine } from "../entities/medicine.entity";
 
@@ -26,8 +26,15 @@ export const createMedicineService = async (medicine: Partial<Medicine>) => {
 
 
 export const getAllMedicines = async () => {
+    const today = new Date()
     return await medicineRepo.find({order:{medicine_id:'ASC'}})
 }
+
+export const getAllMedicinesForDoctors = async () => {
+    const today = new Date()
+    return await medicineRepo.find({order:{medicine_id:'ASC'},where:{expiry_date:MoreThan(today)}})
+}
+
 
 export const getMedicineById = async (medicineId: number) => {
     return await medicineRepo.findOneBy({ medicine_id: medicineId })

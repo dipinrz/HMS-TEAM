@@ -135,6 +135,7 @@ export default function DepartmentModal({
             <TextField
               name="consultation_fee"
               label="Consultation Fee"
+              type="number"
               fullWidth
               size="small"
               value={formData.consultation_fee}
@@ -142,26 +143,6 @@ export default function DepartmentModal({
               error={!!errors.consultation_fee}
               helperText={errors.consultation_fee}
             />
-
-            {/* <TextField
-              select
-              name="head_doctor"
-              label="HOD"
-              fullWidth
-              size="small"
-              value={formData.head_doctor}
-              onChange={handleChange}
-              SelectProps={{ native: true }}
-              error={!!errors.head_doctor}
-              helperText={errors.head_doctor}
-            >
-              <option value={0}>Select Head Doctor</option>
-              {doctors.map((doc) => (
-                <option key={doc.doctor_id} value={doc.doctor_id}>
-                  {doc.user.first_name} {doc.user.last_name}
-                </option>
-              ))}
-            </TextField> */}
 
             {isEditMode && (
               <TextField

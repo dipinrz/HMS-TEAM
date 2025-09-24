@@ -15,6 +15,8 @@ import { createDoctor, updateDoctorById } from "../services/doctor.services";
 import { getDepartmentById } from "../services/department.services";
 import { AuthRequest } from "./doctor.controller";
 
+
+
 export const fetchAllUsers = async (
   req: Request,
   res: Response,
@@ -57,6 +59,63 @@ export const fetchAllUsers = async (
     });
   }
 };
+
+
+
+// export const fetchAllUsers = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const cachedUsers = await redisCache.get("users:all");
+//     let users;
+
+//     if (cachedUsers) {
+//       users = JSON.parse(cachedUsers);
+//       console.log("Fetched users from Redis cache");
+//     } else {
+//       users = await findAllUser();
+
+//       if (!users || users.length === 0) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "No users found",
+//         });
+//       }
+
+//       await redisCache.set("users:all", JSON.stringify(users), "EX", 3600);
+//       console.log("Fetched users from DB and cached in Redis");
+//     }
+
+//     const patients = users.filter((user) => user.role === UserRole.PATIENT);
+//     const doctors = users.filter((user) => user.role === UserRole.DOCTOR);
+//     const admins = users.filter((user) => user.role === UserRole.ADMIN);
+
+//     res.status(200).json({
+//       success: true,
+//       totalUsers: users.length,
+//       counts: {
+//         patients: patients.length,
+//         doctors: doctors.length,
+//         admins: admins.length,
+//       },
+//       data: {
+//         patients,
+//         doctors,
+//         admins,
+//       },
+//     });
+//   } catch (error) {
+//     console.error("Error fetching users:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Server error while fetching users",
+//       error: (error as Error).message,
+//     });
+//   }
+// };
+
 
 export const updateUserDetails = async (
   req: AuthRequest,
@@ -216,7 +275,6 @@ export const registerDoctor = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("ADMIN CONTROLLER",req.body)
   try {
     const {
       first_name,

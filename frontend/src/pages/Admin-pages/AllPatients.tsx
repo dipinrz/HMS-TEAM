@@ -1,4 +1,4 @@
-import { Box, Paper, Typography, Divider, Button } from "@mui/material";
+import { Box, Paper, Typography} from "@mui/material";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { deletePatient, getAllPatients } from "../../services/adminAPi";
@@ -40,7 +40,7 @@ const AdminPatientsPage = () => {
       setIsLoading(true);
       const response = await getAllPatients();
       setAllPatients(response.data.patients);
-      setFilteredPatients(response.data.patients); // initially same as all
+      setFilteredPatients(response.data.patients); 
     } catch {
       toast.error("Couldn't fetch patients");
     } finally {
@@ -105,16 +105,16 @@ const AdminPatientsPage = () => {
     <Box
       sx={{
         p: 3,
-        backgroundColor: "#f8fafc", // page background
+        backgroundColor: "#f8fafc", 
         minHeight: "100vh",
-        pt: { xs: 10, sm: 8, md: 6 }, // responsive top padding for navbar
+        pt: { xs: 10, sm: 8, md: 6 }, 
       }}
     >
       <Typography
         variant="h4"
         fontWeight="bold"
         textAlign="center"
-        mb={3} // spacing below heading
+        mb={3} 
       >
         Patient Management
       </Typography>
@@ -125,41 +125,18 @@ const AdminPatientsPage = () => {
       />
 
       <Paper sx={{ borderRadius: 4, overflow: "hidden" }}>
+        {/* <PatientTable
+          patients={filteredPatients}
+          isLoading={isLoading}
+          onDeleteClick={handleOpenDeleteDialog}
+        /> */}
+
         <PatientTable
           patients={filteredPatients}
           isLoading={isLoading}
           onDeleteClick={handleOpenDeleteDialog}
+          onDownloadPDF={downloadPatientsPDF}
         />
-
-        <Divider />
-
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          px={3}
-          py={2}
-          bgcolor="#f9fafb"
-        >
-          <Typography variant="subtitle1" fontWeight="bold">
-            Total Patients: {filteredPatients.length}
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={downloadPatientsPDF}
-            sx={{
-              textTransform: "none",
-              borderRadius: 2,
-              boxShadow: "none",
-              "&:hover": {
-                boxShadow: 2,
-              },
-            }}
-          >
-            Download PDF
-          </Button>
-        </Box>
       </Paper>
 
       <PatientDeleteDialog
