@@ -4,9 +4,20 @@ import { scheduleAutoCancelAppointments } from "./cron/autoCancelAppointments";
 import { initSocket } from "./socket";
 import http from "http";
 import { scheduleAppointmentReminders } from "./cron/scheduleAppointmentReminders";
+import { transporter } from "./utils/email";
 
 
 const PORT = process.env.PORT || 5000;
+
+app.get("/test-email", async (req, res) => {
+  try {
+    await transporter.verify(); // checks if SMTP is reachable
+    res.send("SMTP connection works ✅");
+  } catch (err) {
+    console.error("SMTP connection failed ❌:", err);
+    res.status(500).send("SMTP connection failed");
+  }
+});
 
 AppDataSource.initialize()
     .then(() => {
