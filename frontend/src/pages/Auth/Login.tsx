@@ -69,11 +69,11 @@ const LoginPage: React.FC = () => {
       initSocket(String(userId));
 
       if (userData?.role === "admin") {
-        navigate("/admin/dashboard");
+        navigate("/admin/dashboard",{ replace: true });
       } else if (userData?.role === "doctor") {
-        navigate("/doctor/dashboard");
+        navigate("/doctor/dashboard",{ replace: true });
       } else if (userData?.role === "patient") {
-        navigate("/patient/dashboard");
+        navigate("/patient/dashboard",{ replace: true });
       } else {
         navigate("/");
       }
